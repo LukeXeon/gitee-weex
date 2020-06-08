@@ -7,3 +7,7 @@ const App = require('@/index.vue');
 new Vue(Vue.util.extend({el: '#root', router}, App));
 router.push('/home');
 
+export const global = {
+    __domino_frozen__: false
+}
+

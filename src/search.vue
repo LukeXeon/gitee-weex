@@ -34,20 +34,16 @@
                 </div>
             </cell>
         </list>
-        <list class="list" v-else>
-            <header class="header">
+        <div class="list" v-else>
+            <div class="header">
                 <div class="header2">
                     <text style="font-size: 32px;">{{lang}} | {{orderByUp?'最多star':'最少star'}}</text>
                     <image style="width: 60px;height: 60px;background-color: #00B4FF">
                     </image>
                 </div>
-            </header>
-            <cell v-for="(text,index) in historyItems" :key="index">
-                <div class="item">
-                    <text style="font-size: 32px">{{text}}</text>
-                </div>
-            </cell>
-        </list>
+            </div>
+            <repos-list></repos-list>
+        </div>
     </div>
 </template>
 
@@ -130,6 +126,7 @@
 <script>
     import {WxcSearchbar} from 'weex-ui'
     import tabView from "@/tabView";
+    import reposList from "@/reposList";
 
     let tabStyle = {
         lineSpacing: '0px',
@@ -148,7 +145,8 @@
     export default {
         components: {
             WxcSearchbar,
-            tabView
+            tabView,
+            reposList
         },
         name: "search",
         methods: {

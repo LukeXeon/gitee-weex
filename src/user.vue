@@ -136,13 +136,13 @@
         align-items: center;
         border-width: 0.5px;
         border-color: #dddddd;
-        height: 100px;
+        height: 80px;
         flex-direction: row
     }
 
     .item2-icon {
-        width: 70px;
-        height: 70px;
+        width: 50px;
+        height: 50px;
         background-color: #238FFF;
         border-radius: 5px;
         margin-left: 30px
