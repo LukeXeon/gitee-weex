@@ -4,7 +4,7 @@
                  title-type="icon">
         <!-- 第一个页面内容-->
         <div class="item-container">
-            <search style="flex: 1"/>
+            <star style="flex: 1"/>
         </div>
 
         <!-- 第二个页面内容-->
