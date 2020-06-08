@@ -1,0 +1,115 @@
+<template>
+    <wxc-tab-bar :tab-titles="titles"
+                 :tab-styles="tabStyles"
+                 title-type="icon">
+        <!-- 第一个页面内容-->
+        <div class="item-container">
+            <search style="flex: 1"/>
+        </div>
+
+        <!-- 第二个页面内容-->
+        <div class="item-container">
+            <text>特别推荐</text>
+        </div>
+
+        <!-- 第三个页面内容-->
+        <div class="item-container">
+            <star style="flex: 1"/>
+        </div>
+
+        <!-- 第四个页面内容-->
+        <div class="item-container">
+            <search style="flex: 1"/>
+        </div>
+
+        <!-- 第五个页面内容-->
+        <div class="item-container" :style="this['contentStyle']">
+            <user style="flex: 1"/>
+        </div>
+    </wxc-tab-bar>
+</template>
+
+<script>
+    import {WxcTabBar, Utils} from 'weex-ui'
+    import user from "@/user";
+    import search from "@/search";
+    import star from "@/star";
+
+    const modal = weex.requireModule('modal')
+    let titles = [
+        {
+            title: '热门仓库',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+        },
+        {
+            title: '事件',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+        },
+        {
+            title: '我的star',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+        },
+        {
+            title: '搜索',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+        },
+        {
+            title: '个人信息',
+            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
+            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+        }
+    ];
+    let styles = {
+        bgColor: '#FFFFFF',
+        titleColor: '#666666',
+        activeTitleColor: '#3D3D3D',
+        activeBgColor: '#FFFFFF',
+        isActiveTitleBold: true,
+        iconWidth: 70,
+        iconHeight: 70,
+        width: 140,
+        height: 120,
+        fontSize: 24,
+        textPaddingLeft: 10,
+        textPaddingRight: 10
+    };
+
+    export default {
+        name: "home",
+        components: {
+            WxcTabBar,
+            user,
+            search,
+            star
+        },
+        created() {
+            const tabPageHeight = Utils.env.getPageHeight();
+            // 如果页面没有导航栏，可以用下面这个计算高度的方法
+            // const tabPageHeight = env.deviceHeight / env.deviceWidth * 750;
+            const {tabStyles} = this;
+            this["contentStyle"] = {
+                height: (tabPageHeight - tabStyles.height) + 'px'
+            };
+        },
+        data() {
+            return {
+                tabStyles: styles,
+                titles: titles
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .item-container {
+        width: 750px;
+        height: auto;
+        background-color: #f2f3f4;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
