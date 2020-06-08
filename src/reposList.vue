@@ -7,7 +7,7 @@
                     </image>
                     <div style="flex-direction: row">
                         <text class="title-text" style="margin-left: 20px;">{{item[1]}}</text>
-                        <text class="title-text"> /</text>
+                        <text class="title-text"> / </text>
                         <text class="title-text">{{item[2]}}</text>
                     </div>
                 </div>

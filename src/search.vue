@@ -15,7 +15,7 @@
                 <tab-view style="height: 60px;width: 500px" :tabs="['仓库','用户']">
                 </tab-view>
                 <div class="right-item">
-                    <image style="width: 60px;height: 60px;background-color: #00B4FF">
+                    <image style="width: 60px;height: 60px;background-color: #238FFF">
                     </image>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             <header class="header">
                 <div class="header2">
                     <text style="font-size: 32px">搜索历史</text>
-                    <image style="width: 60px;height: 60px;background-color: #00B4FF">
+                    <image style="width: 60px;height: 60px;background-color: #238FFF">
                     </image>
                 </div>
             </header>
@@ -59,7 +59,7 @@
     }
 
     .top-bar {
-        padding-top: 20px;
+        padding-top: 5px;
         background-color: white;
         justify-content: center;
         align-items: center;

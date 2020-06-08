@@ -15,7 +15,11 @@
                 <image class="head-icon">
                 </image>
                 <div style="flex-direction: column;margin-top: 20px;margin-left: 25px">
-                    <text style="font-size: 40px;margin-top: 0px">{{username}}({{nikeName}})</text>
+                    <div style="flex-direction: row">
+                        <text style="font-size: 40px;margin-top: 0px">{{username}}</text>
+                        <text style="font-size: 40px;margin-top: 0px">({{nikeName}})</text>
+                    </div>
+
                     <text style="font-size: 35px;margin-top: 10px">{{bio}}</text>
                     <text style="font-size: 30px;margin-top: 10px">于{{joinTime}}加入</text>
                 </div>

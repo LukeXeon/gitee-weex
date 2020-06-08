@@ -4,12 +4,12 @@
                  title-type="icon">
         <!-- 第一个页面内容-->
         <div class="item-container">
-            <star style="flex: 1"/>
+            <events style="flex: 1"/>
         </div>
 
         <!-- 第二个页面内容-->
         <div class="item-container">
-            <text>特别推荐</text>
+            <events style="flex: 1"></events>
         </div>
 
         <!-- 第三个页面内容-->
@@ -34,6 +34,8 @@
     import user from "@/user";
     import search from "@/search";
     import star from "@/star";
+    import hot from "@/hot";
+    import events from "@/events";
 
     const modal = weex.requireModule('modal')
 
@@ -86,7 +88,9 @@
             WxcTabBar,
             user,
             search,
-            star
+            star,
+            hot,
+            events
         },
         created() {
             const tabPageHeight = Utils.env.getPageHeight();
