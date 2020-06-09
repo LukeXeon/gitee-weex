@@ -4,13 +4,12 @@
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"
-                 v-on:click="back"
+                 v-on:click="()=>{this.$router.back()}"
                  style="width: 60px;height: 60px;justify-content: center;align-items: center">
                 <image :src="require('@/res/back.png').default"
                        style="width: 40px;height: 40px">
                 </image>
             </div>
-
         </wxc-minibar>
         <scroller alwaysScrollableVertical="true">
             <div style="flex-direction: column;align-items: center;">
@@ -42,9 +41,6 @@
         },
         name: "about",
         methods: {
-            back() {
-                this.$router.back()
-            }
         },
         data() {
             return {

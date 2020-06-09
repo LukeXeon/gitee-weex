@@ -1,4 +1,5 @@
 const stream = weex.requireModule('stream')
+const storage = weex.requireModule('storage')
 export default {
     request(method, url, type, body, headers) {
         return new Promise(function (resolve, reject) {
@@ -47,4 +48,18 @@ export default {
             }
         }
     },
+    setValue(key, value) {
+        return new Promise(function (resolve, reject) {
+            storage.setItem(key, value, function (e) {
+                resolve()
+            })
+        })
+    },
+    getValue(key) {
+        return new Promise(function (resolve, reject) {
+            storage.getItem(key, function (e) {
+                resolve(e.result === 'success' ? e.data : null)
+            })
+        })
+    }
 }

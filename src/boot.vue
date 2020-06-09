@@ -19,21 +19,29 @@
 </template>
 
 <script>
+    import utils from "@/utils";
+
     const modal = weex.requireModule('modal')
     let image = require('@/res/logo.png').default
     export default {
         name: "boot",
         methods: {
-            onClick() {
+            async onClick() {
                 let self = this;
-                modal.alert({
-                    okTitle: "我已确认",
-                    message: "gitee-weex是一个开源项目，它不会收集任何信息，甚至连服务器都没有，请放心授权此APP。"
-                }, function (value) {
-                    self.$router.push({
+                let first = await utils.getValue('first-boot')
+                if (first === null) {
+                    modal.alert({
+                        okTitle: "我已确认",
+                        message: "gitee-weex是一个开源项目，它不会收集任何信息，甚至连服务器都没有，请放心授权此APP。"
+                    }, async function (value) {
+                        await utils.setValue('first-boot', true)
+                    })
+                }
+                else {
+                    await self.$router.push({
                         path: '/login'
                     })
-                })
+                }
             }
         },
         data() {
