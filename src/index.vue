@@ -12,7 +12,6 @@
 
     import gitee from "@/gitee";
 
-
     const modal = weex.requireModule('modal')
 
     export default {

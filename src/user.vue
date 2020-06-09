@@ -32,7 +32,7 @@
             </div>
             <div style="height: 30px"></div>
             <div>
-                <div class="item2" v-for="item in items2">
+                <div class="item2" v-for="(item,index) in items2" v-on:click="onClick(index)">
                     <image class="item2-icon" :src="item[0]">
                     </image>
                     <text style="margin-left: 15px;font-size: 30px">{{item[1]}}</text>
@@ -40,7 +40,7 @@
             </div>
             <div style="height: 30px"></div>
             <div>
-                <div class="item2" v-for="item in items3">
+                <div class="item2" v-for="(item,index) in items3" v-on:click="onClick2(index)">
                     <image class="item2-icon" :src="item[0]">
                     </image>
                     <text style="margin-left: 15px;font-size: 30px;flex: 1">{{item[1]}}</text>
@@ -73,7 +73,13 @@
         },
         methods: {
             onRefresh() {
-
+            },
+            onClick(index) {
+            },
+            onClick2(index) {
+                if (index === 1) {
+                    this.$router.push('/about')
+                }
             }
         },
         data() {

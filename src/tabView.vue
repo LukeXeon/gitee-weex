@@ -60,6 +60,7 @@
     }
 
     .item {
+        text-align: center;
         font-size: 32px;
         flex: 1;
         justify-content: center;
