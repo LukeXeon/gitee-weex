@@ -1,4 +1,5 @@
 import utils from "./utils"
+import domino from './domino/index'
 
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
 const clientSecret = '17c6a2209b1f8c732388d49713cdf08ab20aa67ab8aa38a799d490c821275d78'
@@ -135,5 +136,14 @@ export default {
         let accessToken = storage.getItem('access_token')
         const url = `https://gitee.com/api/v5/user?access_token=${accessToken}`
         return await request("GET", url)
+    },
+    async getHotRepos() {
+        const url = 'https://gitee.com/explore/all'
+        let html = await utils.requestRaw("GET", url, {
+            'User-Agent': 'Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10'
+        })
+        let document = domino.createDocument(html,true)
+
+
     }
 }

@@ -14,7 +14,20 @@ export default {
                 } else {
                     reject(event.status)
                 }
+            }, function () {
+
             })
+        })
+    },
+    requestRaw(method, url, headers) {
+        return new Promise(function (resolve, reject) {
+            stream.sendHttp({
+                method: "GET",
+                url: url,
+                header: headers
+            }, function (e) {
+                resolve(e)
+            });
         })
     },
     getQueryVariable(url, variable) {
