@@ -85,11 +85,12 @@
         flex-direction: row;
         justify-content: flex-end;
         height: 60px;
-        align-items: flex-end;
+        align-items: center;
         padding-right: 20px
     }
 
     .header {
+        background-color: white;
         flex-direction: column;
         width: 750px;
         border-top-width: 0.5px;

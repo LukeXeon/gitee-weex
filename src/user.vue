@@ -43,7 +43,9 @@
                 <div class="item2" v-for="item in items3">
                     <image class="item2-icon" :src="item[0]">
                     </image>
-                    <text style="margin-left: 15px;font-size: 30px">{{item[1]}}</text>
+                    <text style="margin-left: 15px;font-size: 30px;flex: 1">{{item[1]}}</text>
+                    <image style="height: 30px;width: 30px;margin-right: 20px" :src="rightIcon">
+                    </image>
                 </div>
             </div>
         </scroller>
@@ -62,6 +64,7 @@
     let setting = require('@/res/setting.png').default
     let info = require('@/res/info.png').default
     let feedback = require('@/res/feedback.png').default
+    let right = require('@/res/right.png').default
 
     export default {
         name: "user",
@@ -75,6 +78,7 @@
         },
         data() {
             return {
+                rightIcon: right,
                 username: "username",
                 nikeName: "nikeName",
                 bio: "tag",

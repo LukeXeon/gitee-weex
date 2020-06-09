@@ -42,28 +42,28 @@
     let titles = [
         {
             title: '热门仓库',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+            icon: require('./res/hot(1).png').default,
+            activeIcon: require('./res/hot.png').default
         },
         {
             title: '事件',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+            icon: require('./res/event(1).png').default,
+            activeIcon: require('./res/event.png').default
         },
         {
             title: '我的star',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+            icon: require('./res/starBig(1).png').default,
+            activeIcon: require('./res/starBig.png').default,
         },
         {
             title: '搜索',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+            icon: require('./res/search(1).png').default,
+            activeIcon: require('./res/search.png').default
         },
         {
             title: '个人信息',
-            icon: 'https://gw.alicdn.com/tfs/TB1MWXdSpXXXXcmXXXXXXXXXXXX-72-72.png',
-            activeIcon: 'https://gw.alicdn.com/tfs/TB1kCk2SXXXXXXFXFXXXXXXXXXX-72-72.png'
+            icon: require('./res/userInfo(1).png').default,
+            activeIcon: require('./res/userInfo.png').default
         }
     ];
     let styles = {
@@ -72,8 +72,8 @@
         activeTitleColor: '#3D3D3D',
         activeBgColor: '#FFFFFF',
         isActiveTitleBold: true,
-        iconWidth: 70,
-        iconHeight: 70,
+        iconWidth: 45,
+        iconHeight: 45,
         width: 140,
         height: 120,
         fontSize: 24,
