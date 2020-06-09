@@ -196,6 +196,12 @@ const weexConfig = {
           options: vueLoaderConfig({useVue: false})
         }],
         exclude: config.excludeModuleReg
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        use: [{
+          loader: 'url-loader'
+        }]
       }
     ]
   },

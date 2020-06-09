@@ -20,6 +20,11 @@
 
 <script>
     const modal = weex.requireModule('modal')
+    let image = require('@/res/logo.png').default
+    let index = image.indexOf(',')
+    let head = 'data:mime/type;base64,'
+    console.log(index)
+    console.log(image)
     export default {
         name: "boot",
         methods: {
@@ -39,7 +44,7 @@
             return {
                 text: "使用Apache Weex开发",
                 buttonText: "登录Gitee",
-                logo: "https://i.loli.net/2020/06/07/QDWOP85NaSj9xY4.png"
+                logo: image
             }
         }
     }

@@ -39,7 +39,6 @@
 
     const modal = weex.requireModule('modal')
 
-
     let titles = [
         {
             title: '热门仓库',
