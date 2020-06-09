@@ -1,8 +1,9 @@
 <template>
     <div class="wrapper">
-        <div class="app-bar">
-            <text class="title-text">{{title}}</text>
-        </div>
+        <wxc-minibar title="登录gitee"
+                     leftButton=""
+                     text-color="while"
+                     background-color="#238FFF"/>
         <web :src="webviewUrl"
              class="webview"
              @pagestart="onLoad"
@@ -13,6 +14,7 @@
 
 <script>
     import gitee from "@/gitee";
+    import {WxcMinibar} from 'weex-ui'
 
     const modal = weex.requireModule('modal')
     const ws = weex.requireModule('webSocket')
@@ -20,6 +22,9 @@
 
     export default {
         name: 'login',
+        components: {
+            WxcMinibar
+        },
         methods: {
             onLoad(event) {
                 gitee.handleLogin(event.url)
@@ -38,19 +43,6 @@
     .wrapper {
         justify-content: center;
         align-items: center;
-    }
-
-    .app-bar {
-        width: 750px;
-        height: 120px;
-        justify-content: center;
-        align-items: center;
-        background-color: #238FFF;
-    }
-
-    .title-text {
-        font-size: 40px;
-        color: white;
     }
 
     .webview {

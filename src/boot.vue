@@ -21,10 +21,6 @@
 <script>
     const modal = weex.requireModule('modal')
     let image = require('@/res/logo.png').default
-    let index = image.indexOf(',')
-    let head = 'data:mime/type;base64,'
-    console.log(index)
-    console.log(image)
     export default {
         name: "boot",
         methods: {
