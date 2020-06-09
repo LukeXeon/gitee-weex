@@ -1,29 +1,31 @@
 <template>
-    <recycle-list for="(item,index) in items">
+    <recycle-list for="(item,index) in list">
         <cell-slot>
             <div class="item">
                 <div class="line1">
                     <image class="icon">
                     </image>
                     <div style="flex-direction: row">
-                        <text class="title-text" style="margin-left: 20px;">{{item[1]}}</text>
+                        <text class="title-text" style="margin-left: 20px;">{{item[1+2]}}</text>
                         <text class="title-text"> / </text>
-                        <text class="title-text">{{item[2]}}</text>
+                        <text class="title-text">{{item[2+2]}}</text>
                     </div>
                 </div>
-                <text class="distribute">{{item[3]}}</text>
+                <text class="distribute">{{item[3+2]}}</text>
                 <div class="tags-line">
                     <div class="tag">
                         <div style="width: 30px;height: 30px;border-radius: 30px;background-color: #238FFF"></div>
-                        <text style="font-size: 30px;margin-left: 10px">{{item[6]}}</text>
+                        <text style="font-size: 30px;margin-left: 10px">{{item[6+2]}}</text>
                     </div>
                     <div class="tag">
-                        <div style="width: 30px;height: 30px;background-color: #238FFF"></div>
-                        <text style="font-size: 30px;margin-left: 10px">{{item[7]}}</text>
+                        <image style="width: 30px;height: 30px;" v-bind:src="item[0]">
+                        </image>
+                        <text style="font-size: 30px;margin-left: 10px">{{(item[7+2])}}</text>
                     </div>
                     <div class="tag">
-                        <div style="width: 30px;height: 30px;background-color: #238FFF"></div>
-                        <text style="font-size: 30px;margin-left: 10px">{{item[8]}}</text>
+                        <image style="width: 30px;height: 30px;" v-bind:src="item[1]">
+                        </image>
+                        <text style="font-size: 30px;margin-left: 10px">{{item[8+2]}}</text>
                     </div>
                 </div>
             </div>
@@ -31,7 +33,12 @@
     </recycle-list>
 </template>
 
+
 <script>
+    // 0        1            2       3             4           5       6       7        8
+    //["icon", "username", "repos", "distribute", "updateAt", "color", "lang", "star", "fork"],
+    let star = require('@/res/star.png').default
+    let branch = require('@/res/branch.png').default
     export default {
         props: {
             items: {
@@ -39,7 +46,18 @@
                 default: () => ([])
             }
         },
-        name: "reposList"
+        name: "reposList",
+        data() {
+            let list = [];
+            for (let i = 0; i < this.items.length; i++) {
+                let item = [star, branch]
+                item.push(...this.items[i].slice())
+                list.push(item)
+            }
+            return {
+                list: list
+            }
+        }
     }
 </script>
 

@@ -15,7 +15,7 @@
                 <tab-view style="height: 60px;width: 500px" :tabs="['仓库','用户']">
                 </tab-view>
                 <div class="right-item">
-                    <image style="width: 60px;height: 60px;background-color: #238FFF">
+                    <image style="width: 50px;height: 50px;" v-bind:src="optionsIcon">
                     </image>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             <header class="header">
                 <div class="header2">
                     <text style="font-size: 32px">搜索历史</text>
-                    <image style="width: 60px;height: 60px;background-color: #238FFF">
+                    <image style="width: 50px;height: 50px;" v-bind:src="cleanIcon">
                     </image>
                 </div>
             </header>
@@ -128,6 +128,9 @@
     import tabView from "@/tabView";
     import reposList from "@/reposList";
 
+    let clean = require('@/res/clean.png').default
+    let options = require('@/res/options.png').default
+
     let tabStyle = {
         lineSpacing: '0px',
         width: '200px',
@@ -173,6 +176,8 @@
         },
         data() {
             return {
+                optionsIcon: options,
+                cleanIcon: clean,
                 lang: '所有语言',
                 orderByUp: true,
                 searchText: '',

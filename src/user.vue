@@ -33,7 +33,7 @@
             <div style="height: 30px"></div>
             <div>
                 <div class="item2" v-for="item in items2">
-                    <image class="item2-icon">
+                    <image class="item2-icon" :src="item[0]">
                     </image>
                     <text style="margin-left: 15px;font-size: 30px">{{item[1]}}</text>
                 </div>
@@ -41,7 +41,7 @@
             <div style="height: 30px"></div>
             <div>
                 <div class="item2" v-for="item in items3">
-                    <image class="item2-icon">
+                    <image class="item2-icon" :src="item[0]">
                     </image>
                     <text style="margin-left: 15px;font-size: 30px">{{item[1]}}</text>
                 </div>
@@ -54,6 +54,14 @@
 <script>
     import gitee from "@/gitee";
     import {WxcMinibar} from 'weex-ui'
+
+    let team = require('@/res/team.png').default
+    let location = require('@/res/location.png').default
+    let email = require('@/res/email.png').default
+    let link = require('@/res/link.png').default
+    let setting = require('@/res/setting.png').default
+    let info = require('@/res/info.png').default
+    let feedback = require('@/res/feedback.png').default
 
     export default {
         name: "user",
@@ -77,15 +85,15 @@
                     ["关注者", 1111],
                 ],
                 items2: [
-                    ["", "组织"],
-                    ["", "地区"],
-                    ["", "邮箱"],
-                    ["", "网站"]
+                    [team, "组织"],
+                    [location, "地区"],
+                    [email, "邮箱"],
+                    [link, "网站"]
                 ],
                 items3: [
-                    ["", "设置"],
-                    ["", "关于"],
-                    ["", "反馈"],
+                    [setting, "设置"],
+                    [info, "关于"],
+                    [feedback, "反馈"],
                 ]
             }
         }
@@ -147,7 +155,6 @@
     .item2-icon {
         width: 50px;
         height: 50px;
-        background-color: #238FFF;
         border-radius: 5px;
         margin-left: 30px
     }

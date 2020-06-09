@@ -46,5 +46,5 @@ export default {
                 return paramObj[variable];
             }
         }
-    }
+    },
 }
