@@ -23,7 +23,7 @@ let userInfoCache = null;
 
 export default {
     loginUrl: `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`,
-    async handleLogin(url, fun) {
+    async handleLogin(url) {
         if (url != null && url.startsWith(redirectUri)) {
             let code = utils.getQueryVariable(url.toString(), 'code')
             let data = await utils.request(
@@ -35,10 +35,11 @@ export default {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
                 }
             )
-            utils.debug(JSON.stringify(data))
             await utils.setValue('access_token', data["access_token"])
             await utils.setValue('refresh_token', data["refresh_token"])
-            fun()
+            return true
+        } else {
+            return false
         }
     },
     async isLogin() {

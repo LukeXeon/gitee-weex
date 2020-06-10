@@ -13,11 +13,15 @@
             </div>
         </wxc-minibar>
         <web :src="webviewUrl"
+             v-if="showWeb"
              show-loading="true"
              class="webview"
              @receivedtitle="test"
              @pagestart="onLoad">
         </web>
+        <div v-else class="success">
+            <text style="font-size: 50px">登录成功</text>
+        </div>
     </div>
 </template>
 
@@ -39,15 +43,18 @@
             test(text) {
 
             },
-            onLoad(event) {
-                let router = this.$router
-                gitee.handleLogin(event.url, function () {
-                    router.push("/home")
-                })
+            async onLoad(event) {
+                let isLogin = await gitee.handleLogin(event.url)
+                if (isLogin) {
+                    let router = this.$router
+                    this.showWeb = false
+                    await router.push("/home")
+                }
             }
         },
         data() {
             return {
+                showWeb: true,
                 title: '登录Gitee',
                 webviewUrl: gitee.loginUrl
             }
@@ -57,6 +64,14 @@
 
 <style scoped>
     .wrapper {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .success {
+        flex: 1;
+        width: 750px;
+        background-color: white;
         justify-content: center;
         align-items: center;
     }

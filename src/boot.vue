@@ -42,6 +42,9 @@
                         message: "gitee-weex是一个开源项目，它不会收集任何信息，甚至连服务器都没有，请放心授权此APP。"
                     }, async function (value) {
                         await utils.setValue('first-boot', true)
+                        await self.$router.push({
+                            path: '/login'
+                        })
                     })
                 } else {
                     await self.$router.push({
