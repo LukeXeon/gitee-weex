@@ -1,4 +1,4 @@
-<template recyclable>
+<template>
     <div class="item">
         <div class="line1">
             <image class="icon">

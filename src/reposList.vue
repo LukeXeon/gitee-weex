@@ -1,12 +1,11 @@
 <template>
-    <recycle-list for="(item,index) in items">
-        <cell-slot>
+    <list>
+        <cell v-for="(item,index) in items">
             <repos-item :item="item">
             </repos-item>
-        </cell-slot>
-    </recycle-list>
+        </cell>
+    </list>
 </template>
-
 
 <script>
     import reposItem from "@/reposItem";
