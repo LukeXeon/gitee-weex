@@ -1,6 +1,7 @@
 import utils from "./utils"
 import domino from './domino/index'
-import hljs from 'highlight.js'
+
+require('./date.format')
 
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
 const clientSecret = '17c6a2209b1f8c732388d49713cdf08ab20aa67ab8aa38a799d490c821275d78'
@@ -154,7 +155,7 @@ export default {
     },
     async getContributions(username, year) {
         const url = `https://gitee.com/${username}/contribution_calendar?year=${year}`
-        let content = await utils.requestRaw("GET", url, {
+        let content = await utils.fetch("GET", url, {
             Accept: '*/*',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
         })
@@ -164,7 +165,19 @@ export default {
         content = content.substring(index + head.length, index2)
         content = eval(content)
         content = "<html><head><title></title></head><body>" + content + "</body></html>"
-        content = domino.createDocument(content)
+        let document = domino.createDocument(content)
+        let rawArray = document.querySelectorAll('div[data-content]')
+        let result = []
+        let now = parseInt(new Date().format('Ymd'))
+        for (let i = 0; i < rawArray.length; i++) {
+            let item = rawArray[i]
+            if (now >= parseInt(item.getAttribute('date'))) {
+                result.push({
+                    color: item.classList[1],
+                    text: item.getAttribute('data-content')
+                })
+            }
+        }
+        return result
     },
-
 }

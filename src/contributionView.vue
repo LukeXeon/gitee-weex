@@ -2,34 +2,38 @@
     <div class="wrapper">
         <scroller scroll-direction="horizontal"
                   show-scrollbar="false"
+                  scrollToBegin="true"
                   class="scroller">
             <div class="box-group" v-for="(itemGroup,index) in renderItems">
                 <div class="box"
-                     v-for="(box,index) in itemGroup"
-                     v-on:click="onClick(box[1])"/>
+                     v-for="(box,index2) in itemGroup"
+                     v-on:click="onClick(box[1])"
+                     :style="{'background-color':(colors[box.color])}"
+                />
             </div>
         </scroller>
     </div>
 </template>
 
 <script>
-    //  0        1
-    // color    text
-    let colors = [
-        "#eaeaea",
-        "#D6E685",
-        "#8CC665",
-        "#44A340",
-        "#1E6823"
-    ]
+    let colors = {
+        less: "#eaeaea",
+        little: "#D6E685",
+        some: "#8CC665",
+        many: "#44A340",
+        much: "#1E6823"
+    }
 
     function buildItems(array) {
+        if (array == null) {
+            return []
+        }
         let items = new Array(parseInt((array.length / 7).toString()))
         let temp = []
         for (let i = 0; i < array.length; i++) {
             let item = array[i]
             temp.push(item)
-            if (temp.length === 7) {
+            if (temp.length === 7 || array.length - 1 === i) {
                 items.push(temp)
                 temp = []
             }
@@ -45,15 +49,19 @@
                 default: () => ([])
             }
         },
+        computed: {
+            renderItems: function () {
+                return buildItems(this.items)
+            }
+        },
         methods: {
             onClick(text) {
 
             }
         },
         data() {
-            let list = new Array(300)
             return {
-                renderItems: buildItems(list)
+                colors: colors,
             }
         }
     }

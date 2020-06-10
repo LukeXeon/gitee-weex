@@ -30,7 +30,8 @@
                 </div>
             </div>
             <div style="height: 30px"></div>
-            <contribution-view>
+            <contribution-view
+                    :items="contributions">
             </contribution-view>
             <div style="height: 30px"></div>
             <div>
@@ -57,7 +58,6 @@
 
 <script>
     import gitee from "@/gitee";
-    import utils from "@/utils";
     import contributionView from "@/contributionView";
     import {WxcMinibar} from 'weex-ui'
 
@@ -87,8 +87,9 @@
                 }
             }
         },
-        async beforeCreate() {
+        async created() {
             let info = await gitee.loadMyInfo();
+
             this.username = info['login'];
             this.nikeName = info['name'];
             this.bio = info['bio'];
@@ -99,9 +100,11 @@
                 ["关注中", info['following']],
                 ["关注者", info['followers']],
             ]
+            this.contributions = await gitee.getContributions(info['login'],new Date().getFullYear())
         },
         data() {
             return {
+                contributions: [],
                 rightIcon: right,
                 avatarIcon: '',
                 username: "username",
