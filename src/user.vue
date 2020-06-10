@@ -16,7 +16,7 @@
                 </image>
                 <div style="flex-direction: column;margin-top: 15px;margin-left: 25px">
                     <div style="flex-direction: row;align-items: center">
-                        <text style="font-size: 38px;">{{username}}</text>
+                        <text style="font-size: 38px;color: #00B4FF">{{username}}</text>
                         <text style="font-size: 38px;"> ({{nikeName}})</text>
                     </div>
                     <text style="font-size: 35px;margin-top: 10px">{{bio}}</text>

@@ -1,14 +1,88 @@
 <template>
-    <scroller>
-    </scroller>
+    <div class="wrapper">
+        <scroller scroll-direction="horizontal"
+                  show-scrollbar="false"
+                  class="scroller">
+            <div class="box-group" v-for="(itemGroup,index) in renderItems">
+                <div class="box"
+                     v-for="(box,index) in itemGroup"
+                     v-on:click="onClick(box[1])"/>
+            </div>
+        </scroller>
+    </div>
 </template>
 
 <script>
+    //  0        1
+    // color    text
+    let colors = [
+        "#eaeaea",
+        "#D6E685",
+        "#8CC665",
+        "#44A340",
+        "#1E6823"
+    ]
+
+    function buildItems(array) {
+        let items = new Array(parseInt((array.length / 7).toString()))
+        let temp = []
+        for (let i = 0; i < array.length; i++) {
+            let item = array[i]
+            temp.push(item)
+            if (temp.length === 7) {
+                items.push(temp)
+                temp = []
+            }
+        }
+        return items
+    }
+
     export default {
-        name: "contributionView"
+        name: "contributionView",
+        props: {
+            items: {
+                type: Array,
+                default: () => ([])
+            }
+        },
+        methods: {
+            onClick(text) {
+
+            }
+        },
+        data() {
+            let list = new Array(300)
+            return {
+                renderItems: buildItems(list)
+            }
+        }
     }
 </script>
 
 <style scoped>
+    .wrapper {
+        background-color: white;
+        width: 750px;
+        justify-content: center;
+        align-items: center;
+        height: 250px;
+    }
 
+    .scroller {
+        flex-direction: row;
+        width: 710px;
+        height: 210px;
+    }
+
+    .box-group {
+        flex-direction: column;
+    }
+
+    .box {
+        background-color: #eaeaea;
+        height: 25px;
+        width: 25px;
+        border-radius: 2.5px;
+        margin: 2.5px;
+    }
 </style>
