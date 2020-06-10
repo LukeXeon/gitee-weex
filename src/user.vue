@@ -62,9 +62,9 @@
     import {WxcMinibar} from 'weex-ui'
 
     let team = require('@/res/team.png').default
-    let location = require('@/res/location.png').default
+    let wechat = require('@/res/wechat.png').default
     let email = require('@/res/email.png').default
-    let link = require('@/res/link.png').default
+    let qq = require('@/res/qq.png').default
     let setting = require('@/res/setting.png').default
     let info = require('@/res/info.png').default
     let feedback = require('@/res/feedback.png').default
@@ -100,7 +100,14 @@
                 ["关注中", info['following']],
                 ["关注者", info['followers']],
             ]
-            this.contributions = await gitee.getContributions(info['login'],new Date().getFullYear())
+            this.items2 = [
+                [team, info['company'] || "公司"],
+                [wechat, info['wechat'] || "微信"],
+                [qq, info['qq'] || "QQ"],
+                [email, info['email'] || '邮箱'],
+            ]
+
+            this.contributions = await gitee.getContributions(info['login'], new Date().getFullYear())
         },
         data() {
             return {
@@ -118,9 +125,9 @@
                 ],
                 items2: [
                     [team, "组织"],
-                    [location, "地区"],
+                    [wechat, "地区"],
+                    [qq, "网站"],
                     [email, "邮箱"],
-                    [link, "网站"]
                 ],
                 items3: [
                     [setting, "设置"],

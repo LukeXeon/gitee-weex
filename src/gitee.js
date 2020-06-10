@@ -11,7 +11,7 @@ async function request(method, url, body) {
     return await utils.request(
         method,
         url,
-        "jsonp",
+        "json",
         body,
         {
             'Content-Type': 'application/json;charset=UTF-8',
@@ -29,7 +29,11 @@ export default {
             let data = await utils.request(
                 'POST',
                 `https://gitee.com/oauth/token?grant_type=authorization_code&code=${code}&client_id=${clientId}&redirect_uri=${redirectUri}&client_secret=${clientSecret}`,
-                'jsonp'
+                'json',
+                {},
+                {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+                }
             )
             utils.debug(JSON.stringify(data))
             await utils.setValue('access_token', data["access_token"])
@@ -50,8 +54,9 @@ export default {
                     let data = await utils.request(
                         "POST",
                         `https://gitee.com/oauth/token?grant_type=refresh_token&refresh_token=${refreshToken}`,
-                        'jsonp'
+                        'json'
                     )
+
                     await utils.setValue('access_token', data["access_token"])
                     return true;
                 } catch (e2) {

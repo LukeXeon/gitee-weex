@@ -15,8 +15,8 @@
         <web :src="webviewUrl"
              show-loading="true"
              class="webview"
-             @pagestart="onLoad"
-             @pagefinish="">
+             @receivedtitle="test"
+             @pagestart="onLoad">
         </web>
     </div>
 </template>
@@ -24,6 +24,7 @@
 <script>
     import gitee from "@/gitee";
     import {WxcMinibar} from 'weex-ui'
+    import utils from "@/utils";
 
     const modal = weex.requireModule('modal')
     const ws = weex.requireModule('webSocket')
@@ -35,6 +36,9 @@
             WxcMinibar
         },
         methods: {
+            test(text) {
+
+            },
             onLoad(event) {
                 let router = this.$router
                 gitee.handleLogin(event.url, function () {

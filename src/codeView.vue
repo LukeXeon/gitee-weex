@@ -5,6 +5,8 @@
 <script>
     import hljs from 'highlight.js'
 
+    hljs.highlightAuto()
+
     export default {
         name: "codeView"
     }

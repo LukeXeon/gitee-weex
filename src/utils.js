@@ -2,6 +2,7 @@ const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage')
 const modal = weex.requireModule('modal')
 const animation = weex.requireModule('animation')
+
 export default {
     request(method, url, type, body, headers) {
         return new Promise(function (resolve, reject) {
@@ -52,7 +53,7 @@ export default {
     },
     setValue(key, value) {
         return new Promise(function (resolve) {
-            storage.setItem(key, value, function (e) {
+            storage.setItem(key, value, function () {
                 resolve()
             })
         })
