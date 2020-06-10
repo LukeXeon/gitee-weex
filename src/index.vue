@@ -5,11 +5,6 @@
 </template>
 
 <script>
-
-    function f(u) {
-        return require('@/res' + u)
-    }
-
     import gitee from "@/gitee";
 
     const modal = weex.requireModule('modal')

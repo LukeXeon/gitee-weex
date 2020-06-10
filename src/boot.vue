@@ -10,21 +10,28 @@
             </div>
         </div>
         <div class="operations">
-            <div class="button" @click="onClick">
+            <div class="button" v-if="this.buttonEnable" @click="onClick">
                 <text style="color: white;font-size: 35px">{{buttonText}}</text>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
     import utils from "@/utils";
+    import gitee from "@/gitee";
 
     const modal = weex.requireModule('modal')
     let image = require('@/res/logo.png').default
     export default {
         name: "boot",
+        async beforeCreate() {
+            if (await gitee.isLogin()) {
+                await this.$router.push("/home")
+            } else {
+                this.buttonEnable = true
+            }
+        },
         methods: {
             async onClick() {
                 let self = this;
@@ -36,8 +43,7 @@
                     }, async function (value) {
                         await utils.setValue('first-boot', true)
                     })
-                }
-                else {
+                } else {
                     await self.$router.push({
                         path: '/login'
                     })
@@ -46,6 +52,7 @@
         },
         data() {
             return {
+                buttonEnable: false,
                 text: "使用Apache Weex开发",
                 buttonText: "登录Gitee",
                 logo: image
@@ -55,6 +62,12 @@
 </script>
 
 <style scoped>
+    .wrapper{
+        flex: 1;
+        width: 750px;
+        background-color: white;
+    }
+
     .image {
         width: 429px;
         height: 135px;

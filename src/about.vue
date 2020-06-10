@@ -56,6 +56,8 @@
 
 <style scoped>
     .image-root {
+        border-width: 0.5px;
+        border-color: #dddddd;
         border-radius: 25px;
         padding: 25px 35px;
         background-color: white;

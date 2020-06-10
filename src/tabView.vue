@@ -1,7 +1,7 @@
 <template>
     <div class="bar">
         <div v-for="(text,index) in tabs" style="flex: 1">
-            <div class="select-item" v-if="index===activeTab">
+            <div class="select-item" v-if="index===activeTab" key="tab">
                 <text class="item">{{text}}</text>
             </div>
             <div v-else class="unselect-item" @click="onSelect(index)">

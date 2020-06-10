@@ -1,5 +1,6 @@
 const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage')
+const modal = weex.requireModule('modal')
 export default {
     request(method, url, type, body, headers) {
         return new Promise(function (resolve, reject) {
@@ -60,6 +61,11 @@ export default {
             storage.getItem(key, function (e) {
                 resolve(e.result === 'success' ? e.data : null)
             })
+        })
+    },
+    debug(text){
+        modal.alert({
+            message: text
         })
     }
 }

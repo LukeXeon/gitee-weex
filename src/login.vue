@@ -36,7 +36,10 @@
         },
         methods: {
             onLoad(event) {
-                gitee.handleLogin(event.url)
+                let router = this.$router
+                gitee.handleLogin(event.url, function () {
+                    router.push("/home")
+                })
             }
         },
         data() {

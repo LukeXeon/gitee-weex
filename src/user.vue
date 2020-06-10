@@ -12,14 +12,13 @@
                 </loading-indicator>
             </refresh>
             <div class="head-bar">
-                <image class="head-icon">
+                <image class="head-icon" :src="avatarIcon">
                 </image>
-                <div style="flex-direction: column;margin-top: 20px;margin-left: 25px">
-                    <div style="flex-direction: row">
-                        <text style="font-size: 40px;margin-top: 0px">{{username}}</text>
-                        <text style="font-size: 40px;margin-top: 0px">({{nikeName}})</text>
+                <div style="flex-direction: column;margin-top: 15px;margin-left: 25px">
+                    <div style="flex-direction: row;align-items: center">
+                        <text style="font-size: 38px;">{{username}}</text>
+                        <text style="font-size: 38px;"> ({{nikeName}})</text>
                     </div>
-
                     <text style="font-size: 35px;margin-top: 10px">{{bio}}</text>
                     <text style="font-size: 30px;margin-top: 10px">于{{joinTime}}加入</text>
                 </div>
@@ -30,6 +29,9 @@
                     <text style="font-size: 25px">{{item[0]}}</text>
                 </div>
             </div>
+            <div style="height: 30px"></div>
+            <contribution-view>
+            </contribution-view>
             <div style="height: 30px"></div>
             <div>
                 <div class="item2" v-for="(item,index) in items2" v-on:click="onClick(index)">
@@ -55,6 +57,8 @@
 
 <script>
     import gitee from "@/gitee";
+    import utils from "@/utils";
+    import contributionView from "@/contributionView";
     import {WxcMinibar} from 'weex-ui'
 
     let team = require('@/res/team.png').default
@@ -69,7 +73,8 @@
     export default {
         name: "user",
         components: {
-            WxcMinibar
+            WxcMinibar,
+            contributionView
         },
         methods: {
             onRefresh() {
@@ -82,17 +87,31 @@
                 }
             }
         },
+        async beforeCreate() {
+            let info = await gitee.loadMyInfo();
+            this.username = info['login'];
+            this.nikeName = info['name'];
+            this.bio = info['bio'];
+            this.avatarIcon = info['avatar_url']
+            this.joinTime = new Date(info['created_at']).toLocaleDateString()
+            this.items = [
+                ["仓库", info['public_repos']],
+                ["关注中", info['following']],
+                ["关注者", info['followers']],
+            ]
+        },
         data() {
             return {
                 rightIcon: right,
+                avatarIcon: '',
                 username: "username",
                 nikeName: "nikeName",
                 bio: "tag",
                 joinTime: "111",
                 items: [
-                    ["仓库", 11],
-                    ["关注中", 111],
-                    ["关注者", 1111],
+                    ["仓库", 0],
+                    ["关注中", 0],
+                    ["关注者", 0],
                 ],
                 items2: [
                     [team, "组织"],
@@ -145,6 +164,8 @@
     }
 
     .head-bar2 {
+        padding-left: 80px;
+        padding-right: 80px;
         background-color: white;
         height: 100px;
         flex-direction: row;
@@ -170,8 +191,6 @@
     }
 
     .head-item {
-        margin-left: 60px;
-        margin-right: 60px;
         flex-direction: column;
         justify-content: center;
         align-items: center;
