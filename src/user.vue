@@ -187,8 +187,6 @@
         border-color: #dddddd;
         background-color: white;
         align-items: center;
-        border-width: 0.5px;
-        border-color: #dddddd;
         height: 80px;
         flex-direction: row
     }

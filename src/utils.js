@@ -67,7 +67,7 @@ export default {
     },
     debug(text) {
         modal.alert({
-            message: text
+            message: text.toString()
         })
     },
     animate(vnode, options) {
