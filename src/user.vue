@@ -104,7 +104,7 @@
                 [team, info['company'] || "公司"],
                 [wechat, info['wechat'] || "微信"],
                 [qq, info['qq'] || "QQ"],
-                [email, info['email'] || '邮箱'],
+                [email, info['email'] || '电子邮箱'],
             ]
 
             this.contributions = await gitee.getContributions(info['login'], new Date().getFullYear())
@@ -124,10 +124,10 @@
                     ["关注者", 0],
                 ],
                 items2: [
-                    [team, "组织"],
-                    [wechat, "地区"],
-                    [qq, "网站"],
-                    [email, "邮箱"],
+                    [team, "公司"],
+                    [wechat, "微信"],
+                    [qq, "QQ"],
+                    [email, "电子邮箱"],
                 ],
                 items3: [
                     [setting, "设置"],
