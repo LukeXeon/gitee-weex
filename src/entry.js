@@ -9,4 +9,3 @@ new Vue(Vue.util.extend({el: '#root', router}, App));
 router.push('/boot');
 
 
-
