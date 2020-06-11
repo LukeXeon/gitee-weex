@@ -6,7 +6,7 @@
                        style="margin-top: 250px"
                        :src="logo">
                 </image>
-                <text style="margin-top: 40px">{{text}}</text>
+                <text style="margin-top: 40px;font-size: 30px">{{text}}</text>
             </div>
         </div>
         <div class="operations">
