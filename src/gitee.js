@@ -2,6 +2,9 @@ import utils from "./utils"
 import domino from './domino/index'
 import format from './date.format'
 
+
+const colors = require('color-scheme');
+
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
 const clientSecret = '17c6a2209b1f8c732388d49713cdf08ab20aa67ab8aa38a799d490c821275d78'
 const redirectUri = 'http://weex.gitee.client/login'
