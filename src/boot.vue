@@ -27,7 +27,7 @@
     let image = require('@/res/logo.png').default
     export default {
         name: "boot",
-        async beforeCreate() {
+        async created() {
             if (await gitee.isLogin()) {
 //                utils.jumpTo('home')
                 await this.$router.push({

@@ -155,8 +155,9 @@ export default {
         userInfoCache = await this.getUser(login)
         return userInfoCache
     },
-    async getHotRepos() {
-
+    async getLatest(page = 1) {
+        const url = `https://gitee.com/api/v3/projects/latest?page=${page}`
+        return await request("GET", url)
     },
     async getContributions(username, year) {
         const url = `https://gitee.com/${username}/contribution_calendar?year=${year}`
@@ -173,7 +174,7 @@ export default {
         let document = domino.createDocument(content)
         let rawArray = document.querySelectorAll('div[data-content]')
         let result = []
-        let now = parseInt(format.format(new Date(),'Ymd'))
+        let now = parseInt(format.format(new Date(), 'Ymd'))
         for (let i = 0; i < rawArray.length; i++) {
             let item = rawArray[i]
             if (now >= parseInt(item.getAttribute('date'))) {

@@ -42,7 +42,8 @@
                     </image>
                 </div>
             </div>
-            <repos-list></repos-list>
+            <repos-list>
+            </repos-list>
         </div>
     </div>
 </template>

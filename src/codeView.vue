@@ -1,14 +1,21 @@
-<template>
-    
-</template>
-
 <script>
     import hljs from 'highlight.js'
 
-    hljs.highlightAuto()
-
     export default {
-        name: "codeView"
+        name: "codeView",
+        props: {
+            code: {
+                type: String
+            }
+        },
+        computed: {
+            hText: function () {
+                return hljs.highlightAuto(this.code)
+            }
+        },
+        render(createElement, context) {
+
+        }
     }
 </script>
 
