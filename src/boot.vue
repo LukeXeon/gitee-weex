@@ -21,13 +21,18 @@
     import utils from "@/utils";
     import gitee from "@/gitee";
 
+    const navigator = weex.requireModule('navigator')
+
     const modal = weex.requireModule('modal')
     let image = require('@/res/logo.png').default
     export default {
         name: "boot",
         async beforeCreate() {
             if (await gitee.isLogin()) {
-                await this.$router.push("/home")
+//                utils.jumpTo('home')
+                await this.$router.push({
+                    path: '/home'
+                })
             } else {
                 this.buttonEnable = true
             }
@@ -42,12 +47,14 @@
                         message: "gitee-weex是一个开源项目，它不会收集任何信息，甚至连服务器都没有，请放心授权此APP。"
                     }, async function (value) {
                         await utils.setValue('first-boot', true)
-                        await self.$router.push({
+//                        utils.jumpTo('login')
+                        await this.$router.push({
                             path: '/login'
                         })
                     })
                 } else {
-                    await self.$router.push({
+//                    utils.jumpTo('login')
+                    await this.$router.push({
                         path: '/login'
                     })
                 }
@@ -65,7 +72,7 @@
 </script>
 
 <style scoped>
-    .wrapper{
+    .wrapper {
         flex: 1;
         width: 750px;
         background-color: white;

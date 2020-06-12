@@ -60,6 +60,7 @@
     import gitee from "@/gitee";
     import contributionView from "@/contributionView";
     import {WxcMinibar} from 'weex-ui'
+    import utils from "@/utils";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -83,7 +84,7 @@
             },
             onClick2(index) {
                 if (index === 1) {
-                    this.$router.push('/about')
+                    utils.jumpTo('about')
                 }
             }
         },

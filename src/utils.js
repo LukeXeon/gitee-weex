@@ -2,6 +2,7 @@ const stream = weex.requireModule('stream')
 const storage = weex.requireModule('storage')
 const modal = weex.requireModule('modal')
 const animation = weex.requireModule('animation')
+const navigator = weex.requireModule('navigator')
 
 export default {
     request(method, url, type, body, headers) {
@@ -75,6 +76,38 @@ export default {
             animation.transition(vnode, options, function () {
                 resolve()
             })
+        })
+    },
+    jumpTo(toUrl) {
+        let bundleUrl = weex.config.bundleUrl;
+        bundleUrl = String(bundleUrl);
+        let nativeBase;
+        let native;
+        if (WXEnvironment.platform === 'Android') {
+            nativeBase = 'file://assets/dist/';
+            native = nativeBase + toUrl + ".js";
+        } else if (WXEnvironment.platform === 'iOS') {
+            nativeBase = bundleUrl.substring(0, bundleUrl.lastIndexOf('/') + 1);
+            native = nativeBase + toUrl + ".js";
+        } else {
+            let host = 'localhost:8081';
+            let matches = /\/\/([^\/]+?)\//.exec(bundleUrl);
+            if (matches && matches.length >= 2) {
+                host = matches[1];
+            }
+
+            //此处需注意一下,tabbar 用的直接是jsbundle 的路径,但是navigator是直接跳转到新页面上的.
+            if (typeof window === 'object') {
+                nativeBase = 'http://' + host + '/';
+            } else {
+                nativeBase = 'http://' + host + '/';
+            }
+
+            native = nativeBase + toUrl + ".html";
+        }
+        navigator.push({
+            url: native,
+            animated: "true"
         })
     }
 }

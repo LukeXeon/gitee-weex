@@ -4,7 +4,7 @@
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"
-                 v-on:click="()=>{this.$router.back()}"
+                 v-on:click="back"
                  style="width: 60px;height: 60px;justify-content: center;align-items: center">
                 <image :src="require('@/res/back.png').default"
                        style="width: 40px;height: 40px">
@@ -41,6 +41,10 @@
         },
         name: "about",
         methods: {
+            back() {
+                const navigator = weex.requireModule('navigator')
+                navigator.pop()
+            },
         },
         data() {
             return {

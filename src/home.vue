@@ -1,7 +1,8 @@
 <template>
-    <wxc-tab-bar :tab-titles="titles"
-                 :tab-styles="tabStyles"
-                 title-type="icon">
+    <wxc-tab-bar
+            :tab-titles="titles"
+            :tab-styles="tabStyles"
+            title-type="icon">
         <!-- 第一个页面内容-->
         <div class="item-container">
             <events style="flex: 1"/>
@@ -36,6 +37,7 @@
     import star from "@/star";
     import hot from "@/hot";
     import events from "@/events";
+    import utils from "@/utils";
 
     const modal = weex.requireModule('modal')
 

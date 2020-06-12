@@ -5,7 +5,7 @@
                      text-color="while"
                      background-color="#238FFF">
             <div slot="left"
-                 v-on:click="()=>{this.$router.back()}"
+                 v-on:click="back"
                  style="width: 60px;height: 60px;justify-content: center;align-items: center">
                 <image :src="require('@/res/back(1).png').default"
                        style="width: 40px;height: 40px">
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+    const navigator = weex.requireModule('navigator')
     import gitee from "@/gitee";
     import {WxcMinibar} from 'weex-ui'
     import utils from "@/utils";
@@ -40,15 +41,21 @@
             WxcMinibar
         },
         methods: {
+            back() {
+                const navigator = weex.requireModule('navigator')
+                navigator.pop()
+            },
             test(text) {
 
             },
             async onLoad(event) {
                 let isLogin = await gitee.handleLogin(event.url)
                 if (isLogin) {
-                    let router = this.$router
                     this.showWeb = false
-                    await router.push("/home")
+//                    utils.jumpTo('home')
+                    await this.$router.push({
+                        path: '/home'
+                    })
                 }
             }
         },
@@ -64,6 +71,7 @@
 
 <style scoped>
     .wrapper {
+        flex: 1;
         justify-content: center;
         align-items: center;
     }
