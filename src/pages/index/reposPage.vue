@@ -1,16 +1,17 @@
 <template>
-    <div style="width: 750px;">
+    <div>
         <wxc-minibar
                 :title="title"
                 leftButton=""
                 text-color="black"
                 background-color="#FBFBFB"/>
         <repos-list
+                @loadMore="onLoadMore"
                 :items="items">
             <refresh class="refresh"
-                    :display="refreshing ? 'show' : 'hide'"
-                    @refresh="onRefresh"
-                    slot="header">
+                     :display="refreshing ? 'show' : 'hide'"
+                     @refresh="onRefresh"
+                     slot="header">
                 <text class="indicator-text">刷新</text>
                 <loading-indicator class="indicator">
                 </loading-indicator>
@@ -27,7 +28,7 @@
     export default {
         props: {
             model: {
-                type: Function
+                type: Function()
             },
             title: {
                 type: String
@@ -41,44 +42,31 @@
             async onRefresh() {
                 this.refreshing = true
                 try {
-                    await this.doRefresh()
+                    this.page = 1
+                    this.items = await this.loadPage()
                 } finally {
                     this.refreshing = false
                 }
             },
-            async doRefresh() {
-                let loadLanguageTask = gitee.loadLanguages()
-                let loadTask = this.model()
-                let data = await loadTask
-                let language = await loadLanguageTask;
-
-                function load(items) {
-                    let list = []
-                    for (let j = 0; j < items.length; j++) {
-                        let item = items[j]
-                        list.push([
-                            item['owner']['new_portrait'],
-                            item['owner']['username'],
-                            item['name'],
-                            item['description'],
-                            item['last_push_at'],
-                            "color",
-                            item['language'],
-                            item['stars_count'],
-                            item['forks_count']
-                        ])
-                    }
-                    return list
+            async loadPage(page = 1) {
+                return this.model(page);
+            },
+            async onLoadMore() {
+                let page = this.page
+                try {
+                    let data = await this.loadPage(page + 1)
+                    this.items.push(...data)
+                } finally {
+                    this.page = page
                 }
-
-                this.items = await load(data)
             }
         },
         async created() {
-            await this.doRefresh();
+            this.items = await this.loadPage()
         },
         data() {
             return {
+                page: 1,
                 refreshing: false,
                 items: []
             }

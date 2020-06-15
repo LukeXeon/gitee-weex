@@ -4,23 +4,23 @@
             :tab-styles="tabStyles"
             title-type="icon">
         <!-- 第一个页面内容-->
-        <div class="item-container">
+        <div class="item-container" :style="this['contentStyle']">
             <hot style="flex: 1"/>
         </div>
 
         <!-- 第二个页面内容-->
-        <div class="item-container">
+        <div class="item-container" :style="this['contentStyle']">
             <events style="flex: 1">
             </events>
         </div>
 
         <!-- 第三个页面内容-->
-        <div class="item-container">
+        <div class="item-container" :style="this['contentStyle']">
             <star style="flex: 1"/>
         </div>
 
         <!-- 第四个页面内容-->
-        <div class="item-container">
+        <div class="item-container" :style="this['contentStyle']">
             <search style="flex: 1"/>
         </div>
 
