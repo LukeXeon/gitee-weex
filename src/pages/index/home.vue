@@ -10,7 +10,8 @@
 
         <!-- 第二个页面内容-->
         <div class="item-container">
-            <events style="flex: 1"></events>
+            <events style="flex: 1">
+            </events>
         </div>
 
         <!-- 第三个页面内容-->
@@ -32,40 +33,40 @@
 
 <script>
     import {WxcTabBar, Utils} from 'weex-ui'
-    import user from "@/user";
-    import search from "@/search";
-    import star from "@/star";
-    import hot from "@/hot";
-    import events from "@/events";
-    import utils from "@/utils";
+    import user from "@/pages/index/user";
+    import search from "@/pages/index/search";
+    import star from "@/pages/index/star";
+    import hot from "@/pages/index/hot";
+    import events from "@/pages/index/events";
+    import utils from "@/libs/utils";
 
     const modal = weex.requireModule('modal')
 
     let titles = [
         {
             title: '热门仓库',
-            icon: require('./res/hot(1).png').default,
-            activeIcon: require('./res/hot.png').default
+            icon: require('../../res/hot(1).png').default,
+            activeIcon: require('../../res/hot.png').default
         },
         {
             title: '事件',
-            icon: require('./res/event(1).png').default,
-            activeIcon: require('./res/event.png').default
+            icon: require('../../res/event(1).png').default,
+            activeIcon: require('../../res/event.png').default
         },
         {
             title: '我的star',
-            icon: require('./res/starBig(1).png').default,
-            activeIcon: require('./res/starBig.png').default,
+            icon: require('../../res/starBig(1).png').default,
+            activeIcon: require('../../res/starBig.png').default,
         },
         {
             title: '搜索',
-            icon: require('./res/search(1).png').default,
-            activeIcon: require('./res/search.png').default
+            icon: require('../../res/search(1).png').default,
+            activeIcon: require('../../res/search.png').default
         },
         {
             title: '个人信息',
-            icon: require('./res/userInfo(1).png').default,
-            activeIcon: require('./res/userInfo.png').default
+            icon: require('../../res/userInfo(1).png').default,
+            activeIcon: require('../../res/userInfo.png').default
         }
     ];
     let styles = {

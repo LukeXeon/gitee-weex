@@ -9,8 +9,9 @@ const vueWebTemp = helper.rootNode(config.templateDir);
 const hasPluginInstalled = fs.existsSync(helper.rootNode(config.pluginFilePath));
 const isWin = /^win/.test(process.platform);
 const weexEntry = {
-  'index': helper.root('entry.js'),
-  'about': helper.root('aboutEntry.js'),
+  'index': helper.root('pages/index/index.js'),
+  'about': helper.root('pages/about/index.js'),
+  'webview': helper.root('pages/webview/index.js'),
 }
 
 const getEntryFileContent = (source, routerpath) => {
@@ -52,7 +53,7 @@ const getEntryFile = () => {
 }
 
 // The entry file for web needs to add some library. such as vue, weex-vue-render
-// 1. src/entry.js 
+// 1. src/index.js
 // import Vue from 'vue';
 // import weex from 'weex-vue-render';
 // weex.init(Vue);

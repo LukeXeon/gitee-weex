@@ -127,8 +127,8 @@
 
 <script>
     import {WxcSearchbar} from 'weex-ui'
-    import tabView from "@/tabView";
-    import reposList from "@/reposList";
+    import tabView from "@/widget/tabView";
+    import reposList from "@/widget/reposList";
 
     let clean = require('@/res/clean.png').default
     let options = require('@/res/options.png').default

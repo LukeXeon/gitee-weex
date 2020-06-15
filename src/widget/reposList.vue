@@ -1,7 +1,7 @@
 <template>
-    <list>
-        <header>
-        </header>
+    <list @loadmore="onLoadMore">
+        <slot name="header">
+        </slot>
         <cell v-for="(item,index) in items" :key="index">
             <repos-item :item="item">
             </repos-item>
@@ -11,10 +11,16 @@
 
 
 <script>
-    import reposItem from "@/reposItem";
+    import reposItem from "@/widget/reposItem";
+
     export default {
         components: {
             reposItem
+        },
+        methods: {
+            onLoadMore() {
+                this.$emit('loadMore')
+            },
         },
         props: {
             items: {

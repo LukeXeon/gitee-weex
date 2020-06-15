@@ -1,9 +1,7 @@
 import utils from "./utils"
-import domino from './domino/index'
+import domino from './domino'
 import format from './date.format'
-
-
-const colors = require('color-scheme');
+import languages from '../res/languages'
 
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
 const clientSecret = '17c6a2209b1f8c732388d49713cdf08ab20aa67ab8aa38a799d490c821275d78'
@@ -21,7 +19,11 @@ async function request(method, url, body) {
     )
 }
 
-let userInfoCache = null;
+
+let cache = {
+    userInfo: null,
+    languages: []
+}
 
 export default {
     loginUrl: `https://gitee.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`,
@@ -59,8 +61,11 @@ export default {
                         `https://gitee.com/oauth/token?grant_type=refresh_token&refresh_token=${refreshToken}`,
                         'json'
                     )
-
-                    await utils.setValue('access_token', data["access_token"])
+                    let accessToken = data["access_token"]
+                    if (accessToken === null || accessToken === undefined || accessToken === "") {
+                        return false
+                    }
+                    await utils.setValue('access_token', accessToken)
                     return true;
                 } catch (e2) {
                     return false;
@@ -148,18 +153,26 @@ export default {
         return await request("GET", url)
     },
     async loadMyInfo(useCache = false) {
-        if (useCache && !(userInfoCache === null)) {
-            return userInfoCache
+        if (useCache && !(cache.userInfo === null)) {
+            return cache.userInfo
         }
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/user?access_token=${accessToken}`
         let data = await request("GET", url)
         let login = data['login']
-        userInfoCache = await this.getUser(login)
-        return userInfoCache
+        cache.userInfo = await this.getUser(login)
+        return cache.userInfo
     },
     async getLatest(page = 1) {
         const url = `https://gitee.com/api/v3/projects/latest?page=${page}`
+        return await request("GET", url)
+    },
+    async getFeatured(page = 1) {
+        const url = `https://gitee.com/api/v3/projects/featured?page=${page}`
+        return await request("GET", url)
+    },
+    async getPopular(page = 1) {
+        const url = `https://gitee.com/api/v3/projects/popular?page=${page}`
         return await request("GET", url)
     },
     async getContributions(username, year) {
@@ -188,5 +201,29 @@ export default {
             }
         }
         return result
+    },
+    async loadLanguages() {
+        if (cache.languages === []) {
+            const url = 'https://gitee.com/api/v3/projects/languages'
+            let data;
+            try {
+                data = await request("GET", url)
+            } catch (e) {
+                data = languages
+            }
+            let result = []
+            for (let i = 0; i < data.length; i++) {
+                let item = data[i]
+                let name = item['name']
+                let color = '#' + Math.floor(name.hash * 0xffffff)
+                    .toString(16)
+                result.push({
+                    name: name,
+                    color: color
+                })
+            }
+            cache.languages = result
+        }
+        return cache.languages
     },
 }

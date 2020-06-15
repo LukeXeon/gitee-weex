@@ -5,10 +5,6 @@
 </template>
 
 <script>
-    import gitee from "@/gitee";
-
-    const modal = weex.requireModule('modal')
-
     export default {
         name: 'App',
         async created() {
@@ -29,6 +25,4 @@
     .content {
         flex: 1;
     }
-
-
 </style>

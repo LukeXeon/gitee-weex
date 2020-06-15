@@ -6,9 +6,12 @@
                      background-color="#FBFBFB">
         </wxc-minibar>
         <scroller class="wrapper" alwaysScrollableVertical="true">
-            <refresh class="refresh" @refresh="onRefresh">
-                <text style="font-size: 30px">正在加载</text>
-                <loading-indicator>
+            <refresh class="refresh"
+                    :display="refreshing ? 'show' : 'hide'"
+                    @refresh="onRefresh"
+                    slot="header">
+                <text class="indicator-text">刷新</text>
+                <loading-indicator class="indicator">
                 </loading-indicator>
             </refresh>
             <div class="head-bar">
@@ -57,10 +60,10 @@
 </template>
 
 <script>
-    import gitee from "@/gitee";
-    import contributionView from "@/contributionView";
+    import gitee from "@/libs/gitee";
+    import contributionView from "@/widget/contributionView";
     import {WxcMinibar} from 'weex-ui'
-    import utils from "@/utils";
+    import utils from "@/libs/utils";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -78,7 +81,13 @@
             contributionView
         },
         methods: {
-            onRefresh() {
+            async onRefresh() {
+                this.refreshing = true
+                try {
+                    await this.doRefresh();
+                } finally {
+                    this.refreshing = false
+                }
             },
             onClick(index) {
             },
@@ -86,32 +95,34 @@
                 if (index === 1) {
                     utils.jumpTo('about')
                 }
-            }
+            },
+            async doRefresh() {
+                let info = await gitee.loadMyInfo();
+                this.username = info['login'];
+                this.nikeName = info['name'];
+                this.bio = info['bio'];
+                this.avatarIcon = info['avatar_url']
+                this.joinTime = new Date(info['created_at']).toLocaleDateString()
+                this.items = [
+                    ["仓库", info['public_repos']],
+                    ["关注中", info['following']],
+                    ["关注者", info['followers']],
+                ]
+                this.items2 = [
+                    [team, info['company'] || "公司"],
+                    [wechat, info['wechat'] || "微信"],
+                    [qq, info['qq'] || "QQ"],
+                    [email, info['email'] || '电子邮箱'],
+                ]
+                this.contributions = await gitee.getContributions(info['login'], new Date().getFullYear())
+            },
         },
         async created() {
-            let info = await gitee.loadMyInfo();
-
-            this.username = info['login'];
-            this.nikeName = info['name'];
-            this.bio = info['bio'];
-            this.avatarIcon = info['avatar_url']
-            this.joinTime = new Date(info['created_at']).toLocaleDateString()
-            this.items = [
-                ["仓库", info['public_repos']],
-                ["关注中", info['following']],
-                ["关注者", info['followers']],
-            ]
-            this.items2 = [
-                [team, info['company'] || "公司"],
-                [wechat, info['wechat'] || "微信"],
-                [qq, info['qq'] || "QQ"],
-                [email, info['email'] || '电子邮箱'],
-            ]
-
-            this.contributions = await gitee.getContributions(info['login'], new Date().getFullYear())
+            await this.doRefresh()
         },
         data() {
             return {
+                refreshing: false,
                 contributions: [],
                 rightIcon: right,
                 avatarIcon: '',
@@ -205,4 +216,27 @@
         align-items: center;
     }
 
+    .refresh {
+        width: 750px;
+        display: -ms-flex;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -webkit-box-align: center;
+        align-items: center;
+    }
+
+    .indicator-text {
+        color: #888888;
+        font-size: 35px;
+        text-align: center;
+    }
+
+    .indicator {
+        height: 40px;
+        width: 40px;
+        color: #238FFF;
+        margin-bottom: 30px;
+    }
 </style>

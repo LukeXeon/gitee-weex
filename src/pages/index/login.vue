@@ -27,9 +27,9 @@
 
 <script>
     const navigator = weex.requireModule('navigator')
-    import gitee from "@/gitee";
+    import gitee from "@/libs/gitee";
     import {WxcMinibar} from 'weex-ui'
-    import utils from "@/utils";
+    import utils from "@/libs/utils";
 
     const modal = weex.requireModule('modal')
     const ws = weex.requireModule('webSocket')
@@ -52,9 +52,9 @@
                 let isLogin = await gitee.handleLogin(event.url)
                 if (isLogin) {
                     this.showWeb = false
-//                    utils.jumpTo('home')
+//                    utils.jumpTo('index')
                     await this.$router.push({
-                        path: '/home'
+                        path: '/index'
                     })
                 }
             }

@@ -78,7 +78,7 @@ export default {
             })
         })
     },
-    jumpTo(toUrl) {
+    jumpTo(toUrl, query) {
         let bundleUrl = weex.config.bundleUrl;
         bundleUrl = String(bundleUrl);
         let nativeBase;
@@ -102,11 +102,23 @@ export default {
             } else {
                 nativeBase = 'http://' + host + '/';
             }
-
             native = nativeBase + toUrl + ".html";
         }
+        let url = native
+        if (query != null) {
+            let isFirst = true
+            for (let k in query) {
+                if (isFirst) {
+                    isFirst = false
+                    url += `?${encodeURIComponent(k)}=${encodeURIComponent(query[k])}`
+                } else {
+                    url += `&${encodeURIComponent(k)}=${encodeURIComponent(query[k])}`
+                }
+            }
+        }
+
         navigator.push({
-            url: native,
+            url: url,
             animated: "true"
         })
     }

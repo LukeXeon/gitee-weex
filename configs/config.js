@@ -7,10 +7,10 @@ const config = {
   pluginConfigPath: 'plugins/plugins.json',
   pluginFilePath: 'plugins/plugins.js',
   // router
-  routerFilePath: 'router.js',
+  routerFilePath: './pages/index/router.js',
   // common
   templateDir: '.temp',
-  entryFilePath: 'entry.js',
+  entryFilePath: './pages/index/index.js',
   // Module exclude from compile process
   excludeModuleReg: /node_modules(?!(\/|\\).*(weex).*)/,
   dev: {

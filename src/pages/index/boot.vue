@@ -18,8 +18,8 @@
 </template>
 
 <script>
-    import utils from "@/utils";
-    import gitee from "@/gitee";
+    import utils from "@/libs/utils";
+    import gitee from "@/libs/gitee";
 
     const navigator = weex.requireModule('navigator')
 
@@ -29,9 +29,9 @@
         name: "boot",
         async created() {
             if (await gitee.isLogin()) {
-//                utils.jumpTo('home')
+//                utils.jumpTo('index')
                 await this.$router.push({
-                    path: '/home'
+                    path: '/index'
                 })
             } else {
                 this.buttonEnable = true

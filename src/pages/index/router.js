@@ -1,15 +1,15 @@
 /*global Vue*/
 import Router from 'vue-router'
-import boot from "@/boot";
-import login from "@/login";
-import home from "@/home";
+import boot from "@/pages/index/boot";
+import login from "@/pages/index/login";
+import home from "@/pages/index/home";
 
 Vue.use(Router)
 
 export const router = new Router({
     routes: [
         {
-            path: "/home",
+            path: "/index",
             name: "主页面",
             component: home
         },
