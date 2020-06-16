@@ -1,46 +1,35 @@
 <template>
-    <div>
-        <wxc-minibar
-                :title="title"
-                leftButton=""
-                text-color="black"
-                background-color="#FBFBFB"/>
-        <repos-list
-                @loadMore="onLoadMore"
-                :items="items">
-            <refresh class="refresh"
-                     :display="refreshing ? 'show' : 'hide'"
-                     @refresh="onRefresh"
-                     slot="header">
-                <text class="indicator-text">刷新</text>
-                <loading-indicator class="indicator">
-                </loading-indicator>
-            </refresh>
-            <wxc-result
-                    slot="nil"
-                    type="noNetwork"
-                    show="true"
-                    padding-top="232">
-            </wxc-result>
-        </repos-list>
-    </div>
+    <repos-list
+            @loadMore="onLoadMore"
+            :items="items">
+        <refresh class="refresh"
+                 :display="refreshing ? 'show' : 'hide'"
+                 @refresh="onRefresh"
+                 slot="header">
+            <text class="indicator-text">刷新</text>
+            <loading-indicator class="indicator">
+            </loading-indicator>
+        </refresh>
+        <wxc-result
+                slot="nil"
+                type="noNetwork"
+                show="true"
+                padding-top="232">
+        </wxc-result>
+    </repos-list>
 </template>
 
 <script>
     import reposList from "@/widget/reposList";
-    import {WxcMinibar, WxcResult} from 'weex-ui'
+    import {WxcResult} from 'weex-ui'
 
     export default {
         props: {
             model: {
-                type: Function()
-            },
-            title: {
-                type: String
+                type: Function
             }
         },
         components: {
-            WxcMinibar,
             reposList,
             WxcResult
         },
@@ -80,7 +69,7 @@
                 items: []
             }
         },
-        name: "hot-page"
+        name: "hotPage"
     }
 </script>
 

@@ -2,7 +2,7 @@
     <list @loadmore="onLoadMore">
         <slot name="header">
         </slot>
-        <cell v-if="items!=undefined&&items!=null&&typeof items==='object'&&items.length!==0"
+        <cell v-if="items!==undefined&&items!=null&&typeof items==='object'&&items.length!==0"
               v-for="(item,index) in items" :key="index">
             <repos-item :item="item">
             </repos-item>

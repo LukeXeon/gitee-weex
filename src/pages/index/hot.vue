@@ -2,7 +2,10 @@
     <div>
         <slider infinite="false"
                 style="flex: 1;width: 750px;">
-            <repos-page
+<!--            <repos-page-with-language-->
+<!--                    style="width: 750px">-->
+<!--            </repos-page-with-language>-->
+            <repos-page-with-title
                     style="width: 750px;"
                     v-for="(item,index) in items"
                     :key="index"
@@ -15,8 +18,8 @@
 <script>
     import reposList from "@/widget/reposList";
     import gitee from "@/libs/gitee";
-    import reposPage from "@/pages/index/reposPage";
-    import {WxcPopup} from 'weex-ui'
+    import ReposPageWithTitle from "@/widget/reposPageWithTitle";
+    //import ReposPageWithLanguage from "@/pages/index/reposPageWithLanguage";
 
     function wrapLoadFunction(model) {
         return async function (page) {
@@ -50,15 +53,15 @@
     export default {
         name: "hot",
         components: {
-            reposPage,
+            ReposPageWithTitle,
             reposList
         },
         data() {
             return {
                 items: [
-                    ["流行的仓库", wrapLoadFunction(gitee.getPopular)],
-                    ["最近的仓库", wrapLoadFunction(gitee.getLatest)],
-                    ["有趣的仓库", wrapLoadFunction(gitee.getFeatured)]
+                    ["推荐", wrapLoadFunction(gitee.getPopular)],
+                    ["热门", wrapLoadFunction(gitee.getLatest)],
+                    ["最近更新", wrapLoadFunction(gitee.getFeatured)]
                 ]
             }
         }

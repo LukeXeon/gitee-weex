@@ -1,9 +1,10 @@
 <template>
     <div style="flex: 1">
-        <repos-page style="width: 750px;flex: 1"
-                    title="我的star"
-                    :model="model">
-        </repos-page>
+        <repos-page-with-title
+                style="width: 750px;flex: 1"
+                title="我的star"
+                :model="model">
+        </repos-page-with-title>
     </div>
 </template>
 
@@ -11,8 +12,8 @@
 </style>
 
 <script>
-    import reposPage from "@/pages/index/reposPage";
     import gitee from "@/libs/gitee";
+    import ReposPageWithTitle from "@/widget/reposPageWithTitle";
 
     async function loader(page) {
         let loadLanguageTask = gitee.loadLanguages()
@@ -38,7 +39,7 @@
 
     export default {
         components: {
-            reposPage
+            ReposPageWithTitle,
         },
         name: "star",
         data() {

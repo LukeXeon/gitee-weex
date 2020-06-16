@@ -226,4 +226,8 @@ export default {
         }
         return cache.languages
     },
+    async getLanguageProject(langId, page) {
+        const url = `https://gitee.com/api/v3/projects/languages/${langId}?page=${page}`
+        return await request("GET", url)
+    }
 }
