@@ -16,14 +16,19 @@
                 <loading-indicator class="indicator">
                 </loading-indicator>
             </refresh>
+            <wxc-result
+                    slot="nil"
+                    type="noNetwork"
+                    show="true"
+                    padding-top="232">
+            </wxc-result>
         </repos-list>
     </div>
 </template>
 
 <script>
-    import gitee from "@/libs/gitee";
     import reposList from "@/widget/reposList";
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar, WxcResult} from 'weex-ui'
 
     export default {
         props: {
@@ -36,28 +41,31 @@
         },
         components: {
             WxcMinibar,
-            reposList
+            reposList,
+            WxcResult
         },
         methods: {
             async onRefresh() {
-                this.refreshing = true
-                try {
-                    this.page = 1
-                    this.items = await this.loadPage()
-                } finally {
-                    this.refreshing = false
+                if (!this.loading) {
+                    this.refreshing = true
+                    try {
+                        this.page = 0
+                        this.items = await this.loadPage()
+                    } finally {
+                        this.refreshing = false
+                    }
                 }
             },
-            async loadPage(page = 1) {
-                return this.model(page);
+            loadPage(page = 0) {
+                return this.model(page)
             },
             async onLoadMore() {
-                let page = this.page
-                try {
-                    let data = await this.loadPage(page + 1)
+                if (!this.refreshing) {
+                    this.loading = true
+                    this.page++
+                    let data = await this.loadPage(this.page)
                     this.items.push(...data)
-                } finally {
-                    this.page = page
+                    this.loading = false
                 }
             }
         },
@@ -67,6 +75,7 @@
         data() {
             return {
                 page: 1,
+                loading: false,
                 refreshing: false,
                 items: []
             }

@@ -1,19 +1,15 @@
 <template>
-    <list @loadmore="onLoadMore"
-          loadmoreoffset="20">
+    <list @loadmore="onLoadMore">
         <slot name="header">
         </slot>
-        <cell v-if="!(items.length===0)"
+        <cell v-if="items!=undefined&&items!=null&&typeof items==='object'&&items.length!==0"
               v-for="(item,index) in items" :key="index">
             <repos-item :item="item">
             </repos-item>
         </cell>
         <cell v-else>
-            <wxc-result
-                    type="noNetwork"
-                    show="true"
-                    padding-top="232">
-            </wxc-result>
+            <slot name="nil">
+            </slot>
         </cell>
     </list>
 </template>
@@ -21,12 +17,10 @@
 
 <script>
     import reposItem from "@/widget/reposItem";
-    import {WxcResult} from 'weex-ui'
 
     export default {
         components: {
-            reposItem,
-            WxcResult
+            reposItem
         },
         methods: {
             onLoadMore() {

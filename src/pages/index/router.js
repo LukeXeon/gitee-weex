@@ -9,7 +9,7 @@ Vue.use(Router)
 export const router = new Router({
     routes: [
         {
-            path: "/index",
+            path: "/home",
             name: "主页面",
             component: home
         },

@@ -29,7 +29,6 @@
     const navigator = weex.requireModule('navigator')
     import gitee from "@/libs/gitee";
     import {WxcMinibar} from 'weex-ui'
-    import utils from "@/libs/utils";
 
     const modal = weex.requireModule('modal')
     const ws = weex.requireModule('webSocket')
@@ -42,8 +41,7 @@
         },
         methods: {
             back() {
-                const navigator = weex.requireModule('navigator')
-                navigator.pop()
+                this.$router.pop()
             },
             test(text) {
 
@@ -54,7 +52,7 @@
                     this.showWeb = false
 //                    utils.jumpTo('index')
                     await this.$router.push({
-                        path: '/index'
+                        path: '/home'
                     })
                 }
             }

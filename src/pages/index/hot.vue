@@ -16,6 +16,7 @@
     import reposList from "@/widget/reposList";
     import gitee from "@/libs/gitee";
     import reposPage from "@/pages/index/reposPage";
+    import {WxcPopup} from 'weex-ui'
 
     function wrapLoadFunction(model) {
         return async function (page) {

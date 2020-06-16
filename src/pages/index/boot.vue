@@ -31,7 +31,7 @@
             if (await gitee.isLogin()) {
 //                utils.jumpTo('index')
                 await this.$router.push({
-                    path: '/index'
+                    path: '/home'
                 })
             } else {
                 this.buttonEnable = true

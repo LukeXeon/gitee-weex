@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <repos-page title="我的star"
+    <div style="flex: 1">
+        <repos-page style="width: 750px;flex: 1"
+                    title="我的star"
                     :model="model">
         </repos-page>
     </div>
@@ -15,7 +16,7 @@
 
     async function loader(page) {
         let loadLanguageTask = gitee.loadLanguages()
-        let data = await gitee.getStars(Math.abs(page - 1), 20)
+        let data = await gitee.getStars(Math.max(1, page + 1), 20)
         let languages = await loadLanguageTask;
         let list = []
         for (let i = 0; i < data.length; i++) {
