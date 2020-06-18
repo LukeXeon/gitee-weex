@@ -5,11 +5,12 @@
                      text-color="black"
                      background-color="#FBFBFB">
         </wxc-minibar>
-        <scroller class="wrapper" alwaysScrollableVertical="true">
+        <scroller class="wrapper"
+                  alwaysScrollableVertical="true">
             <refresh class="refresh"
-                    :display="refreshing ? 'show' : 'hide'"
-                    @refresh="onRefresh"
-                    slot="header">
+                     :display="refreshing ? 'show' : 'hide'"
+                     @refresh="onRefresh"
+                     slot="header">
                 <text class="indicator-text">刷新</text>
                 <loading-indicator class="indicator">
                 </loading-indicator>
@@ -26,33 +27,28 @@
                     <text style="font-size: 30px;margin-top: 10px">于{{joinTime}}加入</text>
                 </div>
             </div>
-            <div class="head-bar2">
-                <div class="head-item" v-for="item in items">
-                    <text style="font-size: 35px">{{item[1]}}</text>
-                    <text style="font-size: 25px">{{item[0]}}</text>
-                </div>
-            </div>
+            <tab3 :items="items">
+            </tab3>
             <div style="height: 30px"></div>
-            <contribution-view
-                    :items="contributions">
+            <contribution-view :items="contributions">
             </contribution-view>
             <div style="height: 30px"></div>
             <div>
-                <div class="item2" v-for="(item,index) in items2" v-on:click="onClick(index)">
-                    <image class="item2-icon" :src="item[0]">
-                    </image>
-                    <text style="margin-left: 15px;font-size: 30px">{{item[1]}}</text>
-                </div>
+                <label-line v-for="(item,index) in items2"
+                            :key="index"
+                            v-bind:icon="item[0]"
+                            v-bind:title="item[1]"
+                            v-bind:useRight="false"
+                            v-on:click="onClick(index)">
+                </label-line>
             </div>
-            <div style="height: 30px"></div>
-            <div>
-                <div class="item2" v-for="(item,index) in items3" v-on:click="onClick2(index)">
-                    <image class="item2-icon" :src="item[0]">
-                    </image>
-                    <text style="margin-left: 15px;font-size: 30px;flex: 1">{{item[1]}}</text>
-                    <image style="height: 30px;width: 30px;margin-right: 20px" :src="rightIcon">
-                    </image>
-                </div>
+            <div style="margin-top: 30px">
+                <label-line v-for="(item,index) in items3"
+                            :key="index"
+                            v-bind:icon="item[0]"
+                            v-bind:title="item[1]"
+                            @onLabelClick="onClick2(index)">
+                </label-line>
             </div>
         </scroller>
     </div>
@@ -63,6 +59,8 @@
     import gitee from "@/libs/gitee";
     import contributionView from "@/widget/contributionView";
     import {WxcMinibar} from 'weex-ui'
+    import LabelLine from "@/widget/LabelLine";
+    import tab3 from "@/widget/tab3";
     import utils from "@/libs/utils";
 
     let team = require('@/res/team.png').default
@@ -78,7 +76,9 @@
         name: "user",
         components: {
             WxcMinibar,
-            contributionView
+            contributionView,
+            LabelLine,
+            tab3
         },
         methods: {
             async onRefresh() {
@@ -185,36 +185,6 @@
         border-bottom-color: #dddddd
     }
 
-    .head-bar2 {
-        padding-left: 80px;
-        padding-right: 80px;
-        background-color: white;
-        height: 100px;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    .item2 {
-        border-width: 0.5px;
-        border-color: #dddddd;
-        background-color: white;
-        align-items: center;
-        height: 80px;
-        flex-direction: row
-    }
-
-    .item2-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 5px;
-        margin-left: 30px
-    }
-
-    .head-item {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
 
     .refresh {
         width: 750px;

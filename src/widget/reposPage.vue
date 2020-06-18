@@ -1,6 +1,7 @@
 <template>
     <repos-list
             @loadMore="onLoadMore"
+            @onItemClick="onItemClick"
             :items="items">
         <refresh class="refresh"
                  :display="refreshing ? 'show' : 'hide'"
@@ -22,6 +23,7 @@
 <script>
     import reposList from "@/widget/reposList";
     import {WxcResult} from 'weex-ui'
+    import utils from "@/libs/utils";
 
     export default {
         props: {
@@ -34,6 +36,9 @@
             WxcResult
         },
         methods: {
+            onItemClick(e) {
+                utils.jumpTo('repository')
+            },
             async onRefresh() {
                 if (!this.loading) {
                     this.refreshing = true

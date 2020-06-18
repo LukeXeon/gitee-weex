@@ -215,9 +215,11 @@ export default {
             for (let i = 0; i < data.length; i++) {
                 let item = data[i]
                 let name = item['name']
+                let id = item['id']
                 let color = '#' + Math.floor(name.hash * 0xffffff)
                     .toString(16)
                 result.push({
+                    id: id,
                     name: name,
                     color: color
                 })

@@ -1,12 +1,12 @@
 <template>
-    <div class="item">
+    <div class="item" @click="onItemClick('repos',item[1],item[2])">
         <div class="line1">
             <image class="icon" :src="item[0]">
             </image>
             <div style="flex-direction: row;margin-left: 20px;height: 50px;width: 600px">
-                <text class="title-text">{{item[1]}}</text>
+                <text class="title-text" @click="onItemClick('user',item[1],item[2])">{{item[1]}}</text>
                 <text class="title-text">{{char}}</text>
-                <text class="title-text">{{item[2]}}</text>
+                <text class="title-text" @click="onItemClick('repos',item[1],item[2])">{{item[2]}}</text>
             </div>
         </div>
         <text class="distribute">{{item[3]}}</text>
@@ -41,6 +41,15 @@
             },
         },
         name: "reposItem",
+        methods: {
+            onItemClick(type, user, repos) {
+                this.$emit('onItemClick', {
+                    type: type,
+                    user: user,
+                    repos: repos
+                })
+            }
+        },
         data() {
             return {
                 char: " / ",

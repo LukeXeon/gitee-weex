@@ -25,7 +25,7 @@
         },
         render(createElement, context) {
             function create(node) {
-                
+
             }
             return create(this.dom)
         }

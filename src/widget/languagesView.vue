@@ -1,7 +1,7 @@
 <template>
     <div class="list"
          ref="list"
-         :style="extendStyle">
+         :style="animationStyle">
         <wxc-searchbar ref="searchbar"
                        :autofocus="false"
                        :alwaysShowCancel="true"
@@ -16,7 +16,7 @@
                        :height="listHeight"
                        :show-index="true"
                        :only-show-list="onlyShowList"
-                       :city-location-config="currentConfig"
+                       :city-location-config="currentItemConfig"
                        @wxcIndexlistItemClicked="onItemClick">
         </wxc-indexlist>
 
@@ -30,8 +30,8 @@
 </template>
 
 <script>
-
-    import {WxcIndexlist, WxcResult, WxcSearchbar, Utils} from 'weex-ui'
+    import Enumerable from 'linq'
+    import {Utils, WxcIndexlist, WxcResult, WxcSearchbar} from 'weex-ui'
 
     export default {
         components: {
@@ -47,12 +47,16 @@
                 type: String,
                 default: 'push'
             },
-            current: {
+            Items: {
+                type: Array,
+                default: () => ([])
+            },
+            currentItem: {
                 type: String
             },
         },
         data: () => ({
-            tId: null,
+            displayList: [],
             onlyShowList: false,
             result: {
                 noNetwork: {
@@ -63,12 +67,30 @@
             }
         }),
         computed: {
-            extendStyle: () => (Utils.uiStyle.pageTransitionAnimationStyle(this.animationType)),
-            currentConfig() {
-
+            animationStyle: () => (Utils.uiStyle.pageTransitionAnimationStyle(this.animationType)),
+            currentItemConfig() {
+                if (this.currentItem) {
+                    return {
+                        type: 'list',
+                        title: "当前",
+                        list: [{
+                            name: this.currentItem,
+                            isLocation: true
+                        }]
+                    }
+                } else {
+                    return {}
+                }
             },
             normalList() {
-
+                let list = []
+                for (let i = 0; i < this.displayList.length; i++) {
+                    let item = this.displayList[i]
+                    list.push({
+                        name: item.name
+                    })
+                }
+                return list
             },
             showError: () => (this.normalList && this.normalList.length < 1),
             listHeight: () => (Utils.env.getPageHeight() - 84),
@@ -77,21 +99,20 @@
             onItemClick(e) {
                 this.$refs.searchbar.autoBlur();
                 this.show(false);
-                this.$emit('wxcCityItemSelected', {item: e.item});
+                this.$emit('itemSelected', {item: e.item});
             },
             onInput(e) {
-                clearTimeout(this.tId);
-                if (value !== '') {
+                const {value} = e;
+                if (value !== '' && this.items && this.items.length > 0) {
                     this.onlyShowList = true;
+                    this.displayList = Enumerable.from(this.items)
+                        .where((item) => {
+                            return item.name.startsWith(value.trim())
+                        })
                 } else {
-
                     this.onlyShowList = false;
+                    this.displayList = this.items
                 }
-                this.tId = setTimeout(() => {
-                    this.$emit('OnInput', {
-                        value: e.value
-                    });
-                }, 300);
             },
             onCancel() {
                 this.autoBlur();
@@ -106,21 +127,20 @@
                 const inputRef = this.$refs.searchbar;
                 inputRef && inputRef.autoBlur();
             },
-            show(status = true, callback = null) {
-                const ref = this.$refs.city
+            show(status = true) {
+                const ref = this.$refs.list
                 if (this.animationType === 'push') {
                     Utils.animation.pageTransitionAnimation(
                         ref,
                         `translateX(${status ? -750 : 750}px)`,
-                        status,
-                        callback
+                        status
                     )
                 } else if (this.animationType === 'model') {
+                    let text = status ? -Utils.env.getScreenHeight() : Utils.env.getScreenHeight()
                     Utils.animation.pageTransitionAnimation(
                         ref,
-                        `translateY(${status ? -Utils.env.getScreenHeight() : Utils.env.getScreenHeight()}px)`,
-                        status,
-                        callback
+                        `translateY(${text}px)`,
+                        status
                     )
                 }
             }

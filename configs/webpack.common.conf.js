@@ -11,7 +11,9 @@ const isWin = /^win/.test(process.platform);
 const weexEntry = {
   'index': helper.root('pages/index/index.js'),
   'about': helper.root('pages/about/index.js'),
+  'repository': helper.root('pages/repository/index.js'),
   'webview': helper.root('pages/webview/index.js'),
+  'hierarchy': helper.root('pages/hierarchy/index.js'),
 }
 
 const getEntryFileContent = (source, routerpath) => {
