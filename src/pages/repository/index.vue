@@ -13,6 +13,7 @@
                 </image>
             </div>
             <div slot="right"
+                 v-on:click="starThis"
                  class="star-button"
                  :style="{'background-color':!isStared?'white':'#238FFF'}">
                 <text class="star-button-text" :style="{color:!isStared?'#238FFF':'white'}">Star</text>
@@ -29,17 +30,21 @@
             </refresh>
             <div class="info">
                 <div class="line1">
-                    <image class="icon">
+                    <image class="icon" :src="icon">
                     </image>
                     <div class="title-group">
-                        <text class="title-text">username</text>
+                        <text class="title-text">{{username}}</text>
                         <text class="title-text">{{char}}</text>
-                        <text class="title-text">repository</text>
+                        <text class="title-text">{{repository}}</text>
                     </div>
                 </div>
-                <text class="distribute">distribute</text>
-                <text class="distribute" style="color: #0088fb">website</text>
-                <text class="distribute" style="margin-bottom: 10px;">更新于</text>
+                <text class="distribute">{{distribute}}</text>
+                <text class="distribute"
+                      @click="onJumpToWeb"
+                      v-if="website"
+                      style="color: #0088fb;margin-top: 10px">{{website}}
+                </text>
+                <text class="distribute" style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
             </div>
             <tab3 :items="tabs">
             </tab3>
@@ -77,6 +82,9 @@
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tab3";
     import LabelLine from "@/widget/LabelLine";
+    import utils from "@/libs/utils";
+    import gitee from "@/libs/gitee";
+    import format from '@/libs/date.format'
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -91,31 +99,13 @@
             ReposItem,
             tab3
         },
-        methods: {
-            back() {
-                const navigator = weex.requireModule('navigator')
-                navigator.pop()
-            },
-            onRefresh() {
-
-            }
-        },
-        data() {
-            return {
-                isStared: false,
-                char: ' / ',
-                refreshing: false,
-                noReadme: true,
-                tabs: [
-                    ['Watchs', 0],
-                    ['Stars', 0],
-                    ['Forks', 0]
-                ],
-                labels: [
+        computed: {
+            labels() {
+                return [
                     [code, {
-                        'background-color': 'coral',
+                        'background-color': gitee.getLanguageColor(this.language),
                         'border-radius': '30px'
-                    }, 'Javascript', 'GPL-200MB'],
+                    }, (this.language || 'language'), `${this.license || `${this.license}-`}`],
                     [issues, {}, "Issues", 0],
                     [branch2, {
                         'background-color': 'blueviolet',
@@ -123,13 +113,93 @@
                         'border-radius': '30px'
                     }, "Pull Requests", 0],
                 ]
+            },
+            tabs() {
+                return [
+                    ['Watchs', this.watchs],
+                    ['Stars', this.stars],
+                    ['Forks', this.forks]
+                ]
+            },
+        },
+        methods: {
+            onJumpToWeb() {
+                utils.jumpTo('webview', {
+                    url: this.website
+                })
+            },
+            back() {
+                const navigator = weex.requireModule('navigator')
+                navigator.pop()
+            },
+            async onRefresh() {
+                this.refreshing = true
+                await this.doRefresh()
+                this.refreshing = false
+            },
+            async doRefresh() {
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                let data = await gitee.getRepos(user, repos)
+
+                this.icon = data['owner']['avatar_url']
+                this.username = data['namespace']['path']
+                this.repository = data['name']
+                this.distribute = data['description']
+                this.website = data['homepage']
+                this.updateAt = format.format(new Date(data['updated_at']), "Y年m月d日")
+                //this.isStared = data['stared']
+
+                this.language = data['language'] || "其他"
+                this.stars = data['stargazers_count']
+                this.watchs = data['watchers_count']
+                this.forks = data['forks_count']
+            },
+            async starThis() {
+                if (this.refreshing) {
+                    return
+                }
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                if (!this.isStared) {
+                    await gitee.star(user, repos)
+                    this.isStared = true
+                } else {
+                    await gitee.cancelStar(user, repos)
+                    this.isStared = false
+                }
+            }
+        },
+        created() {
+            this.doRefresh()
+        },
+        data() {
+            return {
+                //data
+                icon: '',
+                username: 'username',
+                repository: 'repository',
+                distribute: 'distribute',
+                license: null,
+                website: null,
+                updateAt: '',
+                isStared: false,
+                language: null,
+                watchs: 0,
+                stars: 0,
+                forks: 0,
+                //UI
+                char: ' / ',
+                refreshing: false,
+                noReadme: true,
             }
         }
     }
 </script>
 
 <style scoped>
-
     .star-button {
         border-color: #dddddd;
         border-width: 2px;

@@ -37,7 +37,12 @@
         },
         methods: {
             onItemClick(e) {
-                utils.jumpTo('repository')
+                if (e.type === 'repos') {
+                    utils.jumpTo('repository', {
+                        user: e.user,
+                        repos: e.repos
+                    })
+                }
             },
             async onRefresh() {
                 if (!this.loading) {

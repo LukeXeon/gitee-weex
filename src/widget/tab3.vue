@@ -3,8 +3,8 @@
         <div class="head-item"
              v-for="(item,index) in items"
              @click="click(index)">
-            <text style="font-size: 35px">{{item[1]}}</text>
-            <text style="font-size: 25px">{{item[0]}}</text>
+            <text style="font-size: 35px;text-align: center">{{item[1]}}</text>
+            <text style="font-size: 25px;text-align: center">{{item[0]}}</text>
         </div>
     </div>
 </template>

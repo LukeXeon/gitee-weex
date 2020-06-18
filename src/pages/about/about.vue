@@ -72,7 +72,6 @@
         name: "about",
         methods: {
             onClick2(id) {
-                let navigator = weex.requireModule('navigator')
                 switch (id) {
                     case 0: {
 

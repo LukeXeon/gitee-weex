@@ -1,7 +1,7 @@
 import utils from "./utils"
 import domino from './domino'
 import format from './date.format'
-import languages from '../res/languages'
+import colors from "@/res/colors";
 
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
 const clientSecret = '17c6a2209b1f8c732388d49713cdf08ab20aa67ab8aa38a799d490c821275d78'
@@ -102,10 +102,8 @@ export default {
     },
     async star(owner, repo) {
         let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}`
-        return await request("PUT", url, {
-            "access_token": accessToken
-        })
+        const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}?=${accessToken}`
+        return await request("PUT", url)
     },
     async getStars(page, countAtPage) {
         let accessToken = await utils.getValue('access_token')
@@ -202,34 +200,22 @@ export default {
         }
         return result
     },
-    async loadLanguages() {
-        if (cache.languages === []) {
-            const url = 'https://gitee.com/api/v3/projects/languages'
-            let data;
-            try {
-                data = await request("GET", url)
-            } catch (e) {
-                data = languages
-            }
-            let result = []
-            for (let i = 0; i < data.length; i++) {
-                let item = data[i]
-                let name = item['name']
-                let id = item['id']
-                let color = '#' + Math.floor(name.hash * 0xffffff)
-                    .toString(16)
-                result.push({
-                    id: id,
-                    name: name,
-                    color: color
-                })
-            }
-            cache.languages = result
-        }
-        return cache.languages
-    },
     async getLanguageProject(langId, page) {
         const url = `https://gitee.com/api/v3/projects/languages/${langId}?page=${page}`
         return await request("GET", url)
+    },
+    async getRepos(user, repos) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}?=${accessToken}`
+        return await request("GET", url)
+    },
+    getLanguageColor(lang){
+        let colorItem = colors[lang]
+        let color = null
+        if (colorItem) {
+            color = colorItem['color']
+        }
+        color = color || '#dddddd'
+        return color
     }
 }

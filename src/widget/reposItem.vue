@@ -1,18 +1,18 @@
 <template>
-    <div class="item" @click="onItemClick('repos',item[1],item[2])">
+    <div class="item" @click="onItemClick('repos',item[1],item[9])">
         <div class="line1">
             <image class="icon" :src="item[0]">
             </image>
             <div style="flex-direction: row;margin-left: 20px;height: 50px;width: 600px">
-                <text class="title-text" @click="onItemClick('user',item[1],item[2])">{{item[1]}}</text>
+                <text class="title-text" @click="onItemClick('user',item[1],item[9])">{{item[1]}}</text>
                 <text class="title-text">{{char}}</text>
-                <text class="title-text" @click="onItemClick('repos',item[1],item[2])">{{item[2]}}</text>
+                <text class="title-text" @click="onItemClick('repos',item[1],item[9])">{{item[2]}}</text>
             </div>
         </div>
         <text class="distribute">{{item[3]}}</text>
         <div class="tags-line">
             <div class="tag">
-                <div style="width: 25px;height: 25px;border-radius: 30px;background-color: #238FFF"></div>
+                <div class="lang-tag" :style="{'background-color':item[5]}"></div>
                 <text style="font-size: 30px;margin-left: 10px;">{{item[6]}}</text>
             </div>
             <div class="tag" style="justify-content: center">
@@ -61,6 +61,13 @@
 </script>
 
 <style scoped>
+    .lang-tag {
+        width: 25px;
+        height: 25px;
+        border-radius: 30px;
+        background-color: #238FFF
+    }
+
     .item {
         flex-direction: column;
         background-color: white;
