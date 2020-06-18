@@ -3,6 +3,7 @@ const storage = weex.requireModule('storage')
 const modal = weex.requireModule('modal')
 const animation = weex.requireModule('animation')
 const navigator = weex.requireModule('navigator')
+const dom = weex.requireModule('dom')
 
 export default {
     request(method, url, type, body, headers) {
@@ -120,6 +121,13 @@ export default {
         navigator.push({
             url: url,
             animated: "true"
+        })
+    },
+    getComponentRect(vnode) {
+        return new Promise(function (resolve) {
+            dom.getComponentRect(vnode, function (e) {
+                resolve(e)
+            })
         })
     }
 }

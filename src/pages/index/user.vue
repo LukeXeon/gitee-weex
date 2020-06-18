@@ -62,6 +62,8 @@
     import LabelLine from "@/widget/LabelLine";
     import tab3 from "@/widget/tab3";
     import utils from "@/libs/utils";
+    import domino from "@/libs/domino";
+    import format from "@/libs/date.format";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -114,8 +116,25 @@
                     [qq, info['qq'] || "QQ"],
                     [email, info['email'] || '电子邮箱'],
                 ]
-                this.contributions = await gitee.getContributions(info['login'], new Date().getFullYear())
+
+                this.contributions = await this.loadContributions(gitee.getContributions(info['login'], new Date().getFullYear()))
             },
+            loadContributions(content) {
+                let document = domino.createDocument(content)
+                let rawArray = document.querySelectorAll('div[data-content]')
+                let result = []
+                let now = parseInt(format.format(new Date(), 'Ymd'))
+                for (let i = 0; i < rawArray.length; i++) {
+                    let item = rawArray[i]
+                    if (now >= parseInt(item.getAttribute('date'))) {
+                        result.push({
+                            color: item.classList[1],
+                            text: item.getAttribute('data-content')
+                        })
+                    }
+                }
+                return result
+            }
         },
         async created() {
             await this.doRefresh()

@@ -6,16 +6,25 @@
                   class="scroller">
             <div class="box-group" v-for="(itemGroup,index) in renderItems">
                 <div class="box"
+                     :ref="`[${index},${index2}]`"
                      v-for="(box,index2) in itemGroup"
-                     v-on:click="onClick(box[1])"
-                     :style="{'background-color':(colors[box.color])}"
-                />
+                     v-on:click="onClick(`[${index},${index2}]`)"
+                     :style="{'background-color':(colors[box.color])}"/>
             </div>
         </scroller>
+        <wxc-popover ref="wxc-popover"
+                     :buttons="buttons"
+                     :position="popoverPosition"
+                     :arrowPosition="popoverArrowPosition">
+        </wxc-popover>
     </div>
 </template>
 
 <script>
+
+    import utils from "@/libs/utils";
+    import {WxcPopover} from 'weex-ui'
+
     let colors = {
         less: "#eaeaea",
         little: "#D6E685",
@@ -49,18 +58,32 @@
                 default: () => ([])
             }
         },
+        components: {
+            WxcPopover
+        },
         computed: {
             renderItems: function () {
                 return buildItems(this.items)
             }
         },
         methods: {
-            onClick(text) {
+            async onClick(tag) {
+                let vnode = this.$refs[tag]
+                let result = await utils.getComponentRect(vnode)
 
             }
         },
         data() {
             return {
+                buttons:[
+                    {
+                        icon: '',
+                        text:'Scan',
+                        key:'key-scan'
+                    }
+                ],
+                popoverArrowPosition: {},
+                popoverPosition: {},
                 colors: colors,
             }
         }

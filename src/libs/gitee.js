@@ -1,6 +1,4 @@
 import utils from "./utils"
-import domino from './domino'
-import format from './date.format'
 import colors from "@/res/colors";
 
 const clientId = 'c5544e74d50886f97db7dc3d0e329a50150073627894a600ad15bc990dd8a7f0'
@@ -73,12 +71,12 @@ export default {
             }
         }
     },
-    async cancelFollowing(username, isFollowing) {
+    async cancelFollowing(username) {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/user/following/${username}?access_token=${accessToken}`
         return await request("DELETE", url)
     },
-    async following(username, isFollowing) {
+    async following(username) {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/user/following/${username}`
         return await request("PUT", url, {
@@ -185,20 +183,7 @@ export default {
         content = content.substring(index + head.length, index2)
         content = eval(content)
         content = "<html><head><title></title></head><body>" + content + "</body></html>"
-        let document = domino.createDocument(content)
-        let rawArray = document.querySelectorAll('div[data-content]')
-        let result = []
-        let now = parseInt(format.format(new Date(), 'Ymd'))
-        for (let i = 0; i < rawArray.length; i++) {
-            let item = rawArray[i]
-            if (now >= parseInt(item.getAttribute('date'))) {
-                result.push({
-                    color: item.classList[1],
-                    text: item.getAttribute('data-content')
-                })
-            }
-        }
-        return result
+        return content
     },
     async getLanguageProject(langId, page) {
         const url = `https://gitee.com/api/v3/projects/languages/${langId}?page=${page}`
