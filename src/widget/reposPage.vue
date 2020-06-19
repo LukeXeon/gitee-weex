@@ -17,7 +17,6 @@
 
 <script>
     import reposList from "@/widget/reposList";
-    import {WxcResult} from 'weex-ui'
     import utils from "@/libs/utils";
 
     export default {
@@ -27,8 +26,7 @@
             }
         },
         components: {
-            reposList,
-            WxcResult
+            reposList
         },
         methods: {
             onItemClick(e) {

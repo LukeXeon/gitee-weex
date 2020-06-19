@@ -15,9 +15,6 @@
 
 <script>
 
-    import utils from "@/libs/utils";
-    import {WxcPopover} from 'weex-ui'
-
     let colors = {
         less: "#eaeaea",
         little: "#D6E685",
@@ -50,9 +47,6 @@
                 type: Array,
                 default: () => ([])
             }
-        },
-        components: {
-            WxcPopover
         },
         computed: {
             renderItems: function () {

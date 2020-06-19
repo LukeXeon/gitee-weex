@@ -58,9 +58,11 @@
                 </tab3>
                 <div class="bar">
                     <div v-if="languagesSummary&&languagesSummary.length>0"
+                         ref="langLine"
+                         @click="onLangLineClick"
                          class="lang-line">
                         <div v-for="(item,index) in languagesSummary"
-                             :style="item.style">
+                             :style="item">
                         </div>
                     </div>
                     <label-line v-for="(item,index) in labels"
@@ -98,7 +100,26 @@
                    pos="bottom"
                    height="400">
             <div class="bottom-bar">
+
             </div>
+        </wxc-popup>
+        <wxc-popup popup-color="transparent"
+                   :show="isBottomShow2"
+                   @wxcPopupOverlayClicked="popupOverlayBottomClick2"
+                   pos="bottom"
+                   :height="120+langTexts.length*47.5">
+            <div class="bottom-bar">
+                <div v-if="isBottomShow2"
+                     class="lang-list-wrapper">
+                    <div v-for="(item,index) in langTexts"
+                         class="lang-cell">
+                        <div class="circular-box" :style="{'background-color':item.color}"/>
+                        <text style="flex:1;font-size: 35px;margin-left: 20px">{{item.lang}}</text>
+                        <text style="font-size: 35px;justify-self: flex-end">{{item.value}}</text>
+                    </div>
+                </div>
+            </div>
+
         </wxc-popup>
     </div>
 </template>
@@ -126,7 +147,7 @@
             ReposItem,
             tab3,
             WxcLoading,
-            WxcPopup
+            WxcPopup,
         },
         computed: {
             labels() {
@@ -153,9 +174,15 @@
             branchText() {
                 return `${this.branch}-${this.branchCount}`
             },
-            pageHeight: () => Utils.env.getPageHeight()
+            pageHeight: () => Utils.env.getPageHeight(),
         },
         methods: {
+            popupOverlayBottomClick2() {
+                this.isBottomShow2 = false
+            },
+            async onLangLineClick() {
+                this.isBottomShow2 = true
+            },
             onJumpToWeb() {
                 utils.jumpTo('webview', {
                     url: this.website
@@ -196,8 +223,10 @@
                 this.license = data['license']
                 this.branch = data['default_branch']
                 let task3 = this.loadLanguagesSummary(user, repos, this.branch).then(res => {
-                    this.languagesSummary = res.colorLines
-                    this.popupTexts = res.texts
+                    if (res) {
+                        this.languagesSummary = res.colorLines
+                        this.langTexts = res.texts
+                    }
                 })
                 await Promise.all([task1, task2, task3])
             },
@@ -210,11 +239,8 @@
                     for (let i = 0; i < rawArray.length; i++) {
                         let item = rawArray[i].style
                         colorLines.push({
-                            value: Number.parseFloat(item['width']),
-                            style: {
-                                'flex': Number.parseFloat(item['width']) * 10,
-                                'background-color': item['background-color']
-                            }
+                            'flex': Number.parseFloat(item['width']) * 10,
+                            'background-color': item['background-color']
                         })
                     }
                     let texts = []
@@ -223,22 +249,22 @@
                         languages = languages.children[1]
                         for (let i = 0; i < languages.children.length; i++) {
                             let item = languages.children[i]
-                            let text = item.children[1].textContent
+                            let lang = item.children[1].textContent
                             let value = item.children[2].textContent
+                            let color = gitee.getLanguageColor(lang)
                             texts.push({
-                                lang: text,
+                                lang: lang,
+                                color: color,
                                 value: value
                             })
                         }
                     }
-                    utils.debug(JSON.stringify(texts))
                     return {
                         texts: texts,
                         colorLines: colorLines
                     }
                 } catch (e) {
-                    utils.debug(e)
-                    return []
+                    return null
                 }
             },
             async starThis() {
@@ -310,9 +336,10 @@
                 forks: 0,
                 issues: 0,
                 //UI
-                popupTexts: [],
+                langTexts: [],
                 languagesSummary: [],
                 isBottomShow: false,
+                isBottomShow2: false,
                 timer: null,
                 isShowFloat: true,
                 isLoading: true,
@@ -325,6 +352,25 @@
 </script>
 
 <style scoped>
+
+    .lang-cell {
+        flex-direction: row;
+        align-items: center;
+        padding-bottom: 5px;
+    }
+
+    .lang-list-wrapper {
+        flex: 1;
+        margin: 40px;
+    }
+
+    .circular-box {
+        width: 35px;
+        height: 35px;
+        border-radius: 50px;
+        background-color: #0088fb;
+    }
+
     .bottom-bar {
         flex: 1;
         background-color: white;

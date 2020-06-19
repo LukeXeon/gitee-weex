@@ -5,8 +5,7 @@
                      text-color="black"
                      background-color="#FBFBFB">
         </wxc-minibar>
-        <scroller class="wrapper"
-                  alwaysScrollableVertical="true">
+        <scroller class="wrapper" alwaysScrollableVertical="true">
             <refresh class="refresh"
                      :display="refreshing ? 'show' : 'hide'"
                      @refresh="onRefresh"
@@ -116,9 +115,9 @@
                     [qq, info['qq'] || "QQ"],
                     [email, info['email'] || '电子邮箱'],
                 ]
-                this.contributions = await this.loadContributions()
+                this.contributions = await this.loadContributions(info)
             },
-            async loadContributions() {
+            async loadContributions(info) {
                 let year = new Date().getFullYear()
                 let content = await gitee.getContributions(info['login'], year)
                 let document = domino.createDocument(content, true)
