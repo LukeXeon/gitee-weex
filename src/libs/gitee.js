@@ -44,7 +44,7 @@ export default {
             return false
         }
     },
-    async isLogin() {
+    async testLogin() {
         let refreshToken = await utils.getValue('refresh_token')
         if (refreshToken == null) {
             return false;
@@ -219,5 +219,15 @@ export default {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
         })
+    },
+    async getTree(user, repos, tree) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}/git/trees/${tree}?access_token=${accessToken}`
+        return await request("GET", url)
+    },
+    async getBlob(user, repos, blob) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}/git/blobs/${blob}?access_token=${accessToken}`
+        return await request("GET", url)
     }
 }

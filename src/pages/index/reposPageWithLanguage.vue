@@ -13,7 +13,6 @@
 </template>
 
 <script>
-    import Enumerable from 'linq'
     import gitee from "@/libs/gitee";
     import {WxcIndexlist} from 'weex-ui'
     import languagesView from "@/widget/languagesView";

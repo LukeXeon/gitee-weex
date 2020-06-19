@@ -66,6 +66,7 @@
                         </div>
                     </div>
                     <label-line v-for="(item,index) in labels"
+                                @onLabelClick="onLabelClick(index)"
                                 :icon="item[0]"
                                 :iconStyle="item[1]"
                                 :title="item[2]"
@@ -177,6 +178,29 @@
             pageHeight: () => Utils.env.getPageHeight(),
         },
         methods: {
+            onLabelClick(index) {
+                switch (index) {
+                    case 0: {
+                        let url = weex.config.bundleUrl
+                        let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                        let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                        utils.jumpTo('hierarchy', {
+                            user: user,
+                            repos: repos,
+                            tree: this.branch
+                        })
+                    }
+                        break
+                    case 1: {
+
+                    }
+                        break
+                    case 2: {
+
+                    }
+                        break
+                }
+            },
             popupOverlayBottomClick2() {
                 this.isBottomShow2 = false
             },

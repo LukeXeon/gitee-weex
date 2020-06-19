@@ -28,7 +28,7 @@
     export default {
         name: "boot",
         async created() {
-            if (await gitee.isLogin()) {
+            if (await gitee.testLogin()) {
 //                utils.jumpTo('index')
                 await this.$router.push({
                     path: '/home'
@@ -39,7 +39,6 @@
         },
         methods: {
             async onClick() {
-                let self = this;
                 let first = await utils.getValue('first-boot')
                 if (first === null) {
                     modal.alert({
