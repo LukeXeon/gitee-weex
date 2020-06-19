@@ -100,7 +100,7 @@ export default {
     },
     async star(owner, repo) {
         let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}?=${accessToken}`
+        const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}?access_token=${accessToken}`
         return await request("PUT", url)
     },
     async getStars(page, countAtPage) {
@@ -191,10 +191,10 @@ export default {
     },
     async getRepos(user, repos) {
         let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/repos/${user}/${repos}?=${accessToken}`
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}?access_token=${accessToken}`
         return await request("GET", url)
     },
-    getLanguageColor(lang){
+    getLanguageColor(lang) {
         let colorItem = colors[lang]
         let color = null
         if (colorItem) {
@@ -202,5 +202,15 @@ export default {
         }
         color = color || '#dddddd'
         return color
+    },
+    async getPulls(user, repos) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}/pulls?access_token=${accessToken}&state=open&sort=created&direction=desc`
+        return await request("GET", url)
+    },
+    async getBranches(user, repos) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}/branches?access_token=${accessToken}`
+        return await request("GET", url)
     }
 }

@@ -11,12 +11,7 @@
             <loading-indicator class="indicator">
             </loading-indicator>
         </refresh>
-        <wxc-result
-                slot="nil"
-                type="noNetwork"
-                show="true"
-                padding-top="232">
-        </wxc-result>
+
     </repos-list>
 </template>
 
@@ -39,8 +34,8 @@
             onItemClick(e) {
                 if (e.type === 'repos') {
                     utils.jumpTo('repository', {
-                        user: e.user,
-                        repos: e.repos
+                        user: e.item.username,
+                        repos: e.item.repos
                     })
                 }
             },

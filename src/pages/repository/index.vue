@@ -13,10 +13,12 @@
                 </image>
             </div>
             <div slot="right"
+                 v-if="!isLoading"
                  v-on:click="starThis"
                  class="star-button"
-                 :style="{'background-color':!isStared?'white':'#238FFF'}">
-                <text class="star-button-text" :style="{color:!isStared?'#238FFF':'white'}">Star</text>
+                 :style="{'background-color':!isStared?'white':'#238FFF','border-color':isStared?'#0062ff':'#dddddd'}">
+                <text class="star-button-text"
+                      :style="{color:!isStared?'#238FFF':'white'}">{{isStared?'Unstar':'Star'}}</text>
             </div>
         </wxc-minibar>
         <scroller alwaysScrollableVertical="true">
@@ -42,9 +44,10 @@
                 <text class="distribute"
                       @click="onJumpToWeb"
                       v-if="website"
-                      style="color: #0088fb;margin-top: 10px">{{website}}
-                </text>
-                <text class="distribute" style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
+                      style="color: #0088fb;margin-top: 10px">{{website}}</text>
+                <text class="distribute"
+                      v-if="updateAt"
+                      style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
             </div>
             <tab3 :items="tabs">
             </tab3>
@@ -66,7 +69,7 @@
             <label-line style="margin-top: 20px"
                         :icon="require('@/res/branch(1).png').default"
                         title="Branch"
-                        rightText="1">
+                        :rightText="branchText">
             </label-line>
             <label-line :icon="require('@/res/book.png').default"
                         :useRight="false"
@@ -74,11 +77,13 @@
             </label-line>
             <text v-if="noReadme" class="no-readme">NO README</text>
         </scroller>
+        <wxc-loading :show="isLoading" need-mask="true">
+        </wxc-loading>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar, WxcLoading} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tab3";
     import LabelLine from "@/widget/LabelLine";
@@ -97,7 +102,8 @@
             LabelLine,
             WxcMinibar,
             ReposItem,
-            tab3
+            tab3,
+            WxcLoading
         },
         computed: {
             labels() {
@@ -105,13 +111,13 @@
                     [code, {
                         'background-color': gitee.getLanguageColor(this.language),
                         'border-radius': '30px'
-                    }, (this.language || 'language'), `${this.license || `${this.license}-`}`],
-                    [issues, {}, "Issues", 0],
+                    }, (this.language || 'language'), (this.license != null ? (this.license + '-') : '')],
+                    [issues, {}, "Issues", this.issues],
                     [branch2, {
                         'background-color': 'blueviolet',
-                        'padding': '6px',
+                        'padding': '8px',
                         'border-radius': '30px'
-                    }, "Pull Requests", 0],
+                    }, "Pull Requests", this.pulls],
                 ]
             },
             tabs() {
@@ -121,6 +127,9 @@
                     ['Forks', this.forks]
                 ]
             },
+            branchText() {
+                return `${this.branch}-${this.branchCount}`
+            }
         },
         methods: {
             onJumpToWeb() {
@@ -142,19 +151,26 @@
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
                 let data = await gitee.getRepos(user, repos)
-
                 this.icon = data['owner']['avatar_url']
-                this.username = data['namespace']['path']
+                this.username = data['namespace']['name']
                 this.repository = data['name']
                 this.distribute = data['description']
                 this.website = data['homepage']
                 this.updateAt = format.format(new Date(data['updated_at']), "Y年m月d日")
-                //this.isStared = data['stared']
-
+                this.isStared = data['stared']
                 this.language = data['language'] || "其他"
                 this.stars = data['stargazers_count']
                 this.watchs = data['watchers_count']
                 this.forks = data['forks_count']
+                this.issues = data['open_issues_count']
+                this.license = data['license']
+                this.branch = data['default_branch']
+                gitee.getPulls(user, repos).then(res => {
+                    this.pulls = res.length
+                })
+                gitee.getBranches(user, repos).then(res => {
+                    this.branchCount = res.length
+                })
             },
             async starThis() {
                 if (this.refreshing) {
@@ -172,25 +188,31 @@
                 }
             }
         },
-        created() {
-            this.doRefresh()
+        async created() {
+            await this.doRefresh()
+            this.isLoading = false
         },
         data() {
             return {
                 //data
                 icon: '',
-                username: 'username',
-                repository: 'repository',
-                distribute: 'distribute',
+                username: '...',
+                repository: '...',
+                distribute: '...',
                 license: null,
                 website: null,
+                branch: '',
+                branchCount: 1,
+                pulls: 0,
                 updateAt: '',
                 isStared: false,
                 language: null,
                 watchs: 0,
                 stars: 0,
                 forks: 0,
+                issues: 0,
                 //UI
+                isLoading: true,
                 char: ' / ',
                 refreshing: false,
                 noReadme: true,
@@ -201,17 +223,16 @@
 
 <style scoped>
     .star-button {
-        border-color: #dddddd;
         border-width: 2px;
         border-radius: 30px;
         align-items: center;
         justify-content: center;
-        width: 100px;
+        width: 120px;
         height: 50px
     }
 
     .star-button-text {
-        font-size: 32px;
+        font-size: 30px;
     }
 
     .no-readme {

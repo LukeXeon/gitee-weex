@@ -21,18 +21,20 @@
         for (let i = 0; i < data.length; i++) {
             let item = data[i]
             let color = gitee.getLanguageColor(item['language'])
-            list.push([
-                item['owner']['avatar_url'],
-                item['owner']['login'],
-                item['name'],
-                item['description'],
-                item['updated_at'],
-                color,
-                item['language'] || "其他",
-                item['stargazers_count'],
-                item['forks_count'],
-                item['path']
-            ])
+            list.push({
+                icon: item['owner']['avatar_url'],
+                username: item['namespace']['path'],
+                repos: item['path'],
+                displayReposName: item['name'],
+                displayUsername: item['namespace']['name'],
+                updatedAt: item['updated_at'],
+                languageColor: color,
+                language: item['language'] || "其他",
+                description: item['description'],
+                starCount: item['stargazers_count'],
+                forkCount: item['forks_count'],
+                watchCount: item['watchers_count'],
+            })
         }
         return list
     }

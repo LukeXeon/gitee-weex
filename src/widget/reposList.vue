@@ -8,10 +8,6 @@
                         @onItemClick="onItemClick">
             </repos-item>
         </cell>
-        <cell v-else>
-            <slot name="nil">
-            </slot>
-        </cell>
     </list>
 </template>
 

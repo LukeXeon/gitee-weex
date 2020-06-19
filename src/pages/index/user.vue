@@ -116,8 +116,9 @@
                     [qq, info['qq'] || "QQ"],
                     [email, info['email'] || '电子邮箱'],
                 ]
-
-                this.contributions = await this.loadContributions(gitee.getContributions(info['login'], new Date().getFullYear()))
+                let year = new Date().getFullYear()
+                let html = await gitee.getContributions(info['login'], year)
+                this.contributions =  this.loadContributions(html)
             },
             loadContributions(content) {
                 let document = domino.createDocument(content)

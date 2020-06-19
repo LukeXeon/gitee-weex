@@ -1,6 +1,6 @@
 <template>
     <div style="flex: 1">
-        <wxc-minibar title="WebView"
+        <wxc-minibar title="浏览网页"
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"

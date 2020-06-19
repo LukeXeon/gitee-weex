@@ -2,9 +2,6 @@
     <div>
         <slider infinite="false"
                 style="flex: 1;width: 750px;">
-            <!--            <repos-page-with-language-->
-            <!--                    style="width: 750px">-->
-            <!--            </repos-page-with-language>-->
             <repos-page-with-title
                     style="width: 750px;"
                     v-for="(item,index) in items"
@@ -31,18 +28,20 @@
                 for (let j = 0; j < items.length; j++) {
                     let item = items[j]
                     let color = gitee.getLanguageColor(item['language'])
-                    list.push([
-                        item['owner']['new_portrait'],
-                        item['namespace']['path'],
-                        item['name'],
-                        item['description'],
-                        item['last_push_at'],
-                        color,
-                        item['language'] || "其他",
-                        item['stars_count'],
-                        item['forks_count'],
-                        item['path']
-                    ])
+                    list.push({
+                        icon: item['owner']['new_portrait'],
+                        username: item['namespace']['path'],
+                        repos: item['path'],
+                        displayReposName: item['name'],
+                        displayUsername: item['namespace']['name'],
+                        updatedAt: item['last_push_at'],
+                        languageColor: color,
+                        language: item['language'] || "其他",
+                        description: item['description'],
+                        starCount: item['stars_count'],
+                        forkCount: item['forks_count'],
+                        watchCount: item['watches_count'],
+                    })
                 }
                 return list
             }

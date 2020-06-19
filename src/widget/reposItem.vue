@@ -1,37 +1,35 @@
 <template>
-    <div class="item" @click="onItemClick('repos',item[1],item[9])">
+    <div class="item" @click="onItemClick('repos',item)">
         <div class="line1">
-            <image class="icon" :src="item[0]">
+            <image class="icon" :src="item.icon">
             </image>
             <div style="flex-direction: row;margin-left: 20px;height: 50px;width: 600px">
-                <text class="title-text" @click="onItemClick('user',item[1],item[9])">{{item[1]}}</text>
+                <text class="title-text" @click="onItemClick('user',item)">{{item.displayUsername}}</text>
                 <text class="title-text">{{char}}</text>
-                <text class="title-text" @click="onItemClick('repos',item[1],item[9])">{{item[2]}}</text>
+                <text class="title-text" @click="onItemClick('repos',item)">{{item.displayReposName}}</text>
             </div>
         </div>
-        <text class="distribute">{{item[3]}}</text>
+        <text class="distribute">{{item.description}}</text>
         <div class="tags-line">
             <div class="tag">
-                <div class="lang-tag" :style="{'background-color':item[5]}"></div>
-                <text style="font-size: 30px;margin-left: 10px;">{{item[6]}}</text>
+                <div class="lang-tag" :style="{'background-color':item.languageColor}"></div>
+                <text style="font-size: 30px;margin-left: 10px;">{{item.language}}</text>
             </div>
             <div class="tag" style="justify-content: center">
                 <image style="width: 30px;height: 30px;" :src="starIcon">
                 </image>
-                <text style="font-size: 30px;margin-left: 10px">{{(item[7])}}</text>
+                <text style="font-size: 30px;margin-left: 10px">{{item.starCount}}</text>
             </div>
             <div class="tag" style="justify-content: flex-end">
                 <image style="width: 30px;height: 30px;" :src="branchIcon">
                 </image>
-                <text style="font-size: 30px;margin-left: 10px">{{item[8]}}</text>
+                <text style="font-size: 30px;margin-left: 10px">{{item.forkCount}}</text>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    // 0        1            2       3             4           5       6       7        8
-    //["icon", "username", "repos", "distribute", "updateAt", "color", "lang", "star", "fork"],
     let star = require('@/res/star.png').default
     let branch = require('@/res/branch.png').default
     export default {
@@ -42,11 +40,10 @@
         },
         name: "reposItem",
         methods: {
-            onItemClick(type, user, repos) {
+            onItemClick(type, item) {
                 this.$emit('onItemClick', {
                     type: type,
-                    user: user,
-                    repos: repos
+                    item: item
                 })
             }
         },
