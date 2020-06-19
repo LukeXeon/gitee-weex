@@ -116,12 +116,12 @@
                     [qq, info['qq'] || "QQ"],
                     [email, info['email'] || '电子邮箱'],
                 ]
-                let year = new Date().getFullYear()
-                let html = await gitee.getContributions(info['login'], year)
-                this.contributions =  this.loadContributions(html)
+                this.contributions = await this.loadContributions()
             },
-            loadContributions(content) {
-                let document = domino.createDocument(content)
+            async loadContributions() {
+                let year = new Date().getFullYear()
+                let content = await gitee.getContributions(info['login'], year)
+                let document = domino.createDocument(content, true)
                 let rawArray = document.querySelectorAll('div[data-content]')
                 let result = []
                 let now = parseInt(format.format(new Date(), 'Ymd'))

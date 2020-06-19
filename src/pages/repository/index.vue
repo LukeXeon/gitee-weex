@@ -57,10 +57,10 @@
                 <tab3 :items="tabs">
                 </tab3>
                 <div class="bar">
-                    <div class="lang-line">
-                        <div style="flex: 99;background-color: #238FFF">
-                        </div>
-                        <div style="flex: 1;background-color: coral">
+                    <div v-if="languagesSummary&&languagesSummary.length>0"
+                         class="lang-line">
+                        <div v-for="(item,index) in languagesSummary"
+                             :style="item.style">
                         </div>
                     </div>
                     <label-line v-for="(item,index) in labels"
@@ -104,13 +104,14 @@
 </template>
 
 <script>
-    import {WxcMinibar, WxcLoading, Utils, WxcPopup} from 'weex-ui'
+    import {WxcMinibar, WxcLoading, WxcPopup, Utils} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tab3";
     import LabelLine from "@/widget/LabelLine";
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
+    import domino from '@/libs/domino'
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -133,7 +134,7 @@
                     [code, {
                         'background-color': gitee.getLanguageColor(this.language),
                         'border-radius': '30px'
-                    }, (this.language || 'language'), (this.license != null ? (this.license + '-') : '')],
+                    }, (this.language || 'language'), this.license || ''],
                     [issues, {}, "Issues", this.issues],
                     [branch2, {
                         'background-color': 'blueviolet',
@@ -194,7 +195,51 @@
                 this.issues = data['open_issues_count']
                 this.license = data['license']
                 this.branch = data['default_branch']
-                await Promise.all([task1, task2])
+                let task3 = this.loadLanguagesSummary(user, repos, this.branch).then(res => {
+                    this.languagesSummary = res.colorLines
+                    this.popupTexts = res.texts
+                })
+                await Promise.all([task1, task2, task3])
+            },
+            async loadLanguagesSummary(user, repos, branch) {
+                try {
+                    let html = await gitee.getHomepage(user, repos, branch)
+                    let document = domino.createDocument(html, true)
+                    let rawArray = document.querySelectorAll('a.language-color')
+                    let colorLines = []
+                    for (let i = 0; i < rawArray.length; i++) {
+                        let item = rawArray[i].style
+                        colorLines.push({
+                            value: Number.parseFloat(item['width']),
+                            style: {
+                                'flex': Number.parseFloat(item['width']) * 10,
+                                'background-color': item['background-color']
+                            }
+                        })
+                    }
+                    let texts = []
+                    let languages = document.querySelector('div.viewer-wrapper')
+                    if (languages && languages.children.length === 2) {
+                        languages = languages.children[1]
+                        for (let i = 0; i < languages.children.length; i++) {
+                            let item = languages.children[i]
+                            let text = item.children[1].textContent
+                            let value = item.children[2].textContent
+                            texts.push({
+                                lang: text,
+                                value: value
+                            })
+                        }
+                    }
+                    utils.debug(JSON.stringify(texts))
+                    return {
+                        texts: texts,
+                        colorLines: colorLines
+                    }
+                } catch (e) {
+                    utils.debug(e)
+                    return []
+                }
             },
             async starThis() {
                 if (this.refreshing) {
@@ -218,7 +263,7 @@
                         transform: 'translateX(250px)',
                         transformOrigin: 'center center'
                     },
-                    duration: 800, //ms
+                    duration: 500, //ms
                     timingFunction: 'ease',
                     delay: 0 //ms
                 })
@@ -228,7 +273,7 @@
                             transform: 'translateX(0px)',
                             transformOrigin: 'center center'
                         },
-                        duration: 800, //ms
+                        duration: 500, //ms
                         timingFunction: 'ease',
                         delay: 0 //ms
                     })
@@ -265,6 +310,8 @@
                 forks: 0,
                 issues: 0,
                 //UI
+                popupTexts: [],
+                languagesSummary: [],
                 isBottomShow: false,
                 timer: null,
                 isShowFloat: true,
@@ -333,6 +380,7 @@
     }
 
     .bar {
+        margin-top: 20px;
         flex-direction: column;
         background-color: white
     }

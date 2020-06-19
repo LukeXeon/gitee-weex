@@ -212,5 +212,12 @@ export default {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/repos/${user}/${repos}/branches?access_token=${accessToken}`
         return await request("GET", url)
+    },
+    async getHomepage(user, repos, branch) {
+        const url = `https://gitee.com/${user}/${repos}/tree/${branch}`
+        return await utils.fetch("GET", url, {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+        })
     }
 }
