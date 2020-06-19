@@ -21,69 +21,90 @@
                       :style="{color:!isStared?'#238FFF':'white'}">{{isStared?'Unstar':'Star'}}</text>
             </div>
         </wxc-minibar>
-        <scroller alwaysScrollableVertical="true">
-            <refresh class="refresh"
-                     :display="refreshing ? 'show' : 'hide'"
-                     @refresh="onRefresh"
-                     slot="header">
-                <text class="indicator-text">刷新</text>
-                <loading-indicator class="indicator">
-                </loading-indicator>
-            </refresh>
-            <div class="info">
-                <div class="line1">
-                    <image class="icon" :src="icon">
-                    </image>
-                    <div class="title-group">
-                        <text class="title-text">{{username}}</text>
-                        <text class="title-text">{{char}}</text>
-                        <text class="title-text">{{repository}}</text>
+        <div style="flex: 1">
+            <scroller v-if="!isLoading"
+                      style="flex: 1"
+                      ref="main"
+                      @scroll="onScroll"
+                      alwaysScrollableVertical="true">
+                <refresh class="refresh"
+                         :display="refreshing ? 'show' : 'hide'"
+                         @refresh="onRefresh"
+                         slot="header">
+                    <text class="indicator-text">刷新</text>
+                    <loading-indicator class="indicator">
+                    </loading-indicator>
+                </refresh>
+                <div class="info">
+                    <div class="line1">
+                        <image class="icon" :src="icon">
+                        </image>
+                        <div class="title-group">
+                            <text class="title-text">{{username}}</text>
+                            <text class="title-text">{{char}}</text>
+                            <text class="title-text">{{repository}}</text>
+                        </div>
                     </div>
+                    <text class="distribute">{{distribute}}</text>
+                    <text class="distribute"
+                          @click="onJumpToWeb"
+                          v-if="website"
+                          style="color: #0088fb;margin-top: 10px">{{website}}</text>
+                    <text class="distribute"
+                          v-if="updateAt"
+                          style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
                 </div>
-                <text class="distribute">{{distribute}}</text>
-                <text class="distribute"
-                      @click="onJumpToWeb"
-                      v-if="website"
-                      style="color: #0088fb;margin-top: 10px">{{website}}</text>
-                <text class="distribute"
-                      v-if="updateAt"
-                      style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
-            </div>
-            <tab3 :items="tabs">
-            </tab3>
-            <div class="bar">
-                <div class="lang-line">
-                    <div style="flex: 99;background-color: #238FFF">
+                <tab3 :items="tabs">
+                </tab3>
+                <div class="bar">
+                    <div class="lang-line">
+                        <div style="flex: 99;background-color: #238FFF">
+                        </div>
+                        <div style="flex: 1;background-color: coral">
+                        </div>
                     </div>
-                    <div style="flex: 1;background-color: coral">
-                    </div>
+                    <label-line v-for="(item,index) in labels"
+                                :icon="item[0]"
+                                :iconStyle="item[1]"
+                                :title="item[2]"
+                                :rightText="item[3]"
+                                :key="index">
+                    </label-line>
                 </div>
-                <label-line v-for="(item,index) in labels"
-                            :icon="item[0]"
-                            :iconStyle="item[1]"
-                            :title="item[2]"
-                            :rightText="item[3]"
-                            :key="index">
+                <label-line style="margin-top: 20px"
+                            :icon="require('@/res/branch(1).png').default"
+                            title="Branch"
+                            :rightText="branchText">
                 </label-line>
-            </div>
-            <label-line style="margin-top: 20px"
-                        :icon="require('@/res/branch(1).png').default"
-                        title="Branch"
-                        :rightText="branchText">
-            </label-line>
-            <label-line :icon="require('@/res/book.png').default"
-                        :useRight="false"
-                        title="Readme">
-            </label-line>
-            <text v-if="noReadme" class="no-readme">NO README</text>
-        </scroller>
+                <label-line :icon="require('@/res/book.png').default"
+                            :useRight="false"
+                            title="Readme">
+                </label-line>
+                <text v-if="noReadme" class="no-readme">NO README</text>
+            </scroller>
+            <image class="float-button"
+                   ref="floatButton"
+                   @click="onFloatClick"
+                   v-if="!isLoading&&!isBottomShow"
+                   :style="{'top':`${pageHeight-320}px`}"
+                   :src="require('@/res/point.png').default">
+            </image>
+        </div>
         <wxc-loading :show="isLoading" need-mask="true">
         </wxc-loading>
+        <wxc-popup popup-color="transparent"
+                   :show="isBottomShow"
+                   @wxcPopupOverlayClicked="popupOverlayBottomClick"
+                   pos="bottom"
+                   height="400">
+            <div class="bottom-bar">
+            </div>
+        </wxc-popup>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar, WxcLoading} from 'weex-ui'
+    import {WxcMinibar, WxcLoading, Utils, WxcPopup} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tab3";
     import LabelLine from "@/widget/LabelLine";
@@ -103,7 +124,8 @@
             WxcMinibar,
             ReposItem,
             tab3,
-            WxcLoading
+            WxcLoading,
+            WxcPopup
         },
         computed: {
             labels() {
@@ -129,7 +151,8 @@
             },
             branchText() {
                 return `${this.branch}-${this.branchCount}`
-            }
+            },
+            pageHeight: () => Utils.env.getPageHeight()
         },
         methods: {
             onJumpToWeb() {
@@ -150,6 +173,12 @@
                 let url = weex.config.bundleUrl
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                let task1 = gitee.getPulls(user, repos).then(res => {
+                    this.pulls = res.length
+                })
+                let task2 = gitee.getBranches(user, repos).then(res => {
+                    this.branchCount = res.length
+                })
                 let data = await gitee.getRepos(user, repos)
                 this.icon = data['owner']['avatar_url']
                 this.username = data['namespace']['name']
@@ -165,12 +194,7 @@
                 this.issues = data['open_issues_count']
                 this.license = data['license']
                 this.branch = data['default_branch']
-                gitee.getPulls(user, repos).then(res => {
-                    this.pulls = res.length
-                })
-                gitee.getBranches(user, repos).then(res => {
-                    this.branchCount = res.length
-                })
+                await Promise.all([task1, task2])
             },
             async starThis() {
                 if (this.refreshing) {
@@ -186,6 +210,35 @@
                     await gitee.cancelStar(user, repos)
                     this.isStared = false
                 }
+            },
+            onScroll() {
+                clearTimeout(this.timer)
+                utils.animate(this.$refs.floatButton, {
+                    styles: {
+                        transform: 'translateX(250px)',
+                        transformOrigin: 'center center'
+                    },
+                    duration: 800, //ms
+                    timingFunction: 'ease',
+                    delay: 0 //ms
+                })
+                this.timer = setTimeout(() => {
+                    utils.animate(this.$refs.floatButton, {
+                        styles: {
+                            transform: 'translateX(0px)',
+                            transformOrigin: 'center center'
+                        },
+                        duration: 800, //ms
+                        timingFunction: 'ease',
+                        delay: 0 //ms
+                    })
+                }, 200)
+            },
+            popupOverlayBottomClick() {
+                this.isBottomShow = false
+            },
+            onFloatClick() {
+                this.isBottomShow = true
             }
         },
         async created() {
@@ -212,6 +265,9 @@
                 forks: 0,
                 issues: 0,
                 //UI
+                isBottomShow: false,
+                timer: null,
+                isShowFloat: true,
                 isLoading: true,
                 char: ' / ',
                 refreshing: false,
@@ -222,6 +278,20 @@
 </script>
 
 <style scoped>
+    .bottom-bar {
+        flex: 1;
+        background-color: white;
+        border-radius: 30px;
+        margin: 20px;
+    }
+
+    .float-button {
+        width: 110px;
+        height: 110px;
+        position: absolute;
+        left: 600px;
+    }
+
     .star-button {
         border-width: 2px;
         border-radius: 30px;
