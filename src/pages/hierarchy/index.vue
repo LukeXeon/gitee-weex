@@ -20,20 +20,18 @@
                 <loading-indicator class="indicator">
                 </loading-indicator>
             </refresh>
-            <cell class="cell" v-for="(item,index) in items">
-                <image class="icon"
-                       :src="item.type==='file'?require('@/res/file.png').default:require('@/res/dictionary.png').default">
-                </image>
-                <text style="font-size: 30px;margin-left: 10px">{{item.text}}</text>
-            </cell>
+<!--            <cell class="cell" v-for="(item,index) in items">-->
+<!--                <image class="icon"-->
+<!--                       :src="item.type==='file'?require('@/res/file.png').default:require('@/res/dictionary.png').default">-->
+<!--                </image>-->
+<!--                <text style="font-size: 30px;margin-left: 10px">{{item.text}}</text>-->
+<!--            </cell>-->
         </list>
     </div>
 </template>
 
 <script>
     import {WxcMinibar} from 'weex-ui'
-    import utils from "@/libs/utils";
-    import gitee from "@/libs/gitee";
 
     export default {
         name: "index",
@@ -50,7 +48,6 @@
             }
         },
         async created() {
-
 
         },
         data() {
