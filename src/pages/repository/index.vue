@@ -120,7 +120,6 @@
                     </div>
                 </div>
             </div>
-
         </wxc-popup>
     </div>
 </template>
@@ -187,7 +186,8 @@
                         utils.jumpTo('hierarchy', {
                             user: user,
                             repos: repos,
-                            tree: this.branch
+                            sha: this.branch,
+                            title: this.branch
                         })
                     }
                         break
@@ -225,11 +225,18 @@
                 let url = weex.config.bundleUrl
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                let branch = decodeURIComponent(utils.getQueryVariable(url, 'branch'))
                 let task1 = gitee.getPulls(user, repos).then(res => {
                     this.pulls = res.length
                 })
                 let task2 = gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length
+                })
+                let task3 = this.loadExtraInfo(user, repos, branch).then(res => {
+                    if (res) {
+                        this.languagesSummary = res.colorLines
+                        this.langTexts = res.texts
+                    }
                 })
                 let data = await gitee.getRepos(user, repos)
                 this.icon = data['owner']['avatar_url']
@@ -246,17 +253,11 @@
                 this.issues = data['open_issues_count']
                 this.license = data['license']
                 this.branch = data['default_branch']
-                let task3 = this.loadLanguagesSummary(user, repos, this.branch).then(res => {
-                    if (res) {
-                        this.languagesSummary = res.colorLines
-                        this.langTexts = res.texts
-                    }
-                })
                 await Promise.all([task1, task2, task3])
             },
-            async loadLanguagesSummary(user, repos, branch) {
+            async loadExtraInfo(user, repos, branch) {
                 try {
-                    let html = await gitee.getHomepage(user, repos, branch)
+                    let html = await gitee.getWebPage(user, repos, branch)
                     let document = domino.createDocument(html, true)
                     let rawArray = document.querySelectorAll('a.language-color')
                     let colorLines = []

@@ -20,42 +20,123 @@
                 <loading-indicator class="indicator">
                 </loading-indicator>
             </refresh>
-<!--            <cell class="cell" v-for="(item,index) in items">-->
-<!--                <image class="icon"-->
-<!--                       :src="item.type==='file'?require('@/res/file.png').default:require('@/res/dictionary.png').default">-->
-<!--                </image>-->
-<!--                <text style="font-size: 30px;margin-left: 10px">{{item.text}}</text>-->
-<!--            </cell>-->
+            <cell class="cell"
+                  @click="onClick(item)"
+                  v-for="(item,index) in list">
+                <image class="icon"
+                       :src="icons[item.type]">
+                </image>
+                <text class="text">{{item.path}}</text>
+            </cell>
         </list>
+        <wxc-loading :show="isLoading" :need-mask="false">
+        </wxc-loading>
+        <popup-image
+                :title="imageTitle"
+                :show="imageUrl!=null"
+                :url="imageUrl"
+                @onOverlayClicked="onOverlayClicked">
+        </popup-image>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcLoading, WxcMinibar} from 'weex-ui'
+    import utils from "@/libs/utils";
+    import gitee from "@/libs/gitee";
+    import popupImage from "@/widget/popupImage";
 
     export default {
         name: "index",
         components: {
-            WxcMinibar
+            WxcMinibar,
+            WxcLoading,
+            popupImage
         },
         methods: {
+            onOverlayClicked() {
+                this.imageUrl = null
+                this.imageTitle = null
+            },
             back() {
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
             },
-            onRefresh() {
+            async onRefresh() {
+                this.refreshing = true
+                await this.doRefresh()
+                this.refreshing = false
+            },
+            async onClick(item) {
 
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+
+                if (item.type === 'blob') {
+                    let imageTypes = ['png', 'jpeg', 'jpg', 'gif', 'svg']
+                    for (let i = 0; i < imageTypes.length; i++) {
+                        let type = imageTypes[i]
+                        if (item.path.endsWith(type)) {
+                            let data = await gitee.getBlob(user, repos, item.sha)
+                            this.imageUrl = `data:image/${type};base64,${data['content']}`
+                            this.imageTitle = item.path
+                            return
+                        }
+                    }
+                    utils.jumpTo('code', {
+                        user: user,
+                        repos: repos,
+                        sha: item.sha,
+                        title: item.path
+                    })
+                } else if (item.type === 'tree') {
+                    utils.jumpTo('hierarchy', {
+                        user: user,
+                        repos: repos,
+                        sha: item.sha,
+                        title: item.path
+                    })
+                } else if (item.type === 'commit') {
+                    const modal = weex.requireModule('modal')
+                    modal.alert({
+                        message: "暂时不支持查看commit层级"
+                    })
+                }
+            },
+            async doRefresh() {
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                let sha = decodeURIComponent(utils.getQueryVariable(url, 'sha'))
+                this.title = decodeURIComponent(utils.getQueryVariable(url, 'title'))
+                let data = await gitee.getTree(user, repos, sha)
+                this.list = data['tree'].map(item => {
+                    return {
+                        type: item['type'],
+                        sha: item['sha'],
+                        path: item['path'],
+                    }
+                })
             }
         },
         async created() {
-
+            await this.doRefresh()
+            this.isLoading = false
         },
         data() {
             return {
-                info: [],
+                list: [],
+                isLoading: true,
                 refreshing: false,
-                title: '加载中',
-                items: []
+                title: '',
+                icons: {
+                    blob: require('@/res/file.png').default,
+                    tree: require('@/res/dictionary.png').default,
+                    commit: require('@/res/link(1).png').default
+                },
+                imageUrl: null,
+                imageTitle: null
             }
         }
     }
@@ -67,6 +148,8 @@
         height: 80px;
         flex-direction: row;
         align-items: center;
+        border-bottom-width: 0.5px;
+        border-bottom-color: #dddddd;
     }
 
     .icon {
@@ -97,6 +180,14 @@
         width: 40px;
         color: #238FFF;
         margin-bottom: 30px;
+    }
+
+    .text {
+        lines: 1;
+        max-width: 650px;
+        font-size: 30px;
+        margin-left: 10px;
+        text-overflow: ellipsis;
     }
 
 </style>

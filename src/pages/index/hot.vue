@@ -41,6 +41,7 @@
                         starCount: item['stars_count'],
                         forkCount: item['forks_count'],
                         watchCount: item['watches_count'],
+                        branch: item['default_branch']
                     })
                 }
                 return list

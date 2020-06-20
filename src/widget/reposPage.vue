@@ -33,7 +33,8 @@
                 if (e.type === 'repos') {
                     utils.jumpTo('repository', {
                         user: e.item.username,
-                        repos: e.item.repos
+                        repos: e.item.repos,
+                        branch: e.item.branch
                     })
                 }
             },
@@ -82,9 +83,6 @@
         display: -ms-flex;
         display: -webkit-flex;
         display: flex;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        -webkit-box-align: center;
         align-items: center;
     }
 

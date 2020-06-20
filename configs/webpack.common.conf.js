@@ -14,6 +14,7 @@ const weexEntry = {
   'repository': helper.root('pages/repository/index.js'),
   'webview': helper.root('pages/webview/index.js'),
   'hierarchy': helper.root('pages/hierarchy/index.js'),
+  'code': helper.root('pages/code/index.js'),
 }
 
 const getEntryFileContent = (source, routerpath) => {
