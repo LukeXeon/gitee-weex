@@ -11,20 +11,19 @@
                 type: String
             }
         },
-
-        methods: {
-            create(createElement, node) {
+        render(createElement) {
+            function create(createElement, node) {
                 let list = null
                 if (node.children.length > 0) {
                     list = []
                     for (let i = 0; i < node.children.length; i++) {
-                        let item = this.create(createElement, node.children[i])
+                        let item = create(createElement, node.children[i])
                         if (item) {
                             list.push(item)
                         }
                     }
                 } else {
-                    let classList = []
+                    let classList = ['text-span']
                     for (let i = 0; i < node.classList.length; i++) {
                         let item = node.classList[i]
                         classList.push(item)
@@ -33,9 +32,8 @@
                         class: classList
                     }, node.textContent)
                 }
-            },
-        },
-        render(createElement) {
+            }
+
             if (!this.codeText || this.codeText === '') {
                 return null
             }
@@ -49,7 +47,7 @@
                 if (document.body.children.length > 0) {
                     list = []
                     for (let i = 0; i < document.body.children.length; i++) {
-                        list.push(this.create(createElement, document.body.children[i]))
+                        list.push(create(createElement, document.body.children[i]))
                     }
                 }
                 return createElement('richtext', {
@@ -68,5 +66,7 @@
 </style>
 
 <style scoped>
-
+    .text-span {
+        font-size: 35px;
+    }
 </style>
