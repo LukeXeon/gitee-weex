@@ -11,7 +11,8 @@
                 </image>
             </div>
         </wxc-minibar>
-        <text>{{codeText}}</text>
+        <code-view :codeText="codeText">
+        </code-view>
         <wxc-loading :show="isLoading" :need-mask="false">
         </wxc-loading>
     </div>
@@ -57,5 +58,4 @@
 </script>
 
 <style scoped>
-
 </style>

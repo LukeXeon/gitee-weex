@@ -207,6 +207,20 @@ const weexConfig = {
         use: [{
           loader: 'url-loader'
         }]
+      },
+      {
+        test: /\.css$/,
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }]
+      },
+      {
+        test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
+        use:[{
+          loader: "file-loader"
+        }]
       }
     ]
   },
