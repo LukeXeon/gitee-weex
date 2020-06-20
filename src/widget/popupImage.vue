@@ -30,7 +30,7 @@
 
 <style scoped>
     .header {
-        width: 540px;
+        width: 600px;
         align-items: center;
         flex-direction: row;
         margin-top: 30px;
@@ -57,14 +57,14 @@
         background-color: white;
         border-radius: 30px;
         flex-direction: column;
-        width: 600px;
+        width: 650px;
     }
 
     .image-wrapper {
         align-items: center;
         justify-content: center;
-        width: 600px;
-        height: 600px;
+        width: 650px;
+        height: 650px;
     }
 </style>
 
