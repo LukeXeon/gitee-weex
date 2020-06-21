@@ -129,5 +129,9 @@ export default {
                 resolve(e)
             })
         })
+    },
+    copy(text) {
+        const clipboard = weex.requireModule('clipboard')
+        clipboard.setString(text)
     }
 }

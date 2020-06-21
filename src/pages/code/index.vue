@@ -11,8 +11,9 @@
                 </image>
             </div>
         </wxc-minibar>
-        <code-view :codeText="codeText">
+        <code-view :codeText="codeText" style="flex: 1">
         </code-view>
+
         <wxc-loading :show="isLoading" :need-mask="false">
         </wxc-loading>
     </div>

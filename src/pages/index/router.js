@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import boot from "@/pages/index/boot";
 import login from "@/pages/index/login";
 import home from "@/pages/index/home";
+import test from '@/pages/test'
 
 Vue.use(Router)
 
@@ -23,5 +24,10 @@ export const router = new Router({
             name: "登录页面",
             component: login
         },
+        {
+            path: "/test",
+            name: "test",
+            component: test
+        }
     ]
 })

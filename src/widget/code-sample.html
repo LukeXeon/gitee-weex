@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<span class="hljs-keyword">package</span> com.itstyle.seckill.common.aop;<br>
+<br>
+<span class="hljs-keyword">import</span> com.google.common.cache.CacheBuilder;<br>
+<span class="hljs-keyword">import</span> com.google.common.cache.CacheLoader;<br>
+<span class="hljs-keyword">import</span> com.google.common.cache.LoadingCache;<br>
+<span class="hljs-keyword">import</span> com.itstyle.seckill.common.exception.RrException;<br>
+<span class="hljs-keyword">import</span> com.itstyle.seckill.common.utils.IPUtils;<br>
+<span class="hljs-keyword">import</span> org.aspectj.lang.ProceedingJoinPoint;<br>
+<span class="hljs-keyword">import</span> org.aspectj.lang.<span class="hljs-keyword">annotation</span>.Around;<br>
+<span class="hljs-keyword">import</span> org.aspectj.lang.<span class="hljs-keyword">annotation</span>.Aspect;<br>
+<span class="hljs-keyword">import</span> org.aspectj.lang.<span class="hljs-keyword">annotation</span>.Pointcut;<br>
+<span class="hljs-keyword">import</span> org.aspectj.lang.reflect.MethodSignature;<br>
+<span class="hljs-keyword">import</span> org.springframework.context.<span class="hljs-keyword">annotation</span>.Configuration;<br>
+<br>
+<span class="hljs-keyword">import</span> com.google.common.util.concurrent.RateLimiter;<br>
+<span class="hljs-keyword">import</span> java.lang.reflect.Method;<br>
+<span class="hljs-keyword">import</span> java.util.concurrent.TimeUnit;<br>
+<br>
+<span class="hljs-comment">/**<br>
+ * 限流 AOP<br>
+ * 创建者	张志朋<br>
+ * 创建时间	2015年6月3日<br>
+ */</span><br>
+<span class="hljs-meta">@Aspect</span><br>
+<span class="hljs-meta">@Configuration</span><br>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LimitAspect</span> </span>{<br>
+<br>
+<span class="hljs-comment">//根据IP分不同的令牌桶, 每天自动清理缓存</span><br>
+<span class="hljs-keyword">private</span> static LoadingCache&lt;String, RateLimiter&gt; caches = CacheBuilder.newBuilder()<br>
+.maximumSize(<span class="hljs-number">1000</span>)<br>
+.expireAfterWrite(<span class="hljs-number">1</span>, TimeUnit.DAYS)<br>
+.build(new CacheLoader&lt;String, RateLimiter&gt;() {<br>
+<span class="hljs-meta">@Override</span><br>
+<span class="hljs-keyword">public</span> RateLimiter load(String key) {<br>
+<span class="hljs-comment">// 新的IP初始化 每秒只发出5个令牌</span><br>
+<span class="hljs-keyword">return</span> RateLimiter.create(<span class="hljs-number">5</span>);<br>
+}<br>
+});<br>
+<br>
+<span class="hljs-comment">//Service层切点  限流</span><br>
+<span class="hljs-meta">@Pointcut(<span class="hljs-meta-string">"@annotation(com.itstyle.seckill.common.aop.ServiceLimit)"</span>)</span>  <br>
+<span class="hljs-keyword">public</span> void ServiceAspect() {<br>
+<br>
+}<br>
+<br>
+<span class="hljs-meta">@Around(<span class="hljs-meta-string">"ServiceAspect()"</span>)</span><br>
+<span class="hljs-keyword">public</span>  Object around(ProceedingJoinPoint joinPoint) {<br>
+MethodSignature signature = (MethodSignature) joinPoint.getSignature();<br>
+Method method = signature.getMethod();<br>
+ServiceLimit limitAnnotation = method.getAnnotation(ServiceLimit.<span class="hljs-keyword">class</span>);<br>
+ServiceLimit.LimitType limitType = limitAnnotation.limitType();<br>
+String key = limitAnnotation.key();<br>
+Object obj;<br>
+<span class="hljs-keyword">try</span> {<br>
+<span class="hljs-keyword">if</span>(limitType.equals(ServiceLimit.LimitType.IP)){<br>
+key = IPUtils.getIpAddr();<br>
+}<br>
+RateLimiter rateLimiter = caches.<span class="hljs-keyword">get</span>(key);<br>
+<span class="hljs-built_in">Boolean</span> flag = rateLimiter.tryAcquire();<br>
+<span class="hljs-keyword">if</span>(flag){<br>
+obj = joinPoint.proceed();<br>
+}<span class="hljs-keyword">else</span>{<br>
+<span class="hljs-keyword">throw</span> new RrException(<span class="hljs-string">"小同志，你访问的太频繁了"</span>);<br>
+}<br>
+} <span class="hljs-keyword">catch</span> (Throwable e) {<br>
+<span class="hljs-keyword">throw</span> new RrException(<span class="hljs-string">"小同志，你访问的太频繁了"</span>);<br>
+}<br>
+<span class="hljs-keyword">return</span> obj;<br>
+} <br>
+}<br>
+
+</body>
+</html>
