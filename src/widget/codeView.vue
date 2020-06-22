@@ -24,6 +24,7 @@
     import {Utils} from 'weex-ui'
     import {Element, CharacterData} from '../libs/domino/impl'
     import domino from '@/libs/domino/index'
+    import utils from "@/libs/utils";
 
     export default {
         name: "codeView",
@@ -31,6 +32,7 @@
             codeText: {
                 type: String
             },
+            language: String
         },
         computed: {
             pageHeight: () => Utils.env.getScreenHeight(),
@@ -94,9 +96,15 @@
                     }
                 }
 
-                let highlight = hljs.highlightAuto(this.codeText).value
+                let highlight;
+                if (this.language && hljs.getLanguage(this.language)) {
+                    highlight = hljs.highlight(this.language, this.codeText).value
+                } else {
+                    highlight = hljs.highlightAuto(this.codeText).value
+                }
                 highlight = highlight.replace(/\n/g, '<br>')
                 let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
+                utils.copy(html)
                 let root = domino.createDocument(html).body
                 let env = {
                     lines: [],

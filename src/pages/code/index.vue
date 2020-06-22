@@ -11,9 +11,12 @@
                 </image>
             </div>
         </wxc-minibar>
-        <code-view :codeText="codeText" style="flex: 1">
+        <code-view :codeText="codeText"
+                   :language="language"
+                   style="flex: 1">
         </code-view>
-        <wxc-loading :show="isLoading" :need-mask="false">
+        <wxc-loading :show="isLoading"
+                     :need-mask="false">
         </wxc-loading>
     </div>
 </template>
@@ -43,6 +46,15 @@
             let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
             let sha = decodeURIComponent(utils.getQueryVariable(url, 'sha'))
             this.title = decodeURIComponent(utils.getQueryVariable(url, 'title'))
+
+            function getFileType(filename) {
+                let index = filename.lastIndexOf(".");
+                if (index === -1) {
+                    return null
+                }
+                return filename.substr(index + 1)
+            }
+
             let data = await gitee.getBlob(user, repos, sha)
             if (data['size'] / 1024 > 500) {
                 let modal = weex.requireModule('modal')
@@ -56,6 +68,7 @@
                     }
                 })
             } else {
+                this.language = getFileType(this.title)
                 this.codeText = Base64.decode(data['content'])
             }
             this.isLoading = false
@@ -64,7 +77,8 @@
             return {
                 title: '',
                 codeText: '',
-                isLoading: true
+                isLoading: true,
+                language: null
             }
         }
     }
