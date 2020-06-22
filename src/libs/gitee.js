@@ -171,8 +171,8 @@ export default {
         const url = `https://gitee.com/api/v3/projects/popular?page=${page}`
         return await request("GET", url)
     },
-    async getContributions(username, year) {
-        const url = `https://gitee.com/${username}/contribution_calendar?year=${year}`
+    async getContributions(username) {
+        const url = `https://gitee.com/${username}/contribution_calendar?year=`
         let content = await utils.fetch("GET", url, {
             Accept: '*/*',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'

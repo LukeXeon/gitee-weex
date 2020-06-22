@@ -70,13 +70,13 @@
         width: 750px;
         justify-content: center;
         align-items: center;
-        height: 250px;
+        height: 220px;
     }
 
     .scroller {
         flex-direction: row;
         width: 710px;
-        height: 210px;
+        height: 190px;
     }
 
     .box-group {
@@ -85,9 +85,9 @@
 
     .box {
         background-color: #eaeaea;
-        height: 25px;
-        width: 25px;
-        border-radius: 2.5px;
-        margin: 2.5px;
+        height: 23px;
+        width: 23px;
+        border-radius: 2px;
+        margin: 2px;
     }
 </style>

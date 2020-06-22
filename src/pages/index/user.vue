@@ -118,8 +118,7 @@
                 this.contributions = await this.loadContributions(info)
             },
             async loadContributions(info) {
-                let year = new Date().getFullYear()
-                let content = await gitee.getContributions(info['login'], year)
+                let content = await gitee.getContributions(info['login'])
                 let document = domino.createDocument(content, true)
                 let rawArray = document.querySelectorAll('div[data-content]')
                 let result = []
@@ -131,6 +130,9 @@
                             color: item.classList[1],
                             text: item.getAttribute('data-content')
                         })
+                    }
+                    else {
+                        break
                     }
                 }
                 return result
