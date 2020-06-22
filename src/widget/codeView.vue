@@ -4,7 +4,7 @@
               style="flex: 1">
         <div :style="{height:lines.length*40+'px'}">
             <scroller scroll-direction="horizontal"
-                      alwaysScrollableVertical="true"
+                      alwaysScrollableHorizontal="true"
                       :style="{'min-height':pageHeight+'px'}"
                       show-scrollbar="false"
                       class="inner-scroller">

@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <scroller scroll-direction="horizontal"
-                  alwaysScrollableVertical="true"
+                  alwaysScrollableHorizontal="true"
                   show-scrollbar="false"
                   scrollToBegin="true"
                   class="scroller">
