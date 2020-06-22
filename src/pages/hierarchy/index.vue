@@ -24,7 +24,7 @@
                   @click="onClick(item)"
                   v-for="(item,index) in list">
                 <image class="icon"
-                       :src="icons[item.type]">
+                       :src="getIcon(item)">
                 </image>
                 <text class="text">{{item.path}}</text>
             </cell>
@@ -39,6 +39,18 @@
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
 
+    const imageTypes = ['png', 'jpeg', 'jpg', 'gif', 'svg']
+
+    function testImageType(path) {
+        for (let i = 0; i < imageTypes.length; i++) {
+            let type = imageTypes[i]
+            if (path.endsWith(type)) {
+                return type
+            }
+        }
+        return null
+    }
+
     export default {
         name: "index",
         components: {
@@ -49,6 +61,20 @@
             back() {
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
+            },
+            getIcon(item) {
+                switch (item.type) {
+                    case 'tree':
+                        return require('@/res/dictionary.png').default
+                    case 'commit':
+                        return require('@/res/link(1).png').default
+                    case 'blob':
+                        if (testImageType(item.path)) {
+                            return require('@/res/image.png').default
+                        } else {
+                            return require('@/res/file.png').default
+                        }
+                }
             },
             async onRefresh() {
                 this.refreshing = true
@@ -62,26 +88,23 @@
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
 
                 if (item.type === 'blob') {
-                    let imageTypes = ['png', 'jpeg', 'jpg', 'gif', 'svg']
-                    for (let i = 0; i < imageTypes.length; i++) {
-                        let type = imageTypes[i]
-                        if (item.path.endsWith(type)) {
-                            utils.jumpTo('image', {
-                                user: user,
-                                repos: repos,
-                                sha: item.sha,
-                                title: item.path,
-                                type: type
-                            })
-                            return
-                        }
+                    let imageType = testImageType(item.path)
+                    if (imageType) {
+                        utils.jumpTo('image', {
+                            user: user,
+                            repos: repos,
+                            sha: item.sha,
+                            title: item.path,
+                            type: imageType
+                        })
+                    } else {
+                        utils.jumpTo('code', {
+                            user: user,
+                            repos: repos,
+                            sha: item.sha,
+                            title: item.path
+                        })
                     }
-                    utils.jumpTo('code', {
-                        user: user,
-                        repos: repos,
-                        sha: item.sha,
-                        title: item.path
-                    })
                 } else if (item.type === 'tree') {
                     utils.jumpTo('hierarchy', {
                         user: user,
@@ -122,11 +145,6 @@
                 isLoading: true,
                 refreshing: false,
                 title: '',
-                icons: {
-                    blob: require('@/res/file.png').default,
-                    tree: require('@/res/dictionary.png').default,
-                    commit: require('@/res/link(1).png').default
-                },
             }
         }
     }
