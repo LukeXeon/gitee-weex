@@ -8,17 +8,14 @@
                       :style="{'min-height':pageHeight+'px'}"
                       show-scrollbar="false"
                       class="inner-scroller">
-                <div style="flex: 1">
-                    <div style="flex-direction: row;height: 40px"
-                         v-for="(line,index) in lines">
-                        <text :class="text.class"
-                              v-for="(text,index2) in line">{{text.text}}</text>
-                    </div>
+                <div style="flex-direction: row;height: 40px"
+                     v-for="(line,index) in lines">
+                    <text :class="text.class"
+                          v-for="(text,index2) in line">{{text.text}}</text>
                 </div>
             </scroller>
         </div>
     </scroller>
-
 </template>
 
 
@@ -27,7 +24,6 @@
     import {Utils} from 'weex-ui'
     import {Element, CharacterData} from '../libs/domino/impl'
     import domino from '@/libs/domino/index'
-    import utils from "@/libs/utils";
 
     export default {
         name: "codeView",
@@ -48,60 +44,66 @@
                     return classList
                 }
 
-                let highlight = hljs.highlightAuto(this.codeText).value
-                highlight = highlight.replace(/\n/g, '<br>')
-                utils.copy(highlight)
-                let root = domino.createDocument(
-                    "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
-                ).body
-                let maxWidth = 0
-                let width = 0
-                let lines = []
-                let line = []
-                for (let i = 0; i < root.childNodes.length; i++) {
-                    let item = root.childNodes[i]
-                    if (item instanceof CharacterData) {
+                function appendSpan(line, node, classList) {
+                    if (node instanceof CharacterData && node.data.length > 0) {
+                        if (classList) {
+                            line.push({
+                                class: classList,
+                                text: node.data
+                            })
+                        } else {
+                            line.push({
+                                class: ['text-span'],
+                                text: node.data
+                            })
+                        }
+                    } else if (node instanceof Element && node.textContent.length > 0) {
                         line.push({
-                            class: ['text-span'],
-                            text: item.data
+                            class: getClassList(node),
+                            text: node.textContent
                         })
-                        width += item.data.length
-                    } else if (item instanceof Element) {
-                        if (item.tagName === 'BR') {
-                            lines.push(line)
-                            maxWidth = Math.max(width, maxWidth)
-                            width = 0
-                            line = []
-                        } else if (item.tagName === 'SPAN') {
-                            let classList = getClassList(item)
-                            if (item.children.length > 0) {
-                                for (let j = 0; j < item.childNodes.length; j++) {
-                                    let node = item.childNodes[j]
-                                    if (node instanceof CharacterData) {
-                                        line.push({
-                                            class: classList,
-                                            text: node.data
-                                        })
-                                        width += node.data.length
-                                    } else if (node instanceof Element) {
-                                        line.push({
-                                            class: getClassList(node),
-                                            text: node.textContent
-                                        })
-                                        width += node.textContent.length
+                    }
+                }
+
+                function buildLine(env, node, classList) {
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        let item = node.childNodes[i]
+                        if (item instanceof CharacterData) {
+                            appendSpan(env.line, item, classList)
+                        } else if (item instanceof Element) {
+                            if (item.tagName === 'SPAN') {
+                                let classList2 = getClassList(item)
+                                if (classList && classList2.length === 1) {
+                                    for (let j = 0; j < classList.length; j++) {
+                                        let c = classList[i]
+                                        if (classList2.indexOf(c) === -1) {
+                                            classList2.push(c)
+                                        }
                                     }
                                 }
-                            } else {
-                                line.push({
-                                    class: classList,
-                                    text: item.textContent
-                                })
-                                width += item.textContent.length
+                                if (item.children.length > 0) {
+                                    buildLine(env, item, classList2)
+                                } else {
+                                    appendSpan(env.line, item)
+                                }
+                            } else if (item.tagName === 'BR') {
+                                env.lines.push(env.line)
+                                env.line = []
                             }
                         }
                     }
                 }
-                return lines
+
+                let highlight = hljs.highlightAuto(this.codeText).value
+                highlight = highlight.replace(/\n/g, '<br>')
+                let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
+                let root = domino.createDocument(html).body
+                let env = {
+                    lines: [],
+                    line: []
+                }
+                buildLine(env, root)
+                return env.lines
             }
         },
     }

@@ -13,7 +13,6 @@
         </wxc-minibar>
         <code-view :codeText="codeText" style="flex: 1">
         </code-view>
-
         <wxc-loading :show="isLoading" :need-mask="false">
         </wxc-loading>
     </div>
@@ -45,7 +44,20 @@
             let sha = decodeURIComponent(utils.getQueryVariable(url, 'sha'))
             this.title = decodeURIComponent(utils.getQueryVariable(url, 'title'))
             let data = await gitee.getBlob(user, repos, sha)
-            this.codeText = Base64.decode(data['content'])
+            if (data['size'] / 1024 > 500) {
+                let modal = weex.requireModule('modal')
+                modal.confirm({
+                    message: '文件过大，不能在App中浏览，会导致OOM，是否打开浏览器?',
+                    okTitle: '好的',
+                    cancelTitle: '滚'
+                }, function (value) {
+                    if (value === '滚') {
+                        this.back()
+                    }
+                })
+            } else {
+                this.codeText = Base64.decode(data['content'])
+            }
             this.isLoading = false
         },
         data() {
