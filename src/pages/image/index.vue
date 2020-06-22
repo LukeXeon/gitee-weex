@@ -1,0 +1,94 @@
+<template>
+    <div style="flex-direction: column">
+        <wxc-minibar :title="title"
+                     :text-color="isBlackMode?'#FFFFFF':'#000000'"
+                     :background-color="isBlackMode?'#3f3f3f':'#f6f6f6'">
+            <div slot="left"
+                 v-on:click="back"
+                 class="left">
+                <image :src="require('@/res/back.png').default"
+                       style="width: 40px;height: 40px">
+                </image>
+            </div>
+            <div slot="right"
+                 class="switch"
+                 :style="{'background-color':!isBlackMode?'#3f3f3f':'#FBFBFB'}"
+                 @click="onSwitch">
+            </div>
+        </wxc-minibar>
+        <div class="image-wrapper"
+             :style="{'background-color':isBlackMode?'#000000':'#FFFFFF'}">
+            <image class="image"
+                   resize="contain"
+                   :src="url">
+            </image>
+        </div>
+    </div>
+</template>
+
+<script>
+    import {WxcMinibar} from 'weex-ui'
+    import utils from "@/libs/utils";
+    import gitee from "@/libs/gitee";
+
+    export default {
+        name: "index",
+        components: {
+            WxcMinibar
+        },
+        methods: {
+            back() {
+                const navigator = weex.requireModule('navigator')
+                navigator.pop()
+            },
+            onSwitch() {
+                this.isBlackMode = !this.isBlackMode
+            }
+        },
+        async created() {
+            let url = weex.config.bundleUrl
+            let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+            let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+            let sha = decodeURIComponent(utils.getQueryVariable(url, 'sha'))
+            let type = decodeURIComponent(utils.getQueryVariable(url, 'type'))
+            this.title = decodeURIComponent(utils.getQueryVariable(url, 'title'))
+            let data = await gitee.getBlob(user, repos, sha)
+            this.url = `data:image/${type};base64,${data['content']}`
+        },
+        data() {
+            return {
+                title: '',
+                url: '',
+                isBlackMode: false
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .left {
+        width: 60px;
+        height: 60px;
+        justify-content: center;
+        align-items: center
+    }
+
+    .image-wrapper {
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    }
+
+    .image {
+        width: 750px;
+        height: 750px;
+    }
+
+    .switch {
+        border-radius: 55px;
+        background-color: #3f3f3f;
+        width: 55px;
+        height: 55px;
+    }
+</style>

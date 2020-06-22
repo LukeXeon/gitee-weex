@@ -5,7 +5,9 @@
                   show-scrollbar="false"
                   scrollToBegin="true"
                   class="scroller">
-            <div class="box-group" v-for="(itemGroup,index) in renderItems">
+            <div class="box-group"
+                 :key="index"
+                 v-for="(itemGroup,index) in renderItems">
                 <div class="box"
                      v-for="(box,index2) in itemGroup"
                      :style="{'background-color':(colors[box.color])}"/>
@@ -28,7 +30,7 @@
         if (array == null) {
             return []
         }
-        let items = new Array(parseInt((array.length / 7).toString()))
+        let items = new Array(Math.floor(array.length / 7))
         let temp = []
         for (let i = 0; i < array.length; i++) {
             let item = array[i]
@@ -54,7 +56,11 @@
                 return buildItems(this.items)
             },
         },
-        methods: {
+        watch: {
+            items(value) {
+                let dom = weex.requireModule('dom')
+                let index = Math.floor(value.length / 7)
+            }
         },
         data() {
             return {
@@ -71,6 +77,10 @@
         justify-content: center;
         align-items: center;
         height: 220px;
+        border-bottom-color: #dddddd;
+        border-top-color: #dddddd;
+        border-top-width: 0.5px;
+        border-bottom-width: 0.5px;
     }
 
     .scroller {

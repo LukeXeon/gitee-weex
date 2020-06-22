@@ -30,7 +30,7 @@
         props: {
             codeText: {
                 type: String
-            }
+            },
         },
         computed: {
             pageHeight: () => Utils.env.getScreenHeight(),

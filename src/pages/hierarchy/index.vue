@@ -31,12 +31,6 @@
         </list>
         <wxc-loading :show="isLoading" :need-mask="false">
         </wxc-loading>
-        <popup-image
-                :title="imageTitle"
-                :show="imageUrl!=null"
-                :url="imageUrl"
-                @onOverlayClicked="onOverlayClicked">
-        </popup-image>
     </div>
 </template>
 
@@ -44,20 +38,14 @@
     import {WxcLoading, WxcMinibar} from 'weex-ui'
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
-    import popupImage from "@/widget/popupImage";
 
     export default {
         name: "index",
         components: {
             WxcMinibar,
-            WxcLoading,
-            popupImage
+            WxcLoading
         },
         methods: {
-            onOverlayClicked() {
-                this.imageUrl = null
-                this.imageTitle = null
-            },
             back() {
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
@@ -67,7 +55,7 @@
                 await this.doRefresh()
                 this.refreshing = false
             },
-            async onClick(item) {
+            onClick(item) {
 
                 let url = weex.config.bundleUrl
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
@@ -78,9 +66,13 @@
                     for (let i = 0; i < imageTypes.length; i++) {
                         let type = imageTypes[i]
                         if (item.path.endsWith(type)) {
-                            let data = await gitee.getBlob(user, repos, item.sha)
-                            this.imageUrl = `data:image/${type};base64,${data['content']}`
-                            this.imageTitle = item.path
+                            utils.jumpTo('image', {
+                                user: user,
+                                repos: repos,
+                                sha: item.sha,
+                                title: item.path,
+                                type: type
+                            })
                             return
                         }
                     }
@@ -135,8 +127,6 @@
                     tree: require('@/res/dictionary.png').default,
                     commit: require('@/res/link(1).png').default
                 },
-                imageUrl: null,
-                imageTitle: null
             }
         }
     }

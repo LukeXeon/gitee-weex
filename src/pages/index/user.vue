@@ -5,7 +5,8 @@
                      text-color="black"
                      background-color="#FBFBFB">
         </wxc-minibar>
-        <scroller class="wrapper" alwaysScrollableVertical="true">
+        <scroller class="wrapper"
+                  alwaysScrollableVertical="true">
             <refresh class="refresh"
                      :display="refreshing ? 'show' : 'hide'"
                      @refresh="onRefresh"
@@ -14,33 +15,25 @@
                 <loading-indicator class="indicator">
                 </loading-indicator>
             </refresh>
-            <div class="head-bar">
-                <image class="head-icon" :src="avatarIcon">
-                </image>
-                <div style="flex-direction: column;margin-top: 15px;margin-left: 25px">
-                    <div style="flex-direction: row;align-items: center">
-                        <text style="font-size: 38px;color: #00B4FF">{{username}}</text>
-                        <text style="font-size: 38px;"> ({{nikeName}})</text>
-                    </div>
-                    <text style="font-size: 35px;margin-top: 10px">{{bio}}</text>
-                    <text style="font-size: 30px;margin-top: 10px">于{{joinTime}}加入</text>
-                </div>
-            </div>
+            <user-header :avatarIcon="avatarIcon"
+                         :username="username"
+                         :nikeName="nikeName"
+                         :bio="bio"
+                         :joinTime="joinTime">
+            </user-header>
             <tab3 :items="items">
             </tab3>
-            <div style="height: 30px"></div>
-            <contribution-view :items="contributions">
+            <contribution-view
+                    style="margin-top: 30px;margin-bottom: 30px"
+                    :items="contributions">
             </contribution-view>
-            <div style="height: 30px"></div>
-            <div>
-                <label-line v-for="(item,index) in items2"
-                            :key="index"
-                            v-bind:icon="item[0]"
-                            v-bind:title="item[1]"
-                            v-bind:useRight="false"
-                            v-on:click="onClick(index)">
-                </label-line>
-            </div>
+            <label-line v-for="(item,index) in items2"
+                        :key="index"
+                        v-bind:icon="item[0]"
+                        v-bind:title="item[1]"
+                        v-bind:useRight="false"
+                        v-on:click="onClick(index)">
+            </label-line>
             <div style="margin-top: 30px">
                 <label-line v-for="(item,index) in items3"
                             :key="index"
@@ -63,6 +56,7 @@
     import utils from "@/libs/utils";
     import domino from "@/libs/domino";
     import format from "@/libs/date.format";
+    import userHeader from "@/widget/userHeader";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -79,7 +73,8 @@
             WxcMinibar,
             contributionView,
             LabelLine,
-            tab3
+            tab3,
+            userHeader
         },
         methods: {
             async onRefresh() {
@@ -130,8 +125,7 @@
                             color: item.classList[1],
                             text: item.getAttribute('data-content')
                         })
-                    }
-                    else {
+                    } else {
                         break
                     }
                 }
@@ -149,8 +143,8 @@
                 avatarIcon: '',
                 username: "username",
                 nikeName: "nikeName",
-                bio: "tag",
-                joinTime: "111",
+                bio: "",
+                joinTime: "",
                 items: [
                     ["仓库", 0],
                     ["关注中", 0],
@@ -173,39 +167,11 @@
 </script>
 
 <style scoped>
-    .refresh {
-        width: 750px;
-        display: -ms-flex;
-        display: -webkit-flex;
-        display: flex;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        -webkit-box-align: center;
-        align-items: center;
-    }
 
     .wrapper {
         background-color: whitesmoke;
         flex: 1;
     }
-
-    .head-icon {
-        background-color: #238FFF;
-        height: 150px;
-        width: 150px;
-        margin-top: 25px;
-        margin-left: 30px;
-        border-radius: 10px
-    }
-
-    .head-bar {
-        flex-direction: row;
-        background-color: white;
-        height: 200px;
-        border-bottom-width: 0.5px;
-        border-bottom-color: #dddddd
-    }
-
 
     .refresh {
         width: 750px;
