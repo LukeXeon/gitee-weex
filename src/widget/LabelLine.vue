@@ -4,8 +4,10 @@
             <image class="item-icon" :src="icon">
             </image>
         </div>
-        <text class="left-text">{{title}}</text>
-        <text v-if="useRight&&rightText!=null" class="text2">{{rightText}}</text>
+        <text class="left-text"
+              :style="leftStyle">{{title}}</text>
+        <text v-if="useRight&&rightText!=null"
+              class="text2">{{rightText}}</text>
         <image v-if="useRight"
                class="right-icon"
                :src="rightIcon">
@@ -22,6 +24,9 @@
             rightText: {
                 type: String,
                 default: null
+            },
+            leftStyle: {
+                type: Object
             },
             icon: {
                 type: String

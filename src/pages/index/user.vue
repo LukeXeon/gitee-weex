@@ -29,16 +29,17 @@
             </contribution-view>
             <label-line v-for="(item,index) in items2"
                         :key="index"
-                        v-bind:icon="item[0]"
-                        v-bind:title="item[1]"
-                        v-bind:useRight="false"
-                        v-on:click="onClick(index)">
+                        :icon="item[0]"
+                        :title="item[1]"
+                        :leftStyle="item[2]"
+                        :useRight="false"
+                        @click="onClick(index)">
             </label-line>
             <div style="margin-top: 30px">
                 <label-line v-for="(item,index) in items3"
                             :key="index"
-                            v-bind:icon="item[0]"
-                            v-bind:title="item[1]"
+                            :icon="item[0]"
+                            :title="item[1]"
                             @onLabelClick="onClick2(index)">
                 </label-line>
             </div>
@@ -54,9 +55,8 @@
     import LabelLine from "@/widget/LabelLine";
     import tab3 from "@/widget/tab3";
     import utils from "@/libs/utils";
-    import domino from "@/libs/domino";
-    import format from "@/libs/date.format";
     import userHeader from "@/widget/userHeader";
+    import loadContributions from "@/libs/loadContributions";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -66,6 +66,14 @@
     let info = require('@/res/info.png').default
     let feedback = require('@/res/feedback.png').default
     let right = require('@/res/right.png').default
+
+    let noLabelStyle = {
+        color: "#aaaaaa"
+    }
+
+    let hasLabelStyle = {
+        color: "#141414"
+    }
 
     export default {
         name: "user",
@@ -105,37 +113,20 @@
                     ["关注者", info['followers']],
                 ]
                 this.items2 = [
-                    [team, info['company'] || "公司"],
-                    [wechat, info['wechat'] || "微信"],
-                    [qq, info['qq'] || "QQ"],
-                    [email, info['email'] || '电子邮箱'],
+                    [team, info['company'] || "公司", info['company'] ? hasLabelStyle : noLabelStyle],
+                    [wechat, info['wechat'] || "微信", info['wechat'] ? hasLabelStyle : noLabelStyle],
+                    [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
+                    [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
                 ]
-                this.contributions = await this.loadContributions(info)
+                this.contributions = await loadContributions(info['login'])
             },
-            async loadContributions(info) {
-                let content = await gitee.getContributions(info['login'])
-                let document = domino.createDocument(content, true)
-                let rawArray = document.querySelectorAll('div[data-content]')
-                let result = []
-                let now = parseInt(format.format(new Date(), 'Ymd'))
-                for (let i = 0; i < rawArray.length; i++) {
-                    let item = rawArray[i]
-                    if (now >= parseInt(item.getAttribute('date'))) {
-                        result.push({
-                            color: item.classList[1],
-                            text: item.getAttribute('data-content')
-                        })
-                    } else {
-                        break
-                    }
-                }
-                return result
-            }
         },
         async created() {
             await this.doRefresh()
         },
         data() {
+
+
             return {
                 refreshing: false,
                 contributions: [],
@@ -151,10 +142,10 @@
                     ["关注者", 0],
                 ],
                 items2: [
-                    [team, "公司"],
-                    [wechat, "微信"],
-                    [qq, "QQ"],
-                    [email, "电子邮箱"],
+                    [team, "公司", noLabelStyle],
+                    [wechat, "微信", noLabelStyle],
+                    [qq, "QQ", noLabelStyle],
+                    [email, "电子邮箱", noLabelStyle],
                 ],
                 items3: [
                     [setting, "设置"],

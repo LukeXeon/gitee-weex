@@ -7,7 +7,7 @@
                 <text class="username">{{username}}</text>
                 <text class="nikeName"> ({{nikeName}})</text>
             </div>
-            <text style="font-size: 32px;">{{bio}}</text>
+            <text class="bio">{{bio}}</text>
             <text style="font-size: 26px;">于{{joinTime}}加入</text>
         </div>
     </div>
@@ -27,8 +27,16 @@
 </script>
 
 <style scoped>
+    .bio {
+        font-size: 32px;
+        max-width: 550px;
+        text-overflow: ellipsis;
+        lines: 1
+    }
+
     .head-icon {
-        background-color: #238FFF;
+        border-width: 0.5px;
+        border-color: whitesmoke;
         height: 120px;
         width: 120px;
         margin-left: 30px;

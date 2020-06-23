@@ -35,10 +35,11 @@
             </contribution-view>
             <label-line v-for="(item,index) in items2"
                         :key="index"
-                        v-bind:icon="item[0]"
-                        v-bind:title="item[1]"
-                        v-bind:useRight="false"
-                        v-on:click="onClick(index)">
+                        :icon="item[0]"
+                        :title="item[1]"
+                        :leftStyle="item[2]"
+                        :useRight="false"
+                        :click="onClick(index)">
             </label-line>
         </scroller>
     </div>
@@ -48,14 +49,35 @@
     import {WxcMinibar} from 'weex-ui'
     import tab3 from "@/widget/tab3";
     import userHeader from "@/widget/userHeader";
+    import gitee from "@/libs/gitee";
+    import utils from "@/libs/utils";
+    import labelLine from '@/widget/LabelLine'
+    import contributionView from "@/widget/contributionView";
+    import loadContributions from "@/libs/loadContributions";
 
+    let team = require('@/res/team.png').default
+    let wechat = require('@/res/wechat.png').default
+    let email = require('@/res/email.png').default
+    let qq = require('@/res/qq.png').default
+    let right = require('@/res/right.png').default
+
+
+    let noLabelStyle = {
+        color: "#aaaaaa"
+    }
+
+    let hasLabelStyle = {
+        color: "#141414"
+    }
 
     export default {
         name: "index",
         components: {
             WxcMinibar,
             tab3,
-            userHeader
+            userHeader,
+            labelLine,
+            contributionView
         },
         methods: {
             onClick(index) {
@@ -66,13 +88,35 @@
                 navigator.pop()
             },
             async doRefresh() {
-
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let info = await gitee.getUser(user)
+                this.username = info['login'];
+                this.nikeName = info['name'];
+                this.bio = info['bio'];
+                this.avatarIcon = info['avatar_url']
+                this.joinTime = new Date(info['created_at']).toLocaleDateString()
+                this.items = [
+                    ["仓库", info['public_repos']],
+                    ["关注中", info['following']],
+                    ["关注者", info['followers']],
+                ]
+                this.items2 = [
+                    [team, info['company'] || "公司", info['company'] ? hasLabelStyle : noLabelStyle],
+                    [wechat, info['wechat'] || "微信", info['wechat'] ? hasLabelStyle : noLabelStyle],
+                    [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
+                    [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
+                ]
+                this.contributions = await loadContributions(info['login'])
             },
             async onRefresh() {
                 this.refreshing = true
                 await this.doRefresh()
                 this.refreshing = false
             }
+        },
+        async created() {
+            await this.doRefresh()
         },
         data() {
             return {
@@ -89,10 +133,10 @@
                 avatarIcon: '',
                 contributions: [],
                 items2: [
-                    [team, "公司"],
-                    [wechat, "微信"],
-                    [qq, "QQ"],
-                    [email, "电子邮箱"],
+                    [team, "公司", noLabelStyle],
+                    [wechat, "微信", noLabelStyle],
+                    [qq, "QQ", noLabelStyle],
+                    [email, "电子邮箱", noLabelStyle],
                 ],
             }
         }

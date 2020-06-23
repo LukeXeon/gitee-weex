@@ -36,6 +36,10 @@
                         repos: e.item.repos,
                         branch: e.item.branch
                     })
+                } else if (e.type === 'user') {
+                    utils.jumpTo('user', {
+                        user: e.item.username
+                    })
                 }
             },
             async onRefresh() {
