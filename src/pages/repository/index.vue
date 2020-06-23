@@ -93,7 +93,9 @@
                    :src="require('@/res/point.png').default">
             </image>
         </div>
-        <wxc-loading :show="isLoading" need-mask="true">
+        <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="true">
         </wxc-loading>
         <wxc-popup popup-color="transparent"
                    :show="isBottomShow"

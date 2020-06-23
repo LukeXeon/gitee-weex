@@ -29,7 +29,9 @@
                 <text class="text">{{item.path}}</text>
             </cell>
         </list>
-        <wxc-loading :show="isLoading" :need-mask="false">
+        <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="false">
         </wxc-loading>
     </div>
 </template>

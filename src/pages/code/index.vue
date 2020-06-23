@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar, WxcLoading} from 'weex-ui'
     import codeView from "@/widget/codeView";
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
@@ -31,7 +31,8 @@
     export default {
         components: {
             codeView,
-            WxcMinibar
+            WxcMinibar,
+            WxcLoading
         },
         name: "index",
         methods: {
