@@ -5,12 +5,13 @@
         <div class="text-group">
             <div style="flex-direction: row;align-items: center">
                 <text class="username" v-if="username&&username!==''">{{username}}</text>
-                <text class="text"> (</text>
+                <text class="text" v-if="nikeName&&nikeName!==''"> (</text>
                 <text class="nikeName" v-if="nikeName&&nikeName!==''">{{nikeName}}</text>
-                <text class="text">)</text>
+                <text class="text" v-if="nikeName&&nikeName!==''">)</text>
             </div>
-            <text class="bio" v-if="bio&&bio!==''">{{bio}}</text>
+            <text class="bio">{{bio&&bio!==''?bio:'暂无描述'}}</text>
             <text style="font-size: 26px;" v-if="joinTime&&joinTime!==''">于{{joinTime}}加入</text>
+            <div v-else style="height: 26px"></div>
         </div>
     </div>
 </template>

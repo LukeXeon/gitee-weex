@@ -3,6 +3,7 @@
         <wxc-minibar
                 title="仓库"
                 leftButton=""
+                class="top-bar"
                 text-color="black"
                 background-color="#FBFBFB">
             <div slot="left"
@@ -41,7 +42,8 @@
                         <image class="icon" :src="icon">
                         </image>
                         <div class="title-group">
-                            <text class="title-text">{{username}}</text>
+                            <text class="title-text"
+                                  @click="onNameClick">{{username}}</text>
                             <text class="title-text">{{char}}</text>
                             <text class="title-text">{{repository}}</text>
                         </div>
@@ -56,13 +58,19 @@
                 <tab3 :items="tabs">
                 </tab3>
                 <div class="bar">
-                    <div v-if="languagesSummary&&languagesSummary.length>0"
-                         ref="langLine"
-                         @click="onLangLineClick"
-                         class="lang-line">
-                        <div v-for="(item,index) in languagesSummary"
-                             :style="item">
+                    <div class="lang-line-wrapper">
+                        <div v-if="languagesSummary.length!==0"
+                             @click="onLangLineClick"
+                             style="flex: 1;justify-content: center;align-items: center;">
+                            <div class="lang-line">
+                                <div v-for="(item,index) in languagesSummary"
+                                     :style="item">
+                                </div>
+                            </div>
                         </div>
+                        <div v-else
+                             class="lang-line"
+                             style="background-color: darkgray;"></div>
                     </div>
                     <label-line v-for="(item,index) in labels"
                                 @onLabelClick="onLabelClick(index)"
@@ -128,7 +136,7 @@
 <script>
     import {WxcMinibar, WxcLoading, WxcPopup, Utils} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
-    import tab3 from "@/widget/tab3";
+    import tab3 from "@/widget/tabs";
     import LabelLine from "@/widget/labelLine";
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
@@ -181,6 +189,29 @@
             },
         },
         methods: {
+            onNameClick() {
+                switch (this.reposType) {
+                    case "group": {
+                        utils.jumpTo('organization', {
+                            path: this.path
+                        })
+                    }
+                        break
+                    case "personal": {
+                        utils.jumpTo('user', {
+                            path: this.path
+                        })
+                    }
+                        break
+                    case "enterprise": {
+                        let modal = weex.requireModule('modal')
+                        modal.alert({
+                            message: '该项目为企业项目，Gitee暂未开放获取企业信息的可用的API。'
+                        })
+                    }
+                        break
+                }
+            },
             onLabelClick(index) {
                 switch (index) {
                     case 0: {
@@ -258,6 +289,8 @@
                 this.issues = data['open_issues_count']
                 this.license = data['license']
                 this.branch = data['default_branch']
+                this.reposType = data['namespace']['type']
+                this.path = data['namespace']['path']
             },
             async loadExtraInfo(user, repos, branch) {
                 try {
@@ -375,12 +408,18 @@
                 char: ' / ',
                 refreshing: false,
                 noReadme: true,
+                reposType: '',
+                path: ''
             }
         }
     }
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
 
     .lang-cell {
         flex-direction: row;
@@ -451,8 +490,16 @@
         flex-direction: row;
         width: 750px;
         height: 30px;
-        border-bottom-width: 0.5px;
-        border-bottom-color: #dddddd;
+    }
+
+    .lang-line-wrapper {
+        border-top-width: 0.5px;
+        border-top-color: #dddddd;
+        width: 750px;
+        height: 50px;
+        background-color: white;
+        justify-content: flex-end;
+        align-items: center;
     }
 
     .bar {

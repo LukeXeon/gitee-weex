@@ -2,6 +2,7 @@
     <div style="flex: 1">
         <wxc-minibar title="事件"
                      leftButton=""
+                     class="top-bar"
                      text-color="black"
                      background-color="#FBFBFB"/>
         <recycle-list for="(item,index) in items">
@@ -28,6 +29,11 @@
 
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .text-root {
         flex: 1;
         flex-direction: column;
@@ -68,6 +74,7 @@
 
 <script>
     import {WxcMinibar} from 'weex-ui'
+    import gitee from "@/libs/gitee";
 
     export default {
         components: {
@@ -78,6 +85,10 @@
             onClick() {
 
             }
+        },
+        async created() {
+            let user = await gitee.loadMyInfo()
+            let events = await gitee.getEvents(user['name'], 1, 20)
         },
         data() {
             return {

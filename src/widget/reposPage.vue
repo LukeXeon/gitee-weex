@@ -37,30 +37,48 @@
                         branch: e.item.branch,
                         icon: e.item.icon
                     })
-                } else if (e.type === 'user') {
-                    utils.jumpTo('user', {
-                        user: e.item.username
-                    })
+                } else if (e.type === 'owner') {
+                    switch (e.item.type) {
+                        case "group": {
+                            utils.jumpTo('organization', {
+                                path: e.item.username
+                            })
+                        }
+                            break
+                        case "personal": {
+                            utils.jumpTo('user', {
+                                path: e.item.username
+                            })
+                        }
+                            break
+                        case "enterprise": {
+                            let modal = weex.requireModule('modal')
+                            modal.alert({
+                                message: '该项目为企业项目，Gitee暂未开放获取企业信息的可用的API。'
+                            })
+                        }
+                            break
+                    }
                 }
             },
             async onRefresh() {
                 if (!this.loading) {
                     this.refreshing = true
                     try {
-                        this.page = 0
+                        this.page = 1
                         this.items = await this.loadPage()
                     } finally {
                         this.refreshing = false
                     }
                 }
             },
-            loadPage(page = 0) {
+            loadPage(page = 1) {
                 return this.model(page)
             },
             async onLoadMore() {
                 if (!this.refreshing) {
                     this.loading = true
-                    let data = await this.loadPage(this.page++)
+                    let data = await this.loadPage(++this.page)
                     this.items.push(...data)
                     this.loading = false
                 }

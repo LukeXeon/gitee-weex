@@ -3,6 +3,7 @@
         <wxc-minibar
                 :title="title"
                 leftButton=""
+                class="top-bar"
                 text-color="black"
                 background-color="#FBFBFB"/>
         <repos-page :model="model">
@@ -32,5 +33,8 @@
 </script>
 
 <style scoped>
-
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
 </style>

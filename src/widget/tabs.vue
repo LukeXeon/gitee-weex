@@ -21,7 +21,7 @@
                 this.$emit('tabClick', {index: index})
             }
         },
-        name: "tab3"
+        name: "tabs"
     }
 </script>
 

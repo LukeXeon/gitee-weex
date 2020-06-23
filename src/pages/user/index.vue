@@ -1,6 +1,7 @@
 <template>
     <div style="flex-direction: column">
         <wxc-minibar title="用户"
+                     class="top-bar"
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"
@@ -29,8 +30,8 @@
                          :bio="bio"
                          :joinTime="joinTime">
             </user-header>
-            <tab3 :items="items">
-            </tab3>
+            <tabs :items="items">
+            </tabs>
             <contribution-view
                     style="margin-top: 30px;margin-bottom: 30px"
                     :items="contributions">
@@ -53,7 +54,7 @@
 
 <script>
     import {WxcMinibar, WxcLoading} from 'weex-ui'
-    import tab3 from "@/widget/tab3";
+    import tabs from "@/widget/tabs";
     import userHeader from "@/widget/userHeader";
     import gitee from "@/libs/gitee";
     import utils from "@/libs/utils";
@@ -80,7 +81,7 @@
         name: "index",
         components: {
             WxcMinibar,
-            tab3,
+            tabs,
             userHeader,
             labelLine,
             contributionView,
@@ -96,7 +97,7 @@
             },
             async doRefresh() {
                 let url = weex.config.bundleUrl
-                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
                 let info = await gitee.getUser(user)
                 this.username = info['login'];
                 this.nikeName = info['name'];
@@ -114,7 +115,9 @@
                     [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
                     [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
                 ]
-                this.contributions = await htmlUtils.getContributions(info['login'])
+                htmlUtils.getContributions(info['login']).then(res => {
+                    this.contributions = res
+                })
             },
             async onRefresh() {
                 this.refreshing = true
@@ -153,6 +156,11 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .wrapper {
         flex: 1;
         background-color: whitesmoke;

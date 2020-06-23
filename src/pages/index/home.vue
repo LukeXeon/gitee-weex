@@ -38,9 +38,6 @@
     import star from "@/pages/index/star";
     import hot from "@/pages/index/hot";
     import events from "@/pages/index/events";
-    import utils from "@/libs/utils";
-
-    const modal = weex.requireModule('modal')
 
     let titles = [
         {

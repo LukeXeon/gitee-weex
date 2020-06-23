@@ -1,6 +1,7 @@
 <template>
     <div style="flex: 1">
         <wxc-minibar title="个人信息"
+                     class="top-bar"
                      leftButton=""
                      text-color="black"
                      background-color="#FBFBFB">
@@ -22,8 +23,8 @@
                          :bio="bio"
                          :joinTime="joinTime">
             </user-header>
-            <tab3 :items="items">
-            </tab3>
+            <tabs :items="items">
+            </tabs>
             <contribution-view
                     style="margin-top: 30px;margin-bottom: 30px"
                     :items="contributions">
@@ -54,7 +55,7 @@
     import contributionView from "@/widget/contributionView";
     import {WxcMinibar} from 'weex-ui'
     import LabelLine from "@/widget/labelLine";
-    import tab3 from "@/widget/tab3";
+    import tabs from "@/widget/tabs";
     import utils from "@/libs/utils";
     import userHeader from "@/widget/userHeader";
     import htmlUtils from "@/libs/htmlUtils";
@@ -82,7 +83,7 @@
             WxcMinibar,
             contributionView,
             LabelLine,
-            tab3,
+            tabs,
             userHeader
         },
         methods: {
@@ -119,15 +120,15 @@
                     [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
                     [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
                 ]
-                this.contributions = await htmlUtils.getContributions(info['login'])
+                htmlUtils.getContributions(info['login']).then(res => {
+                    this.contributions = res
+                })
             },
         },
         async created() {
             await this.doRefresh()
         },
         data() {
-
-
             return {
                 refreshing: false,
                 contributions: [],
@@ -159,6 +160,11 @@
 </script>
 
 <style scoped>
+
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
 
     .wrapper {
         background-color: whitesmoke;

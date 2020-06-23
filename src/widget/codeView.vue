@@ -11,8 +11,12 @@
                       class="inner-scroller">
                 <div style="flex-direction: row"
                      v-for="(line,index) in lines">
+                    <div class="line-marker">
+                        <text class="text-span"
+                              style="color: #999999;margin-right: 40px">{{''+(index+1)}}</text>
+                    </div>
                     <text :class="text.class"
-                          v-for="(text,index2) in line">{{text.text}}</text>
+                          v-for="(text) in line">{{text.text}}</text>
                 </div>
             </scroller>
         </div>
@@ -132,10 +136,20 @@
 <style scoped>
     .text-span {
         font-size: 30px;
+        lines: 1
     }
 
     .inner-scroller {
         flex-direction: column;
         flex: 1
+    }
+
+    .line-marker {
+        border-right-width: 0.5px;
+        border-right-color: #888888;
+        margin-right: 10px;
+        align-items: flex-end;
+        background-color: #f0f0f0;
+        min-width: 100px;
     }
 </style>

@@ -126,7 +126,7 @@ export default {
     },
     async getEvents(username, page, countAtPage) {
         let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/users/1/received_events?access_token=${accessToken}&page=${page}&per_page=${countAtPage}`
+        const url = `https://gitee.com/api/v5/users/${username}/received_events?access_token=${accessToken}&page=${page}&per_page=${countAtPage}`
         return await request("GET", url)
     },
     async getMyRepos(page, countAtPage) {
@@ -219,5 +219,24 @@ export default {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/orgs/${org}?access_token=${accessToken}`
         return await request("GET", url)
+    },
+    async getOrgRepos(org) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/orgs/${org}/repos?access_token=${accessToken}`
+        return await request("GET", url)
+    },
+    async getOrgMembers(org) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/orgs/${org}/members?access_token=${accessToken}`
+        return await request("GET", url)
+    },
+    getReposType(item) {
+        if (item['namespace']['enterprise_id'] && item['namespace']['enterprise_id'] !== 0) {
+            return 'enterprise'
+        } else if (item['namespace']['path'] === item['owner']['username']) {
+            return 'personal'
+        } else {
+            return 'group'
+        }
     }
 }

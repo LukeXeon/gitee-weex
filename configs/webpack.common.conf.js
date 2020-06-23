@@ -17,6 +17,7 @@ const weexEntry = {
   'code': helper.root('pages/code/index.js'),
   'image': helper.root('pages/image/index.js'),
   'user': helper.root('pages/user/index.js'),
+  'organization': helper.root('pages/organization/index.js'),
 }
 
 const getEntryFileContent = (source, routerpath) => {

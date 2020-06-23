@@ -20,7 +20,7 @@
 
     function wrapLoadFunction(model) {
         return async function (page) {
-            let data = await model(page)
+            let data = await model(Math.max(1, page))
 
             function buildList(items) {
                 let list = []
@@ -28,6 +28,7 @@
                     let item = items[j]
                     let color = gitee.getLanguageColor(item['language'])
                     let updatedAt = format.format(new Date(item['last_push_at']), 'Y年m月d日')
+                    let type = gitee.getReposType(item)
                     list.push({
                         icon: item['namespace']['avatar'] || item['owner']['new_portrait'],
                         username: item['namespace']['path'],
@@ -42,6 +43,7 @@
                         forkCount: item['forks_count'],
                         watchCount: item['watches_count'],
                         branch: item['default_branch'],
+                        type: type
                     })
                 }
                 return list
