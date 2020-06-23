@@ -1,12 +1,13 @@
 <template>
     <div class="wrapper">
         <scroller scroll-direction="horizontal"
+                  scrollable="true"
                   alwaysScrollableHorizontal="true"
                   show-scrollbar="false"
                   scrollToBegin="true"
                   class="scroller">
             <div class="box-group"
-                 :key="index"
+                 :ref="'key'+index"
                  v-for="(itemGroup,index) in renderItems">
                 <div class="box"
                      v-for="(box,index2) in itemGroup"
@@ -55,12 +56,6 @@
             renderItems: function () {
                 return buildItems(this.items)
             },
-        },
-        watch: {
-            items(value) {
-                let dom = weex.requireModule('dom')
-                let index = Math.floor(value.length / 7)
-            }
         },
         data() {
             return {

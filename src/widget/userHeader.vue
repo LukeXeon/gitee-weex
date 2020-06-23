@@ -4,11 +4,11 @@
         </image>
         <div class="text-group">
             <div style="flex-direction: row;align-items: center">
-                <text class="username">{{username}}</text>
-                <text class="nikeName"> ({{nikeName}})</text>
+                <text class="username" v-if="username&&username!==''">{{username}}</text>
+                <text class="nikeName" v-if="nikeName&&nikeName!==''"> ({{nikeName}})</text>
             </div>
-            <text class="bio">{{bio}}</text>
-            <text style="font-size: 26px;">于{{joinTime}}加入</text>
+            <text class="bio" v-if="bio&&bio!==''">{{bio}}</text>
+            <text style="font-size: 26px;" v-if="joinTime&&joinTime!==''">于{{joinTime}}加入</text>
         </div>
     </div>
 </template>

@@ -11,7 +11,8 @@
                 </image>
             </div>
         </wxc-minibar>
-        <scroller v-if="!showWebView" alwaysScrollableVertical="true">
+        <scroller scrollable="true"
+                  alwaysScrollableVertical="true">
             <div style="flex-direction: column;align-items: center;">
                 <div class="logo-group">
                     <image class="image"

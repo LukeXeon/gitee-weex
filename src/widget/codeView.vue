@@ -1,10 +1,12 @@
 <template>
     <scroller scroll-direction="vertical"
               alwaysScrollableVertical="true"
+              scrollable="true"
               style="flex: 1">
         <div :style="{height:lines.length*40+'px'}">
             <scroller scroll-direction="horizontal"
                       alwaysScrollableHorizontal="true"
+                      scrollable="true"
                       show-scrollbar="false"
                       class="inner-scroller">
                 <div style="flex-direction: row"

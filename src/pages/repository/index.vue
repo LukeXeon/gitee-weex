@@ -25,6 +25,7 @@
             <scroller v-if="!isLoading"
                       style="flex: 1"
                       ref="main"
+                      scrollable="true"
                       @scroll="onScroll"
                       alwaysScrollableVertical="true">
                 <refresh class="refresh"
@@ -130,7 +131,7 @@
     import {WxcMinibar, WxcLoading, WxcPopup, Utils} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tab3";
-    import LabelLine from "@/widget/LabelLine";
+    import LabelLine from "@/widget/labelLine";
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
@@ -389,6 +390,7 @@
     .lang-list-wrapper {
         flex: 1;
         margin: 40px;
+        justify-content: center;
     }
 
     .circular-box {

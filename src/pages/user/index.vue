@@ -12,6 +12,8 @@
             </div>
         </wxc-minibar>
         <scroller class="wrapper"
+                  scrollable="true"
+                  v-if="!isLoading"
                   alwaysScrollableVertical="true">
             <refresh class="refresh"
                      :display="refreshing ? 'show' : 'hide'"
@@ -42,16 +44,20 @@
                         :click="onClick(index)">
             </label-line>
         </scroller>
+        <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="true">
+        </wxc-loading>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar, WxcLoading} from 'weex-ui'
     import tab3 from "@/widget/tab3";
     import userHeader from "@/widget/userHeader";
     import gitee from "@/libs/gitee";
     import utils from "@/libs/utils";
-    import labelLine from '@/widget/LabelLine'
+    import labelLine from '@/widget/labelLine'
     import contributionView from "@/widget/contributionView";
     import loadContributions from "@/libs/loadContributions";
 
@@ -77,7 +83,8 @@
             tab3,
             userHeader,
             labelLine,
-            contributionView
+            contributionView,
+            WxcLoading
         },
         methods: {
             onClick(index) {
@@ -117,12 +124,13 @@
         },
         async created() {
             await this.doRefresh()
+            this.isLoading = false
         },
         data() {
             return {
                 refreshing: false,
-                username: "username",
-                nikeName: "nikeName",
+                username: "",
+                nikeName: "",
                 bio: "",
                 joinTime: "",
                 items: [
@@ -138,6 +146,7 @@
                     [qq, "QQ", noLabelStyle],
                     [email, "电子邮箱", noLabelStyle],
                 ],
+                isLoading: true
             }
         }
     }

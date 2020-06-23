@@ -6,6 +6,7 @@
                      background-color="#FBFBFB">
         </wxc-minibar>
         <scroller class="wrapper"
+                  scrollable="true"
                   alwaysScrollableVertical="true">
             <refresh class="refresh"
                      :display="refreshing ? 'show' : 'hide'"
@@ -52,7 +53,7 @@
     import gitee from "@/libs/gitee";
     import contributionView from "@/widget/contributionView";
     import {WxcMinibar} from 'weex-ui'
-    import LabelLine from "@/widget/LabelLine";
+    import LabelLine from "@/widget/labelLine";
     import tab3 from "@/widget/tab3";
     import utils from "@/libs/utils";
     import userHeader from "@/widget/userHeader";
@@ -132,8 +133,8 @@
                 contributions: [],
                 rightIcon: right,
                 avatarIcon: '',
-                username: "username",
-                nikeName: "nikeName",
+                username: "",
+                nikeName: "",
                 bio: "",
                 joinTime: "",
                 items: [
