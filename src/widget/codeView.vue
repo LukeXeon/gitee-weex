@@ -8,11 +8,15 @@
                       :style="{'min-height':pageHeight+'px'}"
                       show-scrollbar="false"
                       class="inner-scroller">
-                <div style="flex-direction: row;height: 40px"
+                <div style="flex-direction: row"
                      v-for="(line,index) in lines">
+                    <text class="text-span"
+                          v-if="line.length===0">{{space}}</text>
                     <text :class="text.class"
                           v-for="(text,index2) in line">{{text.text}}</text>
                 </div>
+                <text v-if="lines.length===0"
+                      class="text-span">{{codeText}}</text>
             </scroller>
         </div>
     </scroller>
@@ -26,6 +30,85 @@
     import domino from '@/libs/domino/index'
     import utils from "@/libs/utils";
 
+    function highlightLines(language, codeText) {
+
+        function getClassList(node) {
+            let classList = ['text-span']
+            for (let j = 0; j < node.classList.length; j++) {
+                let c = node.classList[j]
+                classList.push(c)
+            }
+            return classList
+        }
+
+        function appendSpan(line, node, classList) {
+            if (node instanceof CharacterData && node.data.length > 0) {
+                if (classList) {
+                    line.push({
+                        class: classList,
+                        text: node.data
+                    })
+                } else {
+                    line.push({
+                        class: ['text-span'],
+                        text: node.data
+                    })
+                }
+            } else if (node instanceof Element && node.textContent.length > 0) {
+                line.push({
+                    class: getClassList(node),
+                    text: node.textContent
+                })
+            }
+        }
+
+        function buildLine(env, node, classList) {
+            for (let i = 0; i < node.childNodes.length; i++) {
+                let item = node.childNodes[i]
+                if (item instanceof CharacterData) {
+                    appendSpan(env.line, item, classList)
+                } else if (item instanceof Element) {
+                    if (item.tagName === 'SPAN') {
+                        let classList2 = getClassList(item)
+                        if (classList && classList2.length === 1) {
+                            for (let j = 0; j < classList.length; j++) {
+                                let c = classList[i]
+                                if (classList2.indexOf(c) === -1) {
+                                    classList2.push(c)
+                                }
+                            }
+                        }
+                        if (item.children.length > 0) {
+                            buildLine(env, item, classList2)
+                        } else {
+                            appendSpan(env.line, item)
+                        }
+                    } else if (item.tagName === 'BR') {
+                        env.lines.push(env.line)
+                        env.line = []
+                    }
+                }
+            }
+        }
+
+        let highlight;
+        if (language && hljs.getLanguage(language)) {
+            highlight = hljs.highlight(language, codeText).value
+        } else {
+            highlight = hljs.highlightAuto(codeText).value
+        }
+        highlight = highlight.replace(/\n/g, '<br>')
+        let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
+        utils.copy(html)
+        let root = domino.createDocument(html).body
+        let env = {
+            lines: [],
+            line: []
+        }
+        buildLine(env, root)
+        return env.lines
+    }
+
     export default {
         name: "codeView",
         props: {
@@ -34,86 +117,24 @@
             },
             language: String
         },
-        computed: {
-            pageHeight: () => Utils.env.getScreenHeight(),
-            lines() {
-                function getClassList(node) {
-                    let classList = ['text-span']
-                    for (let j = 0; j < node.classList.length; j++) {
-                        let c = node.classList[j]
-                        classList.push(c)
-                    }
-                    return classList
-                }
-
-                function appendSpan(line, node, classList) {
-                    if (node instanceof CharacterData && node.data.length > 0) {
-                        if (classList) {
-                            line.push({
-                                class: classList,
-                                text: node.data
-                            })
-                        } else {
-                            line.push({
-                                class: ['text-span'],
-                                text: node.data
-                            })
-                        }
-                    } else if (node instanceof Element && node.textContent.length > 0) {
-                        line.push({
-                            class: getClassList(node),
-                            text: node.textContent
-                        })
-                    }
-                }
-
-                function buildLine(env, node, classList) {
-                    for (let i = 0; i < node.childNodes.length; i++) {
-                        let item = node.childNodes[i]
-                        if (item instanceof CharacterData) {
-                            appendSpan(env.line, item, classList)
-                        } else if (item instanceof Element) {
-                            if (item.tagName === 'SPAN') {
-                                let classList2 = getClassList(item)
-                                if (classList && classList2.length === 1) {
-                                    for (let j = 0; j < classList.length; j++) {
-                                        let c = classList[i]
-                                        if (classList2.indexOf(c) === -1) {
-                                            classList2.push(c)
-                                        }
-                                    }
-                                }
-                                if (item.children.length > 0) {
-                                    buildLine(env, item, classList2)
-                                } else {
-                                    appendSpan(env.line, item)
-                                }
-                            } else if (item.tagName === 'BR') {
-                                env.lines.push(env.line)
-                                env.line = []
-                            }
-                        }
-                    }
-                }
-
-                let highlight;
-                if (this.language && hljs.getLanguage(this.language)) {
-                    highlight = hljs.highlight(this.language, this.codeText).value
-                } else {
-                    highlight = hljs.highlightAuto(this.codeText).value
-                }
-                highlight = highlight.replace(/\n/g, '<br>')
-                let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
-                utils.copy(html)
-                let root = domino.createDocument(html).body
-                let env = {
-                    lines: [],
-                    line: []
-                }
-                buildLine(env, root)
-                return env.lines
+        watch: {
+            async codeText(value) {
+                this.lines = []
+                let language = this.language
+                let codeText = value
+                await Promise.resolve()
+                this.lines = highlightLines(language, codeText)
             }
         },
+        computed: {
+            pageHeight: () => Utils.env.getScreenHeight(),
+        },
+        data() {
+            return {
+                lines: [],
+                space: ' '
+            }
+        }
     }
 </script>
 
