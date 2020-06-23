@@ -57,7 +57,7 @@
     import tab3 from "@/widget/tab3";
     import utils from "@/libs/utils";
     import userHeader from "@/widget/userHeader";
-    import loadContributions from "@/libs/loadContributions";
+    import htmlUtils from "@/libs/htmlUtils";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -119,7 +119,7 @@
                     [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
                     [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
                 ]
-                this.contributions = await loadContributions(info['login'])
+                this.contributions = await htmlUtils.getContributions(info['login'])
             },
         },
         async created() {

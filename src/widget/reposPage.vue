@@ -34,7 +34,8 @@
                     utils.jumpTo('repository', {
                         user: e.item.username,
                         repos: e.item.repos,
-                        branch: e.item.branch
+                        branch: e.item.branch,
+                        icon: e.item.icon
                     })
                 } else if (e.type === 'user') {
                     utils.jumpTo('user', {
@@ -59,8 +60,7 @@
             async onLoadMore() {
                 if (!this.refreshing) {
                     this.loading = true
-                    this.page++
-                    let data = await this.loadPage(this.page)
+                    let data = await this.loadPage(this.page++)
                     this.items.push(...data)
                     this.loading = false
                 }

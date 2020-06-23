@@ -5,7 +5,9 @@
         <div class="text-group">
             <div style="flex-direction: row;align-items: center">
                 <text class="username" v-if="username&&username!==''">{{username}}</text>
-                <text class="nikeName" v-if="nikeName&&nikeName!==''"> ({{nikeName}})</text>
+                <text class="text"> (</text>
+                <text class="nikeName" v-if="nikeName&&nikeName!==''">{{nikeName}}</text>
+                <text class="text">)</text>
             </div>
             <text class="bio" v-if="bio&&bio!==''">{{bio}}</text>
             <text style="font-size: 26px;" v-if="joinTime&&joinTime!==''">于{{joinTime}}加入</text>
@@ -60,12 +62,23 @@
     }
 
     .username {
+        lines: 1;
+        text-overflow: ellipsis;
+        max-width: 260px;
         font-size: 32px;
         color: #00B4FF;
         font-weight: bold
     }
 
+    .text {
+        font-size: 32px;
+        font-weight: bold
+    }
+
     .nikeName {
+        lines: 1;
+        text-overflow: ellipsis;
+        max-width: 260px;
         font-size: 32px;
         font-weight: bold
     }

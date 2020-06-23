@@ -15,9 +15,8 @@
 <script>
     import reposList from "@/widget/reposList";
     import gitee from "@/libs/gitee";
+    import format from '@/libs/date.format'
     import ReposPageWithTitle from "@/widget/reposPageWithTitle";
-
-    //import ReposPageWithLanguage from "@/pages/index/reposPageWithLanguage";
 
     function wrapLoadFunction(model) {
         return async function (page) {
@@ -28,20 +27,21 @@
                 for (let j = 0; j < items.length; j++) {
                     let item = items[j]
                     let color = gitee.getLanguageColor(item['language'])
+                    let updatedAt = format.format(new Date(item['last_push_at']), 'Y年m月d日')
                     list.push({
-                        icon: item['owner']['new_portrait'],
+                        icon: item['namespace']['avatar'] || item['owner']['new_portrait'],
                         username: item['namespace']['path'],
                         repos: item['path'],
                         displayReposName: item['name'],
                         displayUsername: item['namespace']['name'],
-                        updatedAt: item['last_push_at'],
+                        updatedAt: updatedAt,
                         languageColor: color,
                         language: item['language'] || "其他",
                         description: item['description'],
                         starCount: item['stars_count'],
                         forkCount: item['forks_count'],
                         watchCount: item['watches_count'],
-                        branch: item['default_branch']
+                        branch: item['default_branch'],
                     })
                 }
                 return list

@@ -103,9 +103,8 @@ export default {
         const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}?access_token=${accessToken}`
         return await request("PUT", url)
     },
-    async getStars(page, countAtPage) {
-        let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/user/starred?access_token=${accessToken}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
+    async getStars(userId, page) {
+        const url = `https://gitee.com/api/v3/user/${userId}/stared_projects?page=${page}`
         return await request("GET", url)
     },
     async cancelStar(owner, repo) {
@@ -171,20 +170,6 @@ export default {
         const url = `https://gitee.com/api/v3/projects/popular?page=${page}`
         return await request("GET", url)
     },
-    async getContributions(username) {
-        const url = `https://gitee.com/${username}/contribution_calendar?year=`
-        let content = await utils.fetch("GET", url, {
-            Accept: '*/*',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-        })
-        const head = "$contributionContainer.html("
-        let index = content.indexOf(head)
-        let index2 = content.lastIndexOf(");")
-        content = content.substring(index + head.length, index2)
-        content = eval(content)
-        content = "<html><head><title></title></head><body>" + content + "</body></html>"
-        return content
-    },
     async getLanguageProject(langId, page) {
         const url = `https://gitee.com/api/v3/projects/languages/${langId}?page=${page}`
         return await request("GET", url)
@@ -230,4 +215,9 @@ export default {
         const url = `https://gitee.com/api/v5/repos/${user}/${repos}/git/blobs/${blob}?access_token=${accessToken}`
         return await request("GET", url)
     },
+    async getOrg(org) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/orgs/${org}?access_token=${accessToken}`
+        return await request("GET", url)
+    }
 }

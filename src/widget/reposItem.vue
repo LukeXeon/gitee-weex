@@ -9,7 +9,8 @@
                 <text class="title-text" @click="onItemClick('repos',item)">{{item.displayReposName}}</text>
             </div>
         </div>
-        <text class="distribute">{{item.description}}</text>
+        <text class="distribute">{{item.description||'暂无描述'}}</text>
+        <text class="update-at">于{{item.updatedAt}}更新</text>
         <div class="tags-line">
             <div class="tag">
                 <div class="lang-tag" :style="{'background-color':item.languageColor}"></div>
@@ -78,6 +79,15 @@
         font-size: 30px;
         lines: 5;
         text-overflow: ellipsis
+    }
+
+    .update-at {
+        width: 600px;
+        margin-left: 100px;
+        lines: 5;
+        text-overflow: ellipsis;
+        font-size: 28px;
+        margin-top: 10px
     }
 
     .tags-line {

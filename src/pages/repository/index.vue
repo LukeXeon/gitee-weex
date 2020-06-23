@@ -46,14 +46,12 @@
                             <text class="title-text">{{repository}}</text>
                         </div>
                     </div>
-                    <text class="distribute">{{distribute}}</text>
-                    <text class="distribute"
+                    <text class="distribute">{{distribute||'暂无描述'}}</text>
+                    <text class="website"
                           @click="onJumpToWeb"
-                          v-if="website"
-                          style="color: #0088fb;margin-top: 10px">{{website}}</text>
-                    <text class="distribute"
-                          v-if="updateAt"
-                          style="margin-bottom: 10px;margin-top: 10px">更新于：{{updateAt}}</text>
+                          v-if="website">{{website}}</text>
+                    <text class="update-at"
+                          v-if="updateAt">更新于：{{updateAt}}</text>
                 </div>
                 <tab3 :items="tabs">
                 </tab3>
@@ -136,6 +134,7 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
+    import htmlUtils from "@/libs/htmlUtils";
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -177,7 +176,9 @@
             branchText() {
                 return `${this.branch}-${this.branchCount}`
             },
-            pageHeight: () => Utils.env.getPageHeight(),
+            pageHeight() {
+                return Utils.env.getPageHeight()
+            },
         },
         methods: {
             onLabelClick(index) {
@@ -229,20 +230,21 @@
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
                 let branch = decodeURIComponent(utils.getQueryVariable(url, 'branch'))
-                let task1 = gitee.getPulls(user, repos).then(res => {
+                let icon = decodeURIComponent(utils.getQueryVariable(url, 'icon'))
+                gitee.getPulls(user, repos).then(res => {
                     this.pulls = res.length
                 })
-                let task2 = gitee.getBranches(user, repos).then(res => {
+                gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length
                 })
-                let task3 = this.loadExtraInfo(user, repos, branch).then(res => {
+                this.loadExtraInfo(user, repos, branch).then(res => {
                     if (res) {
                         this.languagesSummary = res.colorLines
                         this.langTexts = res.texts
                     }
                 })
                 let data = await gitee.getRepos(user, repos)
-                this.icon = data['owner']['avatar_url']
+                this.icon = icon
                 this.username = data['namespace']['name']
                 this.repository = data['name']
                 this.distribute = data['description']
@@ -256,7 +258,6 @@
                 this.issues = data['open_issues_count']
                 this.license = data['license']
                 this.branch = data['default_branch']
-                await Promise.all([task1, task2, task3])
             },
             async loadExtraInfo(user, repos, branch) {
                 try {
@@ -354,8 +355,8 @@
                 license: null,
                 website: null,
                 branch: '',
-                branchCount: 1,
-                pulls: 0,
+                branchCount: '...',
+                pulls: '...',
                 updateAt: '',
                 isStared: false,
                 language: null,
@@ -498,6 +499,26 @@
         font-size: 30px;
         lines: 5;
         text-overflow: ellipsis
+    }
+
+    .website {
+        width: 600px;
+        margin-left: 100px;
+        lines: 1;
+        text-overflow: ellipsis;
+        color: #0088fb;
+        margin-top: 10px;
+        font-size: 28px
+    }
+
+    .update-at {
+        width: 600px;
+        margin-left: 100px;
+        lines: 1;
+        text-overflow: ellipsis;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-size: 28px;
     }
 
     .line1 {

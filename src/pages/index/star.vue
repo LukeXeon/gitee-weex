@@ -14,27 +14,32 @@
 <script>
     import gitee from "@/libs/gitee";
     import ReposPageWithTitle from "@/widget/reposPageWithTitle";
+    import format from "@/libs/date.format";
+    import htmlUtils from "@/libs/htmlUtils";
+    import utils from "@/libs/utils";
 
     async function loader(page) {
-        let data = await gitee.getStars(Math.max(1, page + 1), 20)
+        let user = await gitee.loadMyInfo()
+        let data = await gitee.getStars(user['id'], Math.max(1, page + 1))
         let list = []
         for (let i = 0; i < data.length; i++) {
             let item = data[i]
             let color = gitee.getLanguageColor(item['language'])
+            let updatedAt = format.format(new Date(item['last_push_at']), 'Y年m月d日')
             list.push({
-                icon: item['owner']['avatar_url'],
+                icon: item['namespace']['avatar'] || item['owner']['new_portrait'],
                 username: item['namespace']['path'],
                 repos: item['path'],
                 displayReposName: item['name'],
                 displayUsername: item['namespace']['name'],
-                updatedAt: item['updated_at'],
+                updatedAt: updatedAt,
                 languageColor: color,
                 language: item['language'] || "其他",
                 description: item['description'],
                 starCount: item['stargazers_count'],
                 forkCount: item['forks_count'],
                 watchCount: item['watchers_count'],
-                branch: item['default_branch']
+                branch: item['default_branch'],
             })
         }
         return list

@@ -59,7 +59,7 @@
     import utils from "@/libs/utils";
     import labelLine from '@/widget/labelLine'
     import contributionView from "@/widget/contributionView";
-    import loadContributions from "@/libs/loadContributions";
+    import htmlUtils from "@/libs/htmlUtils";
 
     let team = require('@/res/team.png').default
     let wechat = require('@/res/wechat.png').default
@@ -114,7 +114,7 @@
                     [qq, info['qq'] || "QQ", info['qq'] ? hasLabelStyle : noLabelStyle],
                     [email, info['email'] || '电子邮箱', info['email'] ? hasLabelStyle : noLabelStyle],
                 ]
-                this.contributions = await loadContributions(info['login'])
+                this.contributions = await htmlUtils.getContributions(info['login'])
             },
             async onRefresh() {
                 this.refreshing = true
