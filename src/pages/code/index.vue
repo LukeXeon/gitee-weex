@@ -16,6 +16,7 @@
                    style="flex: 1">
         </code-view>
         <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
                      :need-mask="false">
         </wxc-loading>
     </div>

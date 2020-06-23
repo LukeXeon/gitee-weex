@@ -23,18 +23,23 @@
                    :src="url">
             </image>
         </div>
+        <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="false">
+        </wxc-loading>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar, WxcLoading} from 'weex-ui'
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
 
     export default {
         name: "index",
         components: {
-            WxcMinibar
+            WxcMinibar,
+            WxcLoading
         },
         methods: {
             back() {
@@ -54,12 +59,14 @@
             this.title = decodeURIComponent(utils.getQueryVariable(url, 'title'))
             let data = await gitee.getBlob(user, repos, sha)
             this.url = `data:image/${type};base64,${data['content']}`
+            this.isLoading = false
         },
         data() {
             return {
                 title: '',
                 url: '',
-                isBlackMode: false
+                isBlackMode: false,
+                isLoading: true
             }
         }
     }

@@ -5,18 +5,13 @@
         <div :style="{height:lines.length*40+'px'}">
             <scroller scroll-direction="horizontal"
                       alwaysScrollableHorizontal="true"
-                      :style="{'min-height':pageHeight+'px'}"
                       show-scrollbar="false"
                       class="inner-scroller">
                 <div style="flex-direction: row"
                      v-for="(line,index) in lines">
-                    <text class="text-span"
-                          v-if="line.length===0">{{space}}</text>
                     <text :class="text.class"
                           v-for="(text,index2) in line">{{text.text}}</text>
                 </div>
-                <text v-if="lines.length===0"
-                      class="text-span">{{codeText}}</text>
             </scroller>
         </div>
     </scroller>
@@ -91,6 +86,7 @@
             }
         }
 
+        language = language || 'txt'
         let highlight;
         if (language && hljs.getLanguage(language)) {
             highlight = hljs.highlight(language, codeText).value
@@ -117,24 +113,14 @@
             },
             language: String
         },
-        watch: {
-            async codeText(value) {
-                this.lines = []
-                let language = this.language
-                let codeText = value
-                await Promise.resolve()
-                this.lines = highlightLines(language, codeText)
-            }
-        },
         computed: {
-            pageHeight: () => Utils.env.getScreenHeight(),
-        },
-        data() {
-            return {
-                lines: [],
-                space: ' '
+            pageHeight() {
+                return Utils.env.getScreenHeight()
+            },
+            lines() {
+                return highlightLines(this.language, this.codeText)
             }
-        }
+        },
     }
 </script>
 
