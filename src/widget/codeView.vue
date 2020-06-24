@@ -12,8 +12,8 @@
                 <div style="flex-direction: row"
                      v-for="(line,index) in lines">
                     <div class="line-marker">
-                        <text class="text-span"
-                              style="color: #999999;margin-right: 40px">{{''+(index+1)}}</text>
+                        <text class="text-span2"
+                              v-for="(item) in getLineText(index+1,lines.length)">{{item}}</text>
                     </div>
                     <text :class="text.class"
                           v-for="(text) in line">{{text.text}}</text>
@@ -119,6 +119,29 @@
             },
             language: String
         },
+        methods: {
+            getLineText(current, max) {
+                function getLength(i) {
+                    let l = 0;
+                    while (i >= 1) {
+                        i = i / 10;
+                        l++;
+                    }
+                    return l
+                }
+
+                let space = getLength(max) - getLength(current)
+                let s = []
+                for (let i = 0; i < space; i++) {
+                    s.push(' ')
+                }
+                let text = current.toString()
+                for (let i = 0; i < text.length; i++) {
+                    s.push(text[i])
+                }
+                return s
+            }
+        },
         computed: {
             pageHeight() {
                 return Utils.env.getScreenHeight()
@@ -139,17 +162,25 @@
         lines: 1
     }
 
+    .text-span2 {
+        font-size: 30px;
+        lines: 1;
+        text-align: center;
+        color: #999999;
+        width: 20px;
+    }
+
     .inner-scroller {
         flex-direction: column;
         flex: 1
     }
 
     .line-marker {
+        padding-left: 5px;
+        padding-right: 30px;
+        flex-direction: row;
         border-right-width: 0.5px;
         border-right-color: #888888;
-        margin-right: 10px;
-        align-items: flex-end;
         background-color: #f0f0f0;
-        min-width: 100px;
     }
 </style>
