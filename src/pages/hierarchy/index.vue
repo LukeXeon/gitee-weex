@@ -2,6 +2,7 @@
     <div style="background-color: whitesmoke">
         <wxc-minibar :title="title"
                      text-color="black"
+                     class="top-bar"
                      background-color="#FBFBFB">
             <div slot="left"
                  v-on:click="back"
@@ -153,6 +154,11 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .cell {
         background-color: white;
         height: 80px;

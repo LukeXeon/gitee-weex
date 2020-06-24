@@ -2,6 +2,7 @@
     <div style="background-color: whitesmoke">
         <wxc-minibar :title="title"
                      text-color="black"
+                     class="top-bar"
                      background-color="#FBFBFB">
             <div slot="left"
                  v-on:click="back"
@@ -38,8 +39,10 @@
         name: "index",
         methods: {
             back() {
-                const navigator = weex.requireModule('navigator')
-                navigator.pop()
+                if (!this.isLoading){
+                    const navigator = weex.requireModule('navigator')
+                    navigator.pop()
+                }
             },
         },
         async created() {
@@ -87,4 +90,9 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
 </style>

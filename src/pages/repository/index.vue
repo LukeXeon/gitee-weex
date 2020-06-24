@@ -61,7 +61,7 @@
                     <div class="lang-line-wrapper">
                         <div v-if="languagesSummary.length!==0"
                              @click="onLangLineClick"
-                             style="flex: 1;justify-content: center;align-items: center;">
+                             style="flex: 1;justify-content: flex-end;align-items: center;">
                             <div class="lang-line">
                                 <div v-for="(item,index) in languagesSummary"
                                      :style="item">

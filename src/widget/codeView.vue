@@ -1,25 +1,24 @@
 <template>
-    <scroller scroll-direction="vertical"
-              alwaysScrollableVertical="true"
-              scrollable="true"
-              style="flex: 1">
-        <div :style="{height:lines.length*40+'px'}">
-            <scroller scroll-direction="horizontal"
-                      alwaysScrollableHorizontal="true"
-                      scrollable="true"
-                      show-scrollbar="false"
-                      class="inner-scroller">
-                <div style="flex-direction: row"
-                     v-for="(line,index) in lines">
-                    <div class="line-marker">
-                        <text class="text-span2"
-                              v-for="(item) in getLineText(index+1,lines.length)">{{item}}</text>
-                    </div>
-                    <text :class="text.class"
-                          v-for="(text) in line">{{text.text}}</text>
+    <scroller scroll-direction="horizontal"
+              show-scrollbar="false">
+        <list scrollable="true"
+              @loadmore="onLoadMore"
+              class="list"
+              :style="{width:Math.max(pageWidth*30,750)+'px'}"
+              show-scrollbar="false">
+            <cell style="flex-direction: row"
+                  :key="index"
+                  v-for="(line,index) in displayLines">
+                <div class="line-marker">
+                    <text class="text-span2"
+                          v-for="(item) in getLineText(index+1,lines.length)">{{item}}</text>
                 </div>
-            </scroller>
-        </div>
+                <text :class="text.class"
+                      v-for="(text) in line">{{text.text}}</text>
+            </cell>
+            <cell style="height: 0.5px;background-color: #888888">
+            </cell>
+        </list>
     </scroller>
 </template>
 
@@ -140,16 +139,42 @@
                     s.push(text[i])
                 }
                 return s
+            },
+            onLoadMore() {
+                ++this.page
             }
         },
         computed: {
+            pageWidth() {
+                let max = 0
+                let lines = this.lines
+                for (let i = 0; i < lines.length; i++) {
+                    let lineWidth = 0
+                    let line = lines[i]
+                    for (let j = 0; j < line.length; j++) {
+                        let span = line[j]
+                        lineWidth += span.text.length
+                    }
+                    max = Math.max(max, lineWidth)
+                }
+                return max
+            },
             pageHeight() {
                 return Utils.env.getScreenHeight()
             },
             lines() {
                 return highlightLines(this.language, this.codeText)
+            },
+            displayLines() {
+                let lines = this.lines
+                return lines.slice(0, Math.min(this.page * 50, lines.length))
             }
         },
+        data() {
+            return {
+                page: 1
+            }
+        }
     }
 </script>
 
@@ -170,13 +195,13 @@
         width: 20px;
     }
 
-    .inner-scroller {
-        flex-direction: column;
-        flex: 1
+    .list {
+        background-color: white;
     }
 
     .line-marker {
-        padding-left: 5px;
+        padding-left: 10px;
+        margin-right: 10px;
         padding-right: 30px;
         flex-direction: row;
         border-right-width: 0.5px;

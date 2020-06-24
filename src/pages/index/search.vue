@@ -12,7 +12,8 @@
             </wxc-searchbar>
             <div class="select-bar">
                 <div style="flex: 1"></div>
-                <tab-view style="height: 60px;width: 500px" :tabs="['仓库','用户']">
+                <tab-view style="height: 60px;width: 500px"
+                          :tabs="['仓库','用户']">
                 </tab-view>
                 <div class="right-item">
                     <image style="width: 50px;height: 50px;" v-bind:src="optionsIcon">
