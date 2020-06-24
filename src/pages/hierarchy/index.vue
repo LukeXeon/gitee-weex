@@ -42,7 +42,7 @@
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
 
-    const imageTypes = ['png', 'jpeg', 'jpg', 'gif', 'svg']
+    const imageTypes = ['png', 'jpeg', 'jpg', 'gif', 'svg','ico']
 
     function testImageType(path) {
         for (let i = 0; i < imageTypes.length; i++) {

@@ -40,14 +40,16 @@
     .bar {
         flex-direction: row;
         background-color: #eaeaea;
-        border-radius: 10px;
+        border-radius: 20px;
     }
 
     .select-item {
         justify-content: center;
         align-items: center;
         flex: 1;
-        border-radius: 5px;
+        border-width: 0.5px;
+        border-color: #dddddd;
+        border-radius: 15px;
         background-color: white;
         margin: 5px;
     }

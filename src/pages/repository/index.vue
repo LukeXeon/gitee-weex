@@ -134,7 +134,7 @@
 </template>
 
 <script>
-    import {WxcMinibar, WxcLoading, WxcPopup, Utils} from 'weex-ui'
+    import {WxcMinibar, WxcLoading, WxcPopup, Utils,WxcSearchbar} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tabs";
     import LabelLine from "@/widget/labelLine";
