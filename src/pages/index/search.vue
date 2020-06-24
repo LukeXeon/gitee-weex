@@ -24,7 +24,7 @@
         </div>
         <search-history v-if="showListMode==='history'">
         </search-history>
-        <search-list v-else>
+        <search-list v-else :searchText="searchText">
         </search-list>
     </div>
 </template>
@@ -70,7 +70,6 @@
     import searchHistory from "@/pages/index/searchHistory";
     import searchList from "@/pages/index/searchList";
     import searchBar from "@/pages/index/searchBar";
-    import utils from "@/libs/utils";
 
     export default {
         components: {
@@ -85,19 +84,23 @@
                 if (index === 0) {
                     this.searchMode = 'repos'
                 } else {
-                    this.searchMode =
+                    this.searchMode = 'user'
                 }
                 if (this.showListMode === 'search') {
 
                 }
             },
             wxcSearchbarInputOnFocus() {
+
             },
             wxcSearchbarInputOnBlur() {
+
             },
             wxcSearchbarInputReturned() {
+                this.showListMode = 'search'
             },
             wxcSearchbarCloseClicked() {
+
             },
             wxcSearchbarInputOnInput(e) {
                 this.searchText = e.value;
