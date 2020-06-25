@@ -4,7 +4,7 @@
 </template>
 
 <script>
-    import MarkdownView from "@/widget/markdownView";
+    import MarkdownView from "@/widget/markdownView.jsx";
 
     export default {
         name: "test",

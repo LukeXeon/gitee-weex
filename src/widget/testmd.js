@@ -307,4 +307,5 @@ export default '# Markdown: Syntax\n' +
 'Unlike a pre-formatted code block, a code span indicates code within a\n' +
 'normal paragraph. For example:\n' +
 '\n' +
-'Use the `printf()` function.'
+'Use the `printf()` function.\n' +
+'![avatar](/home/picture/1.png)'

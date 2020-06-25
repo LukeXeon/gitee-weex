@@ -1,7 +1,8 @@
 {
   "presets": [
     "es2015",
-    "stage-0"
+    "stage-0",
+    "env"
   ],
   "ignore": [
     "./src/libs/domino/sloppy.js"
@@ -15,6 +16,7 @@
         "regenerator": true,
         "moduleName": "babel-runtime"
       }
-    ]
+    ],
+    "transform-vue-jsx"
   ]
 }

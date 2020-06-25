@@ -156,6 +156,13 @@ const webConfig = {
         use: [{
           loader: 'url-loader'
         }]
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: config.excludeModuleReg,
+        use: [{
+          loader: 'babel-loader'
+        }]
       }
     ]
   },
@@ -223,6 +230,13 @@ const weexConfig = {
         test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
         use:[{
           loader: "file-loader"
+        }]
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: config.excludeModuleReg,
+        use: [{
+          loader: 'babel-loader'
         }]
       }
     ]
