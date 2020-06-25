@@ -69,8 +69,8 @@ const styles = {
         backgroundColor: "#d6d6d6"
     },
     img: {
-        width: '500px',
-        height: '500px',
+        width: '750px',
+        height: '750px',
     },
     code: {
         backgroundColor: "#d6d6d6"
