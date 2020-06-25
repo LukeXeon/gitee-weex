@@ -1,0 +1,29 @@
+<html><head><title></title></head><body><span class="hljs-comment">// You can see all the config in `./configs`.</span>
+<span class="hljs-keyword">const</span>  buildPlugins = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/plugin'</span>);
+<span class="hljs-keyword">let</span> webpackConfig;
+<span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">env</span> =&gt;</span> {
+<span class="hljs-keyword">switch</span> (env.NODE_ENV) {
+<span class="hljs-keyword">case</span> <span class="hljs-string">'prod'</span>:
+<span class="hljs-keyword">case</span> <span class="hljs-string">'production'</span>:
+webpackConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/webpack.prod.conf'</span>);
+<span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-string">'test'</span>:
+<span class="hljs-keyword">case</span> <span class="hljs-string">'testing'</span>:
+webpackConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/webpack.test.conf'</span>);
+<span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-string">'plugin'</span>:
+buildPlugins();
+<span class="hljs-keyword">case</span> <span class="hljs-string">'common'</span>:
+webpackConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/webpack.common.conf'</span>);
+<span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-string">'release'</span>:
+webpackConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/webpack.release.conf'</span>);
+<span class="hljs-keyword">break</span>;
+<span class="hljs-keyword">case</span> <span class="hljs-string">'dev'</span>:
+<span class="hljs-keyword">case</span> <span class="hljs-string">'development'</span>:
+<span class="hljs-keyword">default</span>:
+webpackConfig = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./configs/webpack.dev.conf'</span>);
+}
+<span class="hljs-keyword">return</span> webpackConfig;
+}
+<br></body></html>

@@ -1,11 +1,17 @@
 <template>
-
+    <markdown-view>
+    </markdown-view>
 </template>
 
 <script>
+    import MarkdownView from "@/widget/markdownView";
+
     export default {
         name: "test",
-        data(){
+        components: {
+            MarkdownView
+        },
+        data() {
         }
     }
 </script>
@@ -18,7 +24,8 @@
         width: 750px;
         white-space: pre;
     }
-    .span{
-        display:block;
+
+    .span {
+        display: block;
     }
 </style>

@@ -3,6 +3,10 @@ import format from "@/libs/date.format";
 import utils from "@/libs/utils";
 
 export default {
+    createDocument(content) {
+        content = "<html><head><title></title></head><body>" + content + "</body></html>"
+        return domino.createDocument(content, true)
+    },
     async getContributions(username) {
         const url = `https://gitee.com/${username}/contribution_calendar?year=`
         let content = await utils.fetch("GET", url, {
@@ -14,8 +18,7 @@ export default {
         let index2 = content.lastIndexOf(");")
         content = content.substring(index + head.length, index2)
         content = eval(content)
-        content = "<html><head><title></title></head><body>" + content + "</body></html>"
-        let document = domino.createDocument(content, true)
+        let document = this.createDocument(content)
         let rawArray = document.querySelectorAll('div[data-content]')
         let result = []
         let now = parseInt(format.format(new Date(), 'Ymd'))
@@ -32,22 +35,4 @@ export default {
         }
         return result
     },
-    async getEnterprise(name) {
-        const url = `https://gitee.com/${name}`
-        let html = await utils.fetch("GET", url, {
-            Accept: '*/*',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
-        })
-        let document = domino.createDocument(html, true)
-        let image = document.querySelector('img[src^="https://portrait.gitee.com/"]')
-        let icon = image.getAttribute('src')
-        let group = document.querySelector('div.extra')
-        let email = group.childNodes[2].data.trim()
-        let link = group.childNodes[5].getAttribute('href')
-        return {
-            icon: icon,
-            email: email,
-            link: link
-        }
-    }
 }
