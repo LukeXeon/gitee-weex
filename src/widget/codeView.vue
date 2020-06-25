@@ -28,7 +28,6 @@
     import {Utils} from 'weex-ui'
     import {Element, CharacterData} from '../libs/domino/impl'
     import domino from '@/libs/domino/index'
-    import utils from "@/libs/utils";
 
     export default {
         name: "codeView",
@@ -106,7 +105,9 @@
                                     let texts = item.data.split('\n')
                                     for (let j = 0; j < texts.length; j++) {
                                         let span = texts[j]
-                                        appendSpan(env, span, classList)
+                                        if (span.length > 0) {
+                                            appendSpan(env, span, classList)
+                                        }
                                         if (j < texts.length - 1) {
                                             env.lines.push(env.line)
                                             env.maxWidth = Math.max(env.maxWidth, env.width)
