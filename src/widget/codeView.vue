@@ -11,7 +11,7 @@
                   v-for="(line,index) in displayLines">
                 <div class="line-marker">
                     <text class="text-span2"
-                          v-for="(item) in getLineText(index+1,allLines.lines.length)">{{item}}</text>
+                          v-for="(item) in getLineText(index+1)">{{item}}</text>
                 </div>
                 <text :class="text.class"
                       v-for="(text) in line">{{text.text||' '}}</text>
@@ -38,7 +38,8 @@
             language: String
         },
         methods: {
-            getLineText(current, max) {
+            getLineText(current) {
+                let max = this.allLines.lines.length
                 function getLength(i) {
                     let l = 0;
                     while (i >= 1) {
