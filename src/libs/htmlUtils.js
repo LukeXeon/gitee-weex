@@ -4,8 +4,8 @@ import utils from "@/libs/utils";
 
 export default {
     createDocument(content) {
-        content = "<html><head><title></title></head><body>" + content + "</body></html>"
-        return domino.createDocument(content, true)
+        let html = "<html><head><title></title></head><body>" + content + "</body></html>"
+        return domino.createDocument(html, true)
     },
     async getContributions(username) {
         const url = `https://gitee.com/${username}/contribution_calendar?year=`

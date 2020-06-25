@@ -308,4 +308,4 @@ export default '# Markdown: Syntax\n' +
 'normal paragraph. For example:\n' +
 '\n' +
 'Use the `printf()` function.\n' +
-'![avatar](/home/picture/1.png)'
+'![avatar](https://pic1.rpgsky.net/imgcn/2020/04/07/e091d27ddb777516f1339a0adeccda8c.png)'

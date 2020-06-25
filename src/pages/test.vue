@@ -1,10 +1,13 @@
 <template>
-    <markdown-view>
-    </markdown-view>
+    <scroller>
+        <markdown-view :source="test">
+        </markdown-view>
+    </scroller>
 </template>
 
 <script>
     import MarkdownView from "@/widget/markdownView.jsx";
+    import testmd from "@/widget/testmd";
 
     export default {
         name: "test",
@@ -12,6 +15,9 @@
             MarkdownView
         },
         data() {
+            return {
+                test: testmd
+            }
         }
     }
 </script>

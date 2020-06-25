@@ -158,6 +158,22 @@ const webConfig = {
         }]
       },
       {
+        test: /\.css$/,
+        use: [
+            {
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }
+        ]
+      },
+      {
+        test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
+        use:[{
+          loader: "file-loader"
+        }]
+      },
+      {
         test: /\.jsx?$/,
         exclude: config.excludeModuleReg,
         use: [{
@@ -220,11 +236,13 @@ const weexConfig = {
       },
       {
         test: /\.css$/,
-        use: [{
+        use: [
+            {
           loader: 'style-loader'
         }, {
           loader: 'css-loader'
-        }]
+        }
+        ]
       },
       {
         test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
