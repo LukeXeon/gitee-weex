@@ -24,7 +24,7 @@
         </wxc-minibar>
         <div style="flex: 1">
             <scroller v-if="!isLoading"
-                      style="flex: 1"
+                      style="flex: 1;width: 750px"
                       ref="main"
                       scrollable="true"
                       @scroll="onScroll"
@@ -91,6 +91,8 @@
                             title="Readme">
                 </label-line>
                 <text v-if="noReadme" class="no-readme">NO README</text>
+                <md-view-wrapper v-else :content="mdContent">
+                </md-view-wrapper>
             </scroller>
             <image class="float-button"
                    ref="floatButton"
@@ -134,7 +136,7 @@
 </template>
 
 <script>
-    import {WxcMinibar, WxcLoading, WxcPopup, Utils,WxcSearchbar} from 'weex-ui'
+    import {WxcMinibar, WxcLoading, WxcPopup, Utils} from 'weex-ui'
     import ReposItem from "@/widget/reposItem";
     import tab3 from "@/widget/tabs";
     import LabelLine from "@/widget/labelLine";
@@ -142,7 +144,8 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
-    import htmlUtils from "@/libs/htmlUtils";
+    import mdViewWrapper from "@/widget/mdViewWrapper";
+
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -158,6 +161,7 @@
             tab3,
             WxcLoading,
             WxcPopup,
+            mdViewWrapper
         },
         computed: {
             labels() {
@@ -409,7 +413,8 @@
                 refreshing: false,
                 noReadme: true,
                 reposType: '',
-                path: ''
+                path: '',
+                mdContent: ''
             }
         }
     }

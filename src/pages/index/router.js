@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import boot from "@/pages/index/boot";
 import login from "@/pages/index/login";
 import home from "@/pages/index/home";
-import test from '@/pages/test'
+import test from '@/test/test'
 
 Vue.use(Router)
 

@@ -1,5 +1,5 @@
 import hljs from 'highlight.js'
-import {Element, CharacterData, Text} from '@/libs/domino/impl'
+import {Element, CharacterData} from '@/libs/domino/impl'
 import MarkdownIt from 'markdown-it'
 import htmlUtils from "@/libs/htmlUtils";
 import utils from "@/libs/utils";
@@ -77,7 +77,9 @@ const styles = {
     inlineCode: {
         borderRadius: '5px',
         fontSize: `${weexDefaultFontSize}px`,
-        backgroundColor: "#d6d6d6"
+        paddingLeft: '5px',
+        paddingRight: '5px',
+        backgroundColor: '#eaeaea'
     },
     img: {
         width: '750px',
@@ -135,10 +137,12 @@ export default {
         source: String
     },
     methods: {
-        onAClick(url) {
-
+        onActionClick(url) {
+            this.$emit('onActionClick', {
+                url: url
+            })
         },
-        renderListItemContent2(index, node, level) {
+        renderListItemRight2(index, node, level) {
             switch (node.tagName) {
                 case "OL":
                 case "UL": {
@@ -153,12 +157,12 @@ export default {
                 }
             }
         },
-        renderListItemContent(node, level) {
+        renderListItemRight(node, level) {
             if (node.children.length > 0) {
                 let list = []
                 for (let i = 0; i < node.children.length; i++) {
                     let cNode = node.children[i]
-                    list.push(this.renderListItemContent2(i, cNode, level))
+                    list.push(this.renderListItemRight2(i, cNode, level))
                 }
                 return (
                     <div style={styles.list.item.content}>
@@ -166,12 +170,11 @@ export default {
                     </div>
                 )
             } else {
-
-                return (<div style={styles.text}>{node.childNodes[0].data}</div>)
+                return (<div style={styles.text}>{node.textContent}</div>)
             }
         },
-        renderListItemElement(header, node, level) {
-            let content = this.renderListItemContent(node, level)
+        renderListItem(header, node, level) {
+            let content = this.renderListItemRight(node, level)
             if (header.isOrder) {
                 let text = header.value.toString()
                 let indexHeader = []
@@ -232,7 +235,7 @@ export default {
                         value: image
                     }
                 }
-                let cElement = this.renderListItemElement(header, cNode, level)
+                let cElement = this.renderListItem(header, cNode, level)
                 list.push(cElement)
             }
             if (level === 0) {
@@ -247,11 +250,14 @@ export default {
                 case 'A': {
                     let href = node.getAttribute('href')
                     return (<text style={styles.a} onClick={() => {
-                        self.onAClick(href)
+                        self.onActionClick(href)
                     }}>{node.textContent}</text>)
                 }
                 case "STRONG": {
                     return (<text style={styles.strong}>{node.textContent}</text>)
+                }
+                case "CODE": {
+                    return (<text style={styles.inlineCode}>{node.textContent}</text>)
                 }
                 default: {
                     return (<text style={styles.text}>{node.textContent}</text>)
@@ -260,7 +266,6 @@ export default {
         },
         renderParagraphChildren(node) {
             let childNodes = node.childNodes
-
             let line = []
             let lines = []
             for (let i = 0; i < childNodes.length; i++) {
@@ -337,22 +342,21 @@ export default {
     computed: {
         document() {
             if (this.source && this.source !== '') {
-                let content = md.render(this.source)
+                let content = md.render(this.source, {})
                 return htmlUtils.createDocument(content)
             } else {
                 return null
             }
-        }
+        },
     },
     render() {
         if (!this.document) {
             return null
         }
         try {
-            return (<div style={{width: '750px'}}>{this.renderDocument(this.document.body)}</div>)
+            return (<div>{this.renderDocument(this.document.body)}</div>)
         } catch (e) {
             utils.debug(e)
         }
     }
 }
-

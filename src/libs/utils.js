@@ -139,5 +139,12 @@ export default {
             .map(function (v, i, a) {
                 return i > 5 ? null : a[Math.floor(Math.random() * 16)]
             }).join('');
+    },
+    timeout(time) {
+        return new Promise(function (resolve) {
+            setTimeout(function () {
+                resolve()
+            }, time)
+        })
     }
 }
