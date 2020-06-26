@@ -40,6 +40,7 @@
         methods: {
             getLineText(current) {
                 let max = this.allLines.lines.length
+
                 function getLength(i) {
                     let l = 0;
                     while (i >= 1) {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <scroller>
+        <scroller scroll-direction="vertical">
             <markdown-view :source="test">
             </markdown-view>
         </scroller>
