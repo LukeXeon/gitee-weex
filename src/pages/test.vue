@@ -1,8 +1,10 @@
 <template>
-    <scroller>
-        <markdown-view :source="test">
-        </markdown-view>
-    </scroller>
+    <div>
+        <scroller>
+            <markdown-view :source="test">
+            </markdown-view>
+        </scroller>
+    </div>
 </template>
 
 <script>

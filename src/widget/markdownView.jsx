@@ -1,5 +1,5 @@
 import hljs from 'highlight.js'
-import {Element} from '@/libs/domino/impl'
+import {Element, CharacterData, Text} from '@/libs/domino/impl'
 import MarkdownIt from 'markdown-it'
 import htmlUtils from "@/libs/htmlUtils";
 import utils from "@/libs/utils";
@@ -29,8 +29,11 @@ const styles = {
     text: {
         fontSize: `${weexDefaultFontSize}px`,
     },
-    line: {
+    lines: {
         flexDirection: 'column'
+    },
+    line: {
+        flexDirection: 'row'
     },
     h1: {
         fontWeight: 'bold',
@@ -57,7 +60,9 @@ const styles = {
         fontSize: `${htmlSize(12)}px`
     },
     p: {
-        fontSize: `${weexDefaultFontSize}px`
+        fontSize: `${weexDefaultFontSize}px`,
+        marginTop: `${weexDefaultFontSize / 2}px`,
+        marginBottom: `${weexDefaultFontSize / 2}px`,
     },
     a: {
         fontSize: `${weexDefaultFontSize}px`,
@@ -75,20 +80,40 @@ const styles = {
     code: {
         backgroundColor: "#d6d6d6"
     },
+    strong: {
+        fontWeight: 'bold',
+        fontSize: `${weexDefaultFontSize}px`,
+    },
     list: {
-        flexDirection: 'column',
-        paddingLeft: '30px'
+        wrapper: {
+            marginLeft: '25px'
+        },
+        root: {
+            flexDirection: 'column',
+        },
+        item: {
+            root: {
+                flexDirection: 'row',
+            },
+            image: {
+                width: '25px',
+                height: '25px',
+                marginRight: '20px'
+            },
+            order: {
+                textAlign: 'center',
+                width: '20px',
+                fontSize: '30px',
+            },
+            dot: {
+                width: '20px',
+                fontSize: '30px',
+            },
+            content: {
+                flexDirection: 'column',
+            }
+        }
     },
-    listHeader: {
-        fontSize: `${weexDefaultFontSize}px`
-    },
-    listTitle: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    listItem: {
-        flexDirection: 'column'
-    }
 }
 
 export default {
@@ -125,8 +150,7 @@ export default {
                 }
                 case 'A': {
                     let href = node.getAttribute('href')
-                    return (<text style={styles.a}
-                                  onClick={this.onAClick(href)}>{node.textContent}</text>)
+                    return (<text style={styles.a} onClick={this.onAClick(href)}>{node.textContent}</text>)
                 }
                 case 'code': {
                     return (<text style={styles.inlineCode}>{node.textContent}</text>)
@@ -139,85 +163,140 @@ export default {
                     )
                 }
                 default: {
-                    return (<text style={styles.text}>{node.data}</text>)
+                    return (<text style={styles.text}>{node.textContent}</text>)
                 }
             }
         },
-        renderListItem(node, header, level) {
-            let titleNode = node.childNodes[0]
-            return (<div style={styles.listItem}>
-                <div style={styles.listTitle}>
-                    {header}
-
-                    {
-                        titleNode instanceof Element ? this.renderEndNode(titleNode)
-                            : (<text style={styles.text}>{titleNode.nodeType}</text>)
-                    }
+        renderUnOrderListItem(node, image, level) {
+            let list = []
+            for (let i = 0; i < node.childNodes.length; i++) {
+                let cNode = node.childNodes[i]
+                let cElement = this.renderNode(cNode, level + 1)
+                list.push(cElement)
+            }
+            let marginTop = 5
+            if (node.children.length > 0 && node.children[0] instanceof Element && node.children[0].tagName === "P") {
+                marginTop += weexDefaultFontSize / 2
+            }
+            return (
+                <div style={styles.list.item.root}>
+                    <image style={{...styles.list.item.image, ...{marginTop: `${marginTop}px`}}} src={image}>
+                    </image>
+                    <div style={styles.list.item.content}>{list}</div>
                 </div>
-                {node.childNodes[2] instanceof Element ? this.renderList(node.childNodes[2], level + 1) : null}
-            </div>)
+            )
+        },
+        renderUnOrderList(node, level) {
+            let image;
+            switch (level) {
+                case 0: {
+                    image = require("@/res/md-point(2).png").default
+                }
+                    break
+                case 1: {
+                    image = require("@/res/md-point(1).png").default
+                }
+                    break
+                default: {
+                    image = require("@/res/md-point.png").default
+                }
+                    break
+            }
+            let children = node.children
+            let list = []
+            for (let i = 0; i < children.length; i++) {
+                let cNode = children[i]
+                let cElement = this.renderUnOrderListItem(cNode, image, level)
+                list.push(cElement)
+            }
+            return (<div style={styles.list.root}>{list}</div>)
+        },
+        renderOrderListItem(node, index, level) {
+            let list = []
+            let marginTop = 0
+
+            for (let i = 0; i < node.childNodes.length; i++) {
+                let cNode = node.childNodes[i]
+                let cElement = this.renderNode(cNode, level + 1)
+                list.push(cElement)
+            }
+
+            if (node.children.length > 0 && node.children[0] instanceof Element && node.children[0].tagName === "P") {
+                marginTop += weexDefaultFontSize / 2
+            }
+
+            let text = index.toString()
+            let indexList = []
+            for (let i = 0; i < text.length; i++) {
+                indexList.push((<text style={styles.list.item.order}>{text[i]}</text>))
+            }
+            indexList.push((<text style={styles.list.item.dot}>.</text>))
+
+            return (
+                <div style={styles.list.item.root}>
+                    <div style={{marginTop: `${marginTop}px`, flexDirection: 'row', marginRight: '5px'}}>
+                        {indexList}
+                    </div>
+                    <div style={styles.list.item.content}>{list}</div>
+                </div>
+            )
+        },
+        renderOrderList(node, level) {
+            let children = node.children
+            let start = node.getAttribute('start') || 1
+            let list = []
+            for (let i = 0; i < children.length; i++) {
+                let cNode = children[i]
+                let cElement = this.renderOrderListItem(cNode, start + i, level)
+                list.push(cElement)
+            }
+            return (<div style={styles.list.root}>{list}</div>)
         },
         renderList(node, level = 0) {
-            let list = []
-            let isOrder = node.tagName === 'OL'
-            let headerFirst;
-            if (isOrder) {
-                headerFirst = node.getAttribute('start') || 1
-            } else {
-                switch (level) {
-                    case 0: {
-                        headerFirst = require('@/res/md-point(2).png').default
-                    }
-                        break
-                    case 1: {
-                        headerFirst = require('@/res/md-point(1).png').default
-                    }
-                        break
-                    default: {
-                        headerFirst = require('@/res/md-point.png').default
-                    }
-                        break
-                }
-                for (let i = 0; i < node.children.length; i++) {
-                    let cNode = node.children[i]
-                    let header;
-                    if (isOrder) {
-                        header = (<text style={styles.text}>{headerFirst + i}. </text>)
-                    } else {
-                        header = (
-                            <image src={headerFirst}
-                                   style={{width: '25px', height: '25px', marginRight: '10px'}}>
-                            </image>
-                        )
-                    }
-                    let li = this.renderListItem(cNode, header, level)
-                    list.push(li)
-                }
+            let root = null
+            if (node.tagName === "UL") {
+                root = this.renderUnOrderList(node, level)
+            } else if (node.tagName === "OL") {
+                root = this.renderOrderList(node, level)
             }
-            return (<div style={styles.list}>{list}</div>)
+            if (level === 0) {
+                return (<div style={styles.list.wrapper}>{root}</div>)
+            } else {
+                return root
+            }
         },
         renderCodeNode(node) {
             node = node.children[0]
-            return (<text style={styles.code}>{node.innerHTML}</text>)
+            return (<text style={styles.code}>{node.textContent}</text>)
         },
-        renderNode(node) {
+        renderNode(node, level) {
             if (node instanceof Element) {
                 if (node.children.length === 0) {
                     return this.renderEndNode(node)
                 } else if (node.tagName === 'PRE') {
                     return this.renderCodeNode(node)
                 } else if (node.tagName === 'UL' || node.tagName === 'OL') {
-                    return this.renderList(node)
+                    return this.renderList(node, level)
                 } else {
-                    let list = []
+                    let lines = []
+                    let line = []
                     for (let i = 0; i < node.childNodes.length; i++) {
                         let cNode = node.childNodes[i]
                         let cElement = this.renderNode(cNode)
                         if (cElement) {
-                            list.push(cElement)
+                            line.push(cElement)
+                        }
+                        if (cNode instanceof CharacterData) {
+                            if (cNode.data.endsWith('\n')) {
+                                lines.push((<div style={styles.line}>{line}</div>))
+                                line = []
+                            }
                         }
                     }
-                    return (<div style={styles.line}>{list}</div>)
+                    if (line.length > 0) {
+                        lines.push((<div style={styles.line}>{line}</div>))
+                    }
+                    return (<div style={styles.lines}>{lines}</div>)
                 }
             } else {
                 if (node.data.trim().length > 0) {
@@ -243,7 +322,7 @@ export default {
             return null
         }
         try {
-            return this.renderNode(this.document.body)
+            return (<div style={{width: '750px'}}>{this.renderNode(this.document.body)}</div>)
         } catch (e) {
             utils.debug(e)
         }
