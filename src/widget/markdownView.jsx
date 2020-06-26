@@ -67,8 +67,8 @@ const styles = {
     },
     p: {
         flexDirection: 'column',
-        marginTop: `10px`,
-        marginBottom: `10px`,
+        marginTop: '10px',
+        marginBottom: '10px',
     },
     a: {
         fontSize: `${weexDefaultFontSize}px`,
@@ -92,9 +92,9 @@ const styles = {
     },
     list: {
         wrapper: {
-            marginTop: '25px',
+            marginTop: '10px',
             marginBottom: '10px',
-            marginLeft: '10px'
+            marginLeft: '25px'
         },
         root: {
             flexDirection: 'column',
@@ -138,30 +138,40 @@ export default {
         onAClick(url) {
 
         },
-        renderListItemElementContent(node, level) {
+        renderListItemContent2(index, node, level) {
+            switch (node.tagName) {
+                case "OL":
+                case "UL": {
+                    return this.renderListElement(node, level + 1)
+                }
+                case "P": {
+                    let style = index === 0 ? {...styles.p, ...{marginTop: '0px'}} : styles.p;
+                    return (<div style={style}>{this.renderParagraphChildren(node)}</div>)
+                }
+                default: {
+                    return this.renderInlineElement(node)
+                }
+            }
+        },
+        renderListItemContent(node, level) {
             if (node.children.length > 0) {
+                let list = []
                 for (let i = 0; i < node.children.length; i++) {
                     let cNode = node.children[i]
-                    switch (cNode.tagName) {
-                        case "OL":
-                        case "UL": {
-                            return this.renderListElement(node, level + 1)
-                        }
-                        case "P": {
-                            let style = i === 0 ? {...styles.p, ...{marginTop: '0px'}} : styles.p;
-                            return ((<div style={style}>{this.renderParagraphChildren(node)}</div>))
-                        }
-                        default: {
-                            return this.renderInlineElement(cNode)
-                        }
-                    }
+                    list.push(this.renderListItemContent2(i, cNode, level))
                 }
+                return (
+                    <div style={styles.list.item.content}>
+                        {list}
+                    </div>
+                )
             } else {
-                return (<div style={styles.text}>{node.innerHTML}</div>)
+
+                return (<div style={styles.text}>{node.childNodes[0].data}</div>)
             }
         },
         renderListItemElement(header, node, level) {
-            let content = this.renderListItemElementContent(node, level)
+            let content = this.renderListItemContent(node, level)
             if (header.isOrder) {
                 let text = header.value.toString()
                 let indexHeader = []
@@ -182,7 +192,7 @@ export default {
                     <div style={styles.list.item.root}>
                         <image style={{...styles.list.item.image}} src={header.value}>
                         </image>
-                        <div style={styles.list.item.content}>{content}</div>
+                        {content}
                     </div>
                 )
             }
