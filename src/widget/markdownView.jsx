@@ -101,11 +101,13 @@ const styles = {
                 marginRight: '20px'
             },
             order: {
+                fontWeight: 'bold',
                 textAlign: 'center',
                 width: '20px',
                 fontSize: '30px',
             },
             dot: {
+                fontWeight: 'bold',
                 width: '20px',
                 fontSize: '30px',
             },
@@ -124,6 +126,15 @@ export default {
     methods: {
         onAClick(url) {
 
+        },
+        renderChildNodes(childNodes, level) {
+            let list = []
+            for (let i = 0; i < childNodes.length; i++) {
+                let cNode = childNodes[i]
+                let cElement = this.renderNode(cNode, level + 1)
+                list.push(cElement)
+            }
+            return list
         },
         renderEndNode(node) {
             switch (node.tagName) {
@@ -168,12 +179,7 @@ export default {
             }
         },
         renderUnOrderListItem(node, image, level) {
-            let list = []
-            for (let i = 0; i < node.childNodes.length; i++) {
-                let cNode = node.childNodes[i]
-                let cElement = this.renderNode(cNode, level + 1)
-                list.push(cElement)
-            }
+            let list = this.renderChildNodes(node.childNodes, level)
             let marginTop = 5
             if (node.children.length > 0 && node.children[0] instanceof Element && node.children[0].tagName === "P") {
                 marginTop += weexDefaultFontSize / 2
@@ -212,19 +218,11 @@ export default {
             return (<div style={styles.list.root}>{list}</div>)
         },
         renderOrderListItem(node, index, level) {
-            let list = []
             let marginTop = 0
-
-            for (let i = 0; i < node.childNodes.length; i++) {
-                let cNode = node.childNodes[i]
-                let cElement = this.renderNode(cNode, level + 1)
-                list.push(cElement)
-            }
-
+            let list = this.renderChildNodes(node.childNodes, level)
             if (node.children.length > 0 && node.children[0] instanceof Element && node.children[0].tagName === "P") {
                 marginTop += weexDefaultFontSize / 2
             }
-
             let text = index.toString()
             let indexList = []
             for (let i = 0; i < text.length; i++) {
@@ -252,7 +250,7 @@ export default {
             }
             return (<div style={styles.list.root}>{list}</div>)
         },
-        renderList(node, level = 0) {
+        renderList(node, level) {
             let root = null
             if (node.tagName === "UL") {
                 root = this.renderUnOrderList(node, level)
@@ -269,7 +267,7 @@ export default {
             node = node.children[0]
             return (<text style={styles.code}>{node.textContent}</text>)
         },
-        renderNode(node, level) {
+        renderNode(node, level = 0) {
             if (node instanceof Element) {
                 if (node.children.length === 0) {
                     return this.renderEndNode(node)
