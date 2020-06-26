@@ -90,8 +90,11 @@
                             :useRight="false"
                             title="Readme">
                 </label-line>
-                <text v-if="noReadme" class="no-readme">NO README</text>
-                <md-view-wrapper v-else :content="mdContent">
+                <text v-if="readmeState==='error'"
+                      class="no-readme">NO README</text>
+                <md-view-wrapper v-if="readmeState==='loaded'"
+                                 class="md"
+                                 :content="mdContent">
                 </md-view-wrapper>
             </scroller>
             <image class="float-button"
@@ -144,7 +147,8 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
-    import mdViewWrapper from "@/widget/mdViewWrapper";
+    import mdViewWrapper from "@/pages/repository/mdViewWrapper";
+    import {Base64} from 'js-base64'
 
 
     const code = require('@/res/code.png').default
@@ -271,6 +275,12 @@
                 })
                 gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length
+                })
+                gitee.getReadme(user, repos, branch).then(res => {
+                    this.mdContent = Base64.decode(res['content'])
+                    this.readmeState = 'loaded'
+                }).catch(function (e) {
+                    this.readmeState = 'error'
                 })
                 this.loadExtraInfo(user, repos, branch).then(res => {
                     if (res) {
@@ -411,7 +421,7 @@
                 isLoading: true,
                 char: ' / ',
                 refreshing: false,
-                noReadme: true,
+                readmeState: 'loading',
                 reposType: '',
                 path: '',
                 mdContent: ''
@@ -421,6 +431,13 @@
 </script>
 
 <style scoped>
+    .md {
+        border-top-width: 0.5px;
+        border-top-color: #dddddd;
+        margin-top: 20px;
+        background-color: white;
+    }
+
     .top-bar {
         border-bottom-color: #888888;
         border-bottom-width: 0.5px;

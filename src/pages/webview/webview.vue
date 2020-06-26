@@ -1,6 +1,7 @@
 <template>
     <div style="flex: 1">
         <wxc-minibar title="浏览网页"
+                     class="top-bar"
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"
@@ -47,6 +48,11 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .webview {
         width: 750px;
         flex: 1;

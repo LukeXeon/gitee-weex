@@ -5,6 +5,7 @@
         <markdown-view
                 ref="md"
                 style="width: 750px"
+                @onActionClick="onActionClick"
                 :source="content">
         </markdown-view>
     </scroller>
@@ -18,6 +19,13 @@
         name: "mdViewWrapper",
         props: {
             content: String
+        },
+        methods: {
+            onActionClick(e) {
+                utils.jumpTo('webview', {
+                    url: e.url
+                })
+            },
         },
         components: {
             markdownView

@@ -21,6 +21,8 @@ const htmlDefaultFontSize = 14
 
 const weexDefaultFontSize = 30
 
+const marginLeft = 25
+
 function htmlSize(px) {
     return px / htmlDefaultFontSize * weexDefaultFontSize
 }
@@ -36,36 +38,43 @@ const styles = {
         flexDirection: 'row'
     },
     h1: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(32)}px`,
         marginTop: `15px`,
         marginBottom: `15px`,
     },
     h2: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(24)}px`,
         marginTop: `10px`,
         marginBottom: `10px`,
     },
     h3: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(18.72)}px`,
         marginTop: `5px`,
         marginBottom: `5px`,
     },
     h4: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(16)}px`
     },
     h5: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(13.28)}px`
     },
     h6: {
+        marginLeft: `${marginLeft}px`,
         fontWeight: 'bold',
         fontSize: `${htmlSize(12)}px`
     },
     p: {
+        marginLeft: `${marginLeft}px`,
         flexDirection: 'column',
         marginTop: '10px',
         marginBottom: '10px',
@@ -96,7 +105,7 @@ const styles = {
         wrapper: {
             marginTop: '10px',
             marginBottom: '10px',
-            marginLeft: '25px'
+            marginLeft: `${marginLeft + 25}px`
         },
         root: {
             flexDirection: 'column',
@@ -302,6 +311,9 @@ export default {
         renderParagraphElement(node) {
             return (<div style={styles.p}>{this.renderParagraphChildren(node)}</div>)
         },
+        renderCodeElement(node) {
+            
+        },
         renderHeaderElement(node) {
             for (let j = 1; j <= 6; j++) {
                 if (node.tagName === `H${j}`) {
@@ -321,7 +333,7 @@ export default {
                 } else {
                     switch (child.tagName) {
                         case 'PRE': {
-                            list.push(<text style={styles.text}>code</text>)
+                            list.push(this.renderCodeElement(child))
                         }
                             break;
                         case 'P': {

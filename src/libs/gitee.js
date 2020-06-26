@@ -179,6 +179,18 @@ export default {
         const url = `https://gitee.com/api/v5/repos/${user}/${repos}?access_token=${accessToken}`
         return await request("GET", url)
     },
+    async getReadme(user, repos, branch) {
+        let data = await this.getTree(user, repos, branch)
+        let tree = data['tree']
+        let readme = 'README.md'.toLowerCase()
+        for (let i = 0; i < tree.length; i++) {
+            let item = tree[i]
+            if (item['path'].toLowerCase() === readme) {
+                return await this.getBlob(user, repos, item.sha)
+            }
+        }
+        throw new Error('no found')
+    },
     getLanguageColor(lang) {
         let colorItem = colors[lang]
         let color = null
