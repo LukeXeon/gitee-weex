@@ -92,10 +92,13 @@
                 </label-line>
                 <text v-if="readmeState==='error'"
                       class="no-readme">NO README</text>
-                <md-view-wrapper v-if="readmeState==='loaded'"
-                                 class="md"
-                                 :content="mdContent">
-                </md-view-wrapper>
+<!--                <markdown-view v-if="readmeState==='loaded'"-->
+<!--                               class="md"-->
+<!--                               @onActionClick="onActionClick"-->
+<!--                               :content="mdContent">-->
+<!--                </markdown-view>-->
+                <markdown class="md"
+                          v-if="readmeState==='loaded'">{{mdContent}}</markdown>
             </scroller>
             <image class="float-button"
                    ref="floatButton"
@@ -147,8 +150,8 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
-    import mdViewWrapper from "@/pages/repository/mdViewWrapper";
     import {Base64} from 'js-base64'
+    import markdown from 'weex-markdown';
 
 
     const code = require('@/res/code.png').default
@@ -165,7 +168,7 @@
             tab3,
             WxcLoading,
             WxcPopup,
-            mdViewWrapper
+            markdown
         },
         computed: {
             labels() {
@@ -197,6 +200,14 @@
             },
         },
         methods: {
+            onActionClick(e) {
+                utils.jumpTo('webview', {
+                    url: e.url
+                })
+            },
+            onImageClick(e) {
+
+            },
             onNameClick() {
                 switch (this.reposType) {
                     case "group": {

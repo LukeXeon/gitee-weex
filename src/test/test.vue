@@ -1,15 +1,16 @@
 <template>
     <div>
-
+        <scroller>
+        </scroller>
     </div>
 </template>
-
 <script>
-
 
     export default {
         name: "test",
+        data() {
 
+        }
     }
 </script>
 
