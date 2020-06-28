@@ -94,7 +94,7 @@ export const styles = {
         marginLeft: 10,
         marginRight: 10,
         //
-        ...(weex.config.env.platform === 'iOS' ? {lineHeight: 36} : {lineHeight: 30,})
+        ...(weex.config.env.platform === 'iOS' ? {lineHeight: 36} : {lineHeight: 30})
     },
     listOrderedItemText: {
         fontWeight: 'bold',
