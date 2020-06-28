@@ -1,8 +1,9 @@
 import openUrl from './util/openUrl';
 import hasParents from './util/hasParents';
-import applyStyle from './util/applyStyle';
+import applyStyle from './util/applyStyle.jsx';
 
 const renderRules = {
+
     // when unknown elements are introduced, so it wont break
     unknown: (h, node, children, parent, styles) => {
         return (
@@ -77,13 +78,13 @@ const renderRules = {
     heading1: (h, node, children, parent, styles) => {
         return (
             <div key={node.key} style={styles.headingContainer}>
-                {applyStyle(h, children, [styles.heading, styles.heading1], 'Text')}
+                {applyStyle(h, children, [styles.heading, styles.heading1], 'text')}
             </div>
         );
     },
 
     heading2: (h, node, children, parent, styles) => {
-        children = applyStyle(h, children, [styles.heading, styles.heading2], 'Text');
+        children = applyStyle(h, children, [styles.heading, styles.heading2], 'text');
         return (
             <div key={node.key} style={styles.headingContainer}>
                 {children}
@@ -92,22 +93,22 @@ const renderRules = {
     },
     heading3: (h, node, children, parent, styles) => (
         <div key={node.key} style={styles.headingContainer}>
-            {applyStyle(h, children, [styles.heading, styles.heading3], 'Text')}
+            {applyStyle(h, children, [styles.heading, styles.heading3], 'text')}
         </div>
     ),
     heading4: (h, node, children, parent, styles) => (
         <div key={node.key} style={styles.headingContainer}>
-            {applyStyle(h, children, [styles.heading, styles.heading4], 'Text')}
+            {applyStyle(h, children, [styles.heading, styles.heading4], 'text')}
         </div>
     ),
     heading5: (h, node, children, parent, styles) => (
         <div key={node.key} style={styles.headingContainer}>
-            {applyStyle(h, children, [styles.heading, styles.heading5], 'Text')}
+            {applyStyle(h, children, [styles.heading, styles.heading5], 'text')}
         </div>
     ),
     heading6: (h, node, children, parent, styles) => (
         <div key={node.key} style={styles.headingContainer}>
-            {applyStyle(h, children, [styles.heading, styles.heading6], 'Text')}
+            {applyStyle(h, children, [styles.heading, styles.heading6], 'text')}
         </div>
     ),
 

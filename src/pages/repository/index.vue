@@ -93,7 +93,7 @@
                 <text v-if="readmeState==='error'"
                       class="no-readme">NO README</text>
                 <markdown class="md"
-                          :source="mdContent"
+                          :content="mdContent"
                           v-if="readmeState==='loaded'"></markdown>
             </scroller>
             <image class="float-button"

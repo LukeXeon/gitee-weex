@@ -25,6 +25,7 @@ export const styles = {
         fontStyle: 'italic',
     },
     headingContainer: {
+        maxWidth: 750,
         flexDirection: 'row',
     },
     heading: {},
@@ -59,18 +60,22 @@ export const styles = {
     inlineCode: {
         borderRadius: 3,
         borderWidth: 1,
-        fontFamily: 'Courier',
         fontWeight: 'bold',
     },
-    list: {},
+    list: {
+        maxWidth: 750,
+    },
     listItem: {
         flex: 1,
         flexWrap: 'wrap',
         // backgroundColor: 'green',
     },
-    listUnordered: {},
+    listUnordered: {
+        maxWidth: 750,
+    },
 
     listUnorderedItem: {
+        maxWidth: 750,
         flexDirection: 'row',
         justifyContent: 'flex-start',
     },
@@ -88,6 +93,7 @@ export const styles = {
 
     listOrdered: {},
     listOrderedItem: {
+        maxWidth: 750,
         flexDirection: 'row',
     },
     listOrderedItemIcon: {
@@ -105,6 +111,7 @@ export const styles = {
         marginBottom: 10,
         flexWrap: 'wrap',
         flexDirection: 'row',
+        maxWidth: 750,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
     },
@@ -131,6 +138,7 @@ export const styles = {
         borderBottomWidth: 1,
         borderColor: '#000000',
         flexDirection: 'row',
+        maxWidth: 750,
     },
     tableRowCell: {
         flex: 1,

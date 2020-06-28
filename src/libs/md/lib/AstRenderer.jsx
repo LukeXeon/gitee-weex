@@ -1,7 +1,7 @@
 import getUniqueID from "./util/getUniqueID";
 
 function rootRenderRule(h, children, styles) {
-    return <text key={getUniqueID()} style={styles.root}>{children}</text>;
+    return <div key={getUniqueID()} style={styles.root}>{children}</div>;
 }
 
 /**

@@ -1,15 +1,23 @@
 <template>
     <div>
-        <scroller>
-        </scroller>
+        <richtext>
+
+        </richtext>
     </div>
 </template>
 <script>
+    import markdownTest from "@/test/markdownTest";
+    import markdown from '@/libs/md/index'
 
     export default {
         name: "test",
+        components: {
+            markdown
+        },
         data() {
-
+            return {
+                test: markdownTest
+            }
         }
     }
 </script>
