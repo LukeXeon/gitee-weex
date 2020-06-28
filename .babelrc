@@ -17,6 +17,7 @@
         "moduleName": "babel-runtime"
       }
     ],
-    "transform-vue-jsx"
+    "transform-vue-jsx",
+    "transform-class-properties"
   ]
 }

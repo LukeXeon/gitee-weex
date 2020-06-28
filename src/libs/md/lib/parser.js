@@ -5,8 +5,8 @@ import groupTextTokens from './util/groupTextTokens';
 
 /**
  *
- * @param {string} source
- * @param {function} [renderer]
+ * @param {String} source
+ * @param {Function} [renderer]
  * @param {AstRenderer} [markdownIt]
  */
 export default function parser(source, renderer, markdownIt) {

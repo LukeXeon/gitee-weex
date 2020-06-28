@@ -79,15 +79,7 @@ export const styles = {
         marginLeft: 10,
         marginRight: 10,
         //
-        lineHeight: 36,
-        // ...Platform.select({
-        //     [PlatformEnum.IOS]: {
-        //         lineHeight: 36,
-        //     },
-        //     [PlatformEnum.ANDROID]: {
-        //         lineHeight: 30,
-        //     },
-        // }),
+        ...(weex.config.env.platform === 'iOS' ? {lineHeight: 36} : {lineHeight: 30,})
     },
     listUnorderedItemText: {
         fontSize: 20,
@@ -102,15 +94,7 @@ export const styles = {
         marginLeft: 10,
         marginRight: 10,
         //
-        lineHeight: 36,
-        // ...({
-        //     [PlatformEnum.IOS]: {
-        //         lineHeight: 36,
-        //     },
-        //     [PlatformEnum.ANDROID]: {
-        //         lineHeight: 30,
-        //     },
-        // }),
+        ...(weex.config.env.platform === 'iOS' ? {lineHeight: 36} : {lineHeight: 30,})
     },
     listOrderedItemText: {
         fontWeight: 'bold',
@@ -171,5 +155,7 @@ export const styles = {
     },
     image: {
         flex: 1,
+        width: 750,
+        height: 750
     },
 };

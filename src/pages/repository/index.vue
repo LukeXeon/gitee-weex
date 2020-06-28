@@ -92,13 +92,9 @@
                 </label-line>
                 <text v-if="readmeState==='error'"
                       class="no-readme">NO README</text>
-<!--                <markdown-view v-if="readmeState==='loaded'"-->
-<!--                               class="md"-->
-<!--                               @onActionClick="onActionClick"-->
-<!--                               :content="mdContent">-->
-<!--                </markdown-view>-->
                 <markdown class="md"
-                          v-if="readmeState==='loaded'">{{mdContent}}</markdown>
+                          :source="mdContent"
+                          v-if="readmeState==='loaded'"></markdown>
             </scroller>
             <image class="float-button"
                    ref="floatButton"
@@ -151,7 +147,7 @@
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
     import {Base64} from 'js-base64'
-    import markdown from 'weex-markdown';
+    import markdown from '@/libs/md/index'
 
 
     const code = require('@/res/code.png').default

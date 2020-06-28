@@ -1,6 +1,6 @@
 import getUniqueID from "./util/getUniqueID";
 
-export function rootRenderRule(h, children, styles) {
+function rootRenderRule(h, children, styles) {
     return <text key={getUniqueID()} style={styles.root}>{children}</text>;
 }
 
@@ -9,20 +9,19 @@ export function rootRenderRule(h, children, styles) {
  */
 export default class AstRenderer {
     /**
-     * @param {Function} h
+     * @param {Function} createElement
      * @param {Object.<string, function>} renderRules
-     * @param {any} style
+     * @param {Object} style
      */
-    constructor(h, renderRules, style) {
-        this._createElement = h;
+    constructor(createElement, renderRules, style) {
+        this._createElement = createElement
         this._renderRules = renderRules;
         this._style = style;
     }
 
     /**
-     *
-     * @param {string} type
-     * @return {string}
+     * @param {String} type
+     * @return {Function}
      */
     getRenderFunction = type => {
         const renderFunction = this._renderRules[type];
@@ -48,14 +47,14 @@ export default class AstRenderer {
         parents.unshift(node);
 
         if (node.type === "text") {
-            return renderFunction(node, [], parentNodes, this._style);
+            return renderFunction(this._createElement, node, [], parentNodes, this._style);
         }
 
         const children = node.children.map(value => {
             return this.renderNode(value, parents);
         });
 
-        return renderFunction(node, children, parentNodes, this._style);
+        return renderFunction(this._createElement, node, children, parentNodes, this._style);
     };
 
     /**
