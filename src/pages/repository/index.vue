@@ -90,11 +90,6 @@
                             :useRight="false"
                             title="Readme">
                 </label-line>
-                <text v-if="readmeState==='error'"
-                      class="no-readme">NO README</text>
-                <markdown class="md"
-                          :content="mdContent"
-                          v-if="readmeState==='loaded'"></markdown>
             </scroller>
             <image class="float-button"
                    ref="floatButton"
@@ -146,9 +141,6 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from '@/libs/domino'
-    import {Base64} from 'js-base64'
-    import markdown from '@/libs/md/index'
-
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -164,7 +156,6 @@
             tab3,
             WxcLoading,
             WxcPopup,
-            markdown
         },
         computed: {
             labels() {
@@ -282,18 +273,6 @@
                 })
                 gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length
-                })
-                gitee.getReadme(user, repos, branch).then(res => {
-                    this.mdContent = Base64.decode(res['content'])
-                    this.readmeState = 'loaded'
-                }).catch(function (e) {
-                    this.readmeState = 'error'
-                })
-                this.loadExtraInfo(user, repos, branch).then(res => {
-                    if (res) {
-                        this.languagesSummary = res.colorLines
-                        this.langTexts = res.texts
-                    }
                 })
                 let data = await gitee.getRepos(user, repos)
                 this.icon = icon
@@ -428,10 +407,8 @@
                 isLoading: true,
                 char: ' / ',
                 refreshing: false,
-                readmeState: 'loading',
                 reposType: '',
                 path: '',
-                mdContent: ''
             }
         }
     }

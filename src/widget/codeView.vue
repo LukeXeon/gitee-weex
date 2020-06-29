@@ -28,6 +28,7 @@
     import {Utils} from 'weex-ui'
     import {Element, CharacterData} from '../libs/domino/impl'
     import domino from '@/libs/domino/index'
+    import utils from "@/libs/utils";
 
     export default {
         name: "codeView",
@@ -104,18 +105,23 @@
                             let item = node.childNodes[i]
                             if (item instanceof CharacterData) {
                                 if (item.data.length > 0) {
-                                    let texts = item.data.split('\n')
-                                    for (let j = 0; j < texts.length; j++) {
-                                        let span = texts[j]
-                                        if (span.length > 0) {
-                                            appendSpan(env, span, classList)
+                                    if (item.data.indexOf('\n') !== -1) {
+                                        let texts = item.data.split('\n')
+                                        for (let j = 0; j < texts.length; j++) {
+                                            let span = texts[j]
+                                            if (span.length > 0) {
+                                                appendSpan(env, span, classList)
+
+                                            }
+                                            if (j < texts.length - 1) {
+                                                env.lines.push(env.line)
+                                                env.maxWidth = Math.max(env.maxWidth, env.width)
+                                                env.width = 0
+                                                env.line = []
+                                            }
                                         }
-                                        if (j < texts.length - 1) {
-                                            env.lines.push(env.line)
-                                            env.maxWidth = Math.max(env.maxWidth, env.width)
-                                            env.width = 0
-                                            env.line = []
-                                        }
+                                    } else {
+                                        appendSpan(env, item.data, classList)
                                     }
                                 }
                             } else if (item instanceof Element) {
@@ -133,7 +139,23 @@
                                         buildLine(env, item, classList2)
                                     } else {
                                         if (item.textContent.length > 0) {
-                                            appendSpan(env, item.textContent, classList2)
+                                            if (item.textContent.indexOf('\n') !== -1) {
+                                                let texts = item.textContent.split('\n')
+                                                for (let j = 0; j < texts.length; j++) {
+                                                    let span = texts[j]
+                                                    if (span.length > 0) {
+                                                        appendSpan(env, span, classList2)
+                                                    }
+                                                    if (j < texts.length - 1) {
+                                                        env.lines.push(env.line)
+                                                        env.maxWidth = Math.max(env.maxWidth, env.width)
+                                                        env.width = 0
+                                                        env.line = []
+                                                    }
+                                                }
+                                            } else {
+                                                appendSpan(env, item.textContent, classList2)
+                                            }
                                         }
                                     }
                                 }
@@ -149,6 +171,7 @@
                         highlight = hljs.highlightAuto(codeText).value
                     }
                     let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>"
+                    utils.copy(html)
                     let root = domino.createDocument(html).body
                     let env = {
                         lines: [],
