@@ -29,7 +29,6 @@
     import {Utils} from 'weex-ui'
     import {Element} from '../libs/domino/impl'
     import domino from '@/libs/domino/index'
-    import utils from "@/libs/utils";
 
     export default {
         name: "codeView",
@@ -144,7 +143,6 @@
                         highlight = hljs.highlightAuto(source).value
                     }
                     let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>";
-                    utils.copy(html)
 
                     let root = domino.createDocument(html).body;
 
