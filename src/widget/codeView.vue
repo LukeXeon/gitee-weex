@@ -17,7 +17,7 @@
                       v-for="(text) in line">{{text.text||' '}}</text>
             </cell>
             <cell v-if="displayLines.length>0"
-                  style="height: 0.5px;background-color: #888888">
+                  class="line">
             </cell>
         </list>
     </scroller>
@@ -173,6 +173,11 @@
 </style>
 
 <style scoped>
+    .line{
+        height: 0.5px;
+        background-color: #888888;
+    }
+
     .text-span {
         font-size: 30px;
         lines: 1
