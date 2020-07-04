@@ -274,6 +274,13 @@
                 gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length
                 })
+                this.loadExtraInfo(user, repos, branch).then(res => {
+                    if (res) {
+                        this.languagesSummary = res.colorLines
+                        this.langTexts = res.texts
+                    }
+                })
+
                 let data = await gitee.getRepos(user, repos)
                 this.icon = icon
                 this.username = data['namespace']['name']

@@ -139,12 +139,17 @@ export default {
         const url = `https://gitee.com/api/v5/users/${username}/repos?access_token=${accessToken}&type=all&sort=full_name&page=${page}&per_page=${countAtPage}`
         return await request("GET", url)
     },
-    async search(text, lang, page, countAtPage) {
+    async searchRepos(text, lang, page, countAtPage) {
         let accessToken = await utils.getValue('access_token')
-        let url = `https://gitee.com/api/v5/search/repositories?access_token=${accessToken}&q=${text}&page=${page}&per_page=${countAtPage}&order=desc`
+        let url = `https://gitee.com/api/v5/search/repositories?access_token=${accessToken}&q=${encodeURIComponent(text)}&page=${page}&per_page=${countAtPage}&order=desc`
         if (lang != null) {
-            url += `&language=${encodeURI(lang)}`
+            url += `&language=${encodeURIComponent(lang)}`
         }
+        return await request("GET", url)
+    },
+    async searchUser(text, page, countAtPage) {
+        let accessToken = await utils.getValue('access_token')
+        let url = `https://gitee.com/api/v5/search/users?access_token=${accessToken}&q=${encodeURIComponent(text)}&page=${page}&per_page=${countAtPage}&order=desc`
         return await request("GET", url)
     },
     async loadMyInfo(useCache = false) {
@@ -243,12 +248,22 @@ export default {
         return await request("GET", url)
     },
     getReposType(item) {
-        if (item['namespace']['enterprise_id'] && item['namespace']['enterprise_id'] !== 0) {
+        if ((item['namespace']['enterprise_id'] && item['namespace']['enterprise_id'] !== 0) || item['namespace']['type'] === 'enterprise') {
             return 'enterprise'
-        } else if (item['namespace']['path'] === item['owner']['username']) {
+        } else if ((item['namespace']['path'] === item['owner']['username']) || item['namespace']['type'] === 'personal') {
             return 'personal'
         } else {
             return 'group'
+        }
+    },
+    async checkFollow(user) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/user/following/${user}?access_token=${accessToken}`
+        try {
+            await request('GET', url)
+            return true
+        } catch (e) {
+            return false
         }
     }
 }

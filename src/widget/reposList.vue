@@ -8,7 +8,7 @@
                         @onItemClick="onItemClick">
             </repos-item>
         </cell>
-        <cell v-if="!(items!==undefined&&items!=null&&typeof items==='object'&&items.length!==0)"
+        <cell v-if="useEmptyView&&!(items!==undefined&&items!=null&&typeof items==='object'&&items.length!==0)"
               style="flex-direction: column;align-items: center">
             <text class="text">这里什么也没有，下拉刷新试试</text>
             <image class="image" :src="empty">
@@ -40,6 +40,10 @@
             },
         },
         props: {
+            useEmptyView:{
+                type:Boolean,
+                default:true
+            },
             items: {
                 type: Array,
                 default: () => ([])

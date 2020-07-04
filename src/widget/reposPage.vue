@@ -1,5 +1,6 @@
 <template>
     <repos-list
+            :useEmptyView="useEmptyView"
             @loadMore="onLoadMore"
             @onItemClick="onItemClick"
             :items="items">
@@ -11,7 +12,6 @@
             <loading-indicator class="indicator">
             </loading-indicator>
         </refresh>
-
     </repos-list>
 </template>
 
@@ -23,7 +23,11 @@
         props: {
             model: {
                 type: Function
-            }
+            },
+            useEmptyView:{
+                type:Boolean,
+                default:true
+            },
         },
         components: {
             reposList
@@ -95,7 +99,7 @@
                 items: []
             }
         },
-        name: "hotPage"
+        name: "reposPage"
     }
 </script>
 

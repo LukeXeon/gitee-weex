@@ -12,7 +12,7 @@
             <div class="select-bar">
                 <div style="flex: 1"></div>
                 <tab-view style="height: 60px;width: 500px"
-                          :select="onSelect"
+                          @select="onSelect"
                           :tabs="['仓库','用户']">
                 </tab-view>
                 <div class="right-item">
@@ -24,7 +24,10 @@
         </div>
         <search-history v-if="showListMode==='history'">
         </search-history>
-        <search-list v-else :searchText="searchText">
+        <search-list v-if="showListMode==='search'"
+                     style="flex: 1"
+                     :mode="searchMode"
+                     :searchText="searchText">
         </search-list>
     </div>
 </template>
@@ -42,6 +45,8 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        border-bottom-color: #dddddd;
+        border-bottom-width: 0.5px;
     }
 
     .select-bar {
@@ -80,14 +85,11 @@
         },
         name: "search",
         methods: {
-            onSelect(index) {
-                if (index === 0) {
+            onSelect(e) {
+                if (e.index === 0) {
                     this.searchMode = 'repos'
                 } else {
                     this.searchMode = 'user'
-                }
-                if (this.showListMode === 'search') {
-
                 }
             },
             wxcSearchbarInputOnFocus() {
@@ -100,7 +102,7 @@
                 this.showListMode = 'search'
             },
             wxcSearchbarCloseClicked() {
-
+                this.showListMode = 'history'
             },
             wxcSearchbarInputOnInput(e) {
                 this.searchText = e.value;
