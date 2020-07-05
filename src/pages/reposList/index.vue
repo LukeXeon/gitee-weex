@@ -11,7 +11,7 @@
     const configs = {
         user: {
             title: '',
-            loader: () => ({})
+            loader: () => ([])
         }
     };
 
