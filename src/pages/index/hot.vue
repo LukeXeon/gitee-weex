@@ -13,7 +13,6 @@
 </template>
 
 <script>
-    import reposList from "@/widget/reposList";
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import ReposPageWithTitle from "@/widget/reposPageWithTitle";
@@ -57,7 +56,6 @@
         name: "hot",
         components: {
             ReposPageWithTitle,
-            reposList
         },
         data() {
             return {
