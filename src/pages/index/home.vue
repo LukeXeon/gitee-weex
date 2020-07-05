@@ -1,5 +1,5 @@
 <template>
-    <wxc-tab-bar
+    <tab-bar-view
             :tab-titles="titles"
             :tab-styles="tabStyles"
             title-type="icon">
@@ -28,16 +28,17 @@
         <div class="item-container" :style="this['contentStyle']">
             <user style="flex: 1"/>
         </div>
-    </wxc-tab-bar>
+    </tab-bar-view>
 </template>
 
 <script>
-    import {WxcTabBar, Utils} from 'weex-ui'
+    import {Utils} from 'weex-ui'
     import user from "@/pages/index/user";
     import search from "@/pages/index/search";
     import star from "@/pages/index/star";
     import hot from "@/pages/index/hot";
     import events from "@/pages/index/events";
+    import tabBarView from "@/widget/tabBarView";
 
     let titles = [
         {
@@ -84,12 +85,12 @@
     export default {
         name: "home",
         components: {
-            WxcTabBar,
             user,
             search,
             star,
             hot,
-            events
+            events,
+            tabBarView
         },
         created() {
             const tabPageHeight = Utils.env.getPageHeight();

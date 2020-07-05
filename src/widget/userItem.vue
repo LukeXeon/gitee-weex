@@ -46,7 +46,6 @@
 
     .text-follow{
         color: white;
-
     }
 
     .text-unfollow{
@@ -98,9 +97,11 @@
         methods: {
             async onClick() {
                 if (this.isFollow) {
-                    await gitee.following(this.username)
-                } else {
                     await gitee.cancelFollowing(this.username)
+                    this.isFollow = false
+                } else {
+                    await gitee.following(this.username)
+                    this.isFollow = true
                 }
             }
         },

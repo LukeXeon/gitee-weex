@@ -40,7 +40,7 @@
         position: absolute;
         top: 10px;
         padding: 0 40px 0 60px;
-        font-size: 26px;
+        font-size: 30px;
         width: 710px;
         height: 64px;
         line-height: 64px;
