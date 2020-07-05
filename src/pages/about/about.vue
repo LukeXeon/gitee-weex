@@ -103,7 +103,7 @@
             return {
                 url: '',
                 items: [
-                    "URL识别",
+                    "开源协议",
                     "推荐给好友"
                 ],
                 items2: [

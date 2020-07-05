@@ -67,6 +67,13 @@ export default {
             })
         })
     },
+    removeKey(key) {
+        return new Promise(function (resolve) {
+            storage.removeItem(key, function () {
+                resolve()
+            })
+        })
+    },
     debug(text) {
         modal.alert({
             message: text.toString()

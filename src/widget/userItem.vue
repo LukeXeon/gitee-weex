@@ -4,45 +4,49 @@
                :src="icon">
         </image>
         <div class="middle">
-            <text class="username">{{username}}</text>
+            <div style="flex-direction: row;align-items: center">
+                <text class="username" style="color: #238FFF;">{{username}}</text>
+                <text class="username" style="color: #3f3f3f;"> ({{nikeName}})</text>
+            </div>
             <text class="url">{{url}}</text>
         </div>
         <div :class="['button',isFollow?'button-follow':'button-unfollow']"
              @click="onClick">
-            <text :class="['text',isFollow?'text-follow':'text-unfollow']">{{isFollow?'Follow':'Unfollow'}}</text>
+            <text :class="['text',isFollow?'text-follow':'text-unfollow']">{{isFollow?'Unfollow':'Follow'}}</text>
         </div>
     </div>
 </template>
 
 <style scoped>
-    .item{
-        margin: 20px;
+    .item {
+        margin: 20px 20px 20px 30px;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 
     .image{
-        width: 40px;
-        height: 40px;
-        border-width: 10px;
+        width: 80px;
+        height: 80px;
+        border-radius: 5px;
     }
 
     .button {
-        border-width: 30px;
-        width: 120px;
-        height: 40px;
+        border-radius: 30px;
+        width: 160px;
+        height: 55px;
         justify-content: center;
         align-items: center;
     }
 
     .text{
-        font-size: 40px;
+        font-size: 30px;
         font-weight: bold;
     }
 
     .text-follow{
         color: white;
+
     }
 
     .text-unfollow{
@@ -50,26 +54,32 @@
     }
 
     .button-follow{
-        background-color: #dddddd;
-    }
-
-    .button-unfollow{
         background-color: #238FFF;
     }
 
-    .middle{
+    .button-unfollow{
+        background-color: #f1f1f1;
+    }
+
+    .middle {
         flex: 1;
         flex-direction: column;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 
     .username{
-        font-size: 40px;
+        max-width: 250px;
+        font-size: 30px;
         font-weight: bold;
-        color: #238FFF;
+        text-overflow: ellipsis;
+        lines: 1
     }
 
-    .url{
-        font-size: 30px;
+    .url {
+        font-size: 28px;
+        text-overflow: ellipsis;
+        lines: 1
     }
 
 </style>
@@ -81,8 +91,9 @@
         name: "userItem",
         props: {
             username: String,
+            nikeName: String,
             url: String,
-            icon: String
+            icon: String,
         },
         methods: {
             async onClick() {

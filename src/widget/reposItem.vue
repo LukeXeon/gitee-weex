@@ -3,7 +3,7 @@
         <div class="line1">
             <image class="icon" :src="item.icon">
             </image>
-            <div style="flex-direction: row;margin-left: 20px;height: 50px;width: 600px">
+            <div class="title">
                 <text class="title-text" @click="onItemClick('owner',item)">{{item.displayUsername}}</text>
                 <text class="title-text">{{char}}</text>
                 <text class="title-text" @click="onItemClick('repos',item)">{{item.displayReposName}}</text>
@@ -59,6 +59,14 @@
 </script>
 
 <style scoped>
+    .title {
+        flex-direction: row;
+        margin-left: 20px;
+        height: 50px;
+        width: 600px;
+        align-items: center;
+    }
+
     .lang-tag {
         width: 25px;
         height: 25px;

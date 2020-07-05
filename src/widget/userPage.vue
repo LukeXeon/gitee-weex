@@ -1,25 +1,38 @@
 <template>
-    <list>
-        <refresh class="refresh"
-                 :display="refreshing ? 'show' : 'hide'"
-                 @refresh="onRefresh"
-                 slot="header">
-            <text class="indicator-text">刷新</text>
-            <loading-indicator class="indicator">
-            </loading-indicator>
-        </refresh>
-        <cell v-for="(item,index) in items"
-              :key="index">
-            <user-item
-                    :icon="item.icon"
-                    :url="item.url"
-                    :username="item.username">
-            </user-item>
-        </cell>
-    </list>
+    <div>
+        <list alwaysScrollableVertical="true"
+              @loadmore="onLoadMore">
+            <refresh class="refresh"
+                     :display="refreshing ? 'show' : 'hide'"
+                     @refresh="onRefresh"
+                     slot="header">
+                <text class="indicator-text">刷新</text>
+                <loading-indicator class="indicator">
+                </loading-indicator>
+            </refresh>
+            <cell v-for="(item,index) in items"
+                  class="cell"
+                  @click="onClick(item)"
+                  :key="index">
+                <user-item
+                        :icon="item.icon"
+                        :url="item.url"
+                        :nikeName="item.nikeName"
+                        :username="item.username">
+                </user-item>
+            </cell>
+        </list>
+    </div>
 </template>
 
 <style scoped>
+    .cell{
+        width: 750px;
+        border-bottom-width: 1px;
+        border-bottom-color: whitesmoke;
+        background-color: white;
+    }
+
     .refresh {
         width: 750px;
         display: -ms-flex;
@@ -44,6 +57,7 @@
 
 <script>
     import UserItem from "@/widget/userItem";
+    import utils from "@/libs/utils";
 
     export default {
         name: "userList",
@@ -78,6 +92,11 @@
             loadPage(page = 1) {
                 return this.model(page)
             },
+            onClick(item) {
+                utils.jumpTo('user', {
+                    path: item.username
+                })
+            }
         },
         async created() {
             this.items = await this.loadPage()
