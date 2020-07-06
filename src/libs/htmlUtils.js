@@ -1,6 +1,6 @@
-import domino from "@/libs/domino";
 import format from "@/libs/date.format";
 import utils from "@/libs/utils";
+import domino from 'domino-core'
 
 export default {
     createDocument(content) {

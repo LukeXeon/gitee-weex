@@ -27,6 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
+    "domino-core": "^1.0.0",
     "highlight.js": "^10.0.3",
     "js-base64": "^2.6.1",
     "phantom-limb": "0.0.1",

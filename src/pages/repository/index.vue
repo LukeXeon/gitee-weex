@@ -140,7 +140,7 @@
     import utils from "@/libs/utils";
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
-    import domino from '@/libs/domino'
+    import domino from 'domino-core'
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -422,12 +422,6 @@
 </script>
 
 <style scoped>
-    .md {
-        border-top-width: 0.5px;
-        border-top-color: #dddddd;
-        margin-top: 20px;
-        background-color: white;
-    }
 
     .top-bar {
         border-bottom-color: #888888;

@@ -2,6 +2,7 @@
     <div style="flex-direction: column;background-color: whitesmoke;width: 750px">
         <wxc-minibar title="关于"
                      text-color="black"
+                     class="top-bar"
                      background-color="#FBFBFB">
             <div slot="left"
                  v-on:click="back"
@@ -35,7 +36,9 @@
                     <div style="margin-bottom: 30px"></div>
                 </div>
                 <div class="item-group">
-                    <div class="item" v-for="(item,index) in items">
+                    <div class="item"
+                         v-for="(item,index) in items"
+                         @click="onClick(index)">
                         <text style="font-size: 30px;flex: 1">{{item}}</text>
                         <image style="height: 30px;width: 30px;margin-right: 20px;"
                                :src="require('@/res/right.png').default">
@@ -45,7 +48,7 @@
                 <div class="item-group">
                     <div class="item"
                          v-for="(item,index) in items2"
-                         v-on:click="onClick2(index)">
+                         @click="onClick2(index)">
                         <text style="font-size: 30px;flex: 1">{{item}}</text>
                         <image style="height: 30px;width: 30px;margin-right: 20px;"
                                :src="require('@/res/right.png').default">
@@ -63,8 +66,8 @@
     import utils from "@/libs/utils";
 
     const githubUrl = 'https://github.com/LukeXeon'
-    const giteeUrl = 'https://gitee.com/micro-world'
     const juejinUrl = 'https://juejin.im/user/5bbee0e86fb9a05d0e2e8617'
+    const gplUrl = 'https://gitee.com/api/v5/licenses/GPL-3.0/raw'
 
     export default {
         components: {
@@ -72,10 +75,26 @@
         },
         name: "about",
         methods: {
+            onClick(id){
+                switch (id) {
+                    case 0: {
+                        utils.jumpTo('webview', {
+                            url: gplUrl
+                        })
+                    }
+                        break
+                    case 1: {
+
+                    }
+                        break
+                }
+            },
             onClick2(id) {
                 switch (id) {
                     case 0: {
-
+                        utils.jumpTo('user', {
+                            path: 'micro-world'
+                        })
                     }
                         break
                     case 1: {
@@ -97,8 +116,6 @@
                 navigator.pop()
             },
         },
-        created() {
-        },
         data() {
             return {
                 url: '',
@@ -117,6 +134,11 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .image {
         width: 343px;
         height: 108px;
@@ -124,8 +146,6 @@
 
     .item-group {
         flex-direction: column;
-        padding-left: 30px;
-        padding-right: 20px;
         margin-top: 30px;
         width: 750px;
         background-color: white;
@@ -145,6 +165,8 @@
     }
 
     .item {
+        padding-left: 30px;
+        padding-right: 20px;
         align-items: center;
         height: 80px;
         border-bottom-width: 0.5px;

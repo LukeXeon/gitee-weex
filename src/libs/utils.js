@@ -4,6 +4,7 @@ const modal = weex.requireModule('modal')
 const animation = weex.requireModule('animation')
 const navigator = weex.requireModule('navigator')
 const dom = weex.requireModule('dom')
+const clipboard = weex.requireModule('clipboard')
 
 export default {
     request(method, url, type, body, headers) {
@@ -138,8 +139,14 @@ export default {
         })
     },
     copy(text) {
-        const clipboard = weex.requireModule('clipboard')
         clipboard.setString(text)
+    },
+    getClipboard() {
+        return new Promise(function (resolve) {
+            clipboard.getString(function () {
+                resolve()
+            })
+        })
     },
     getRandomColor() {
         return '#' + '0123456789abcdef'.split('')

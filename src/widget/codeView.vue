@@ -27,8 +27,8 @@
 <script>
     import hljs from 'highlight.js'
     import {Utils} from 'weex-ui'
-    import {Element} from '../libs/domino/impl'
-    import domino from '@/libs/domino/index'
+    import {Element} from 'domino-core/src/impl'
+    import domino from 'domino-core'
 
     export default {
         name: "codeView",
