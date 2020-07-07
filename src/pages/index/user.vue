@@ -23,7 +23,8 @@
                          :bio="bio"
                          :joinTime="joinTime">
             </user-header>
-            <tabs :items="items">
+            <tabs :items="items"
+                  @tabClick="onClick">
             </tabs>
             <contribution-view
                     style="margin-top: 30px;margin-bottom: 30px"
@@ -95,7 +96,32 @@
                     this.refreshing = false
                 }
             },
-            onClick(index) {
+            async onClick(e) {
+                let index = e.index
+                let user = (await gitee.loadMyInfo())['login']
+                switch (index) {
+                    case 0: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'repos'
+                        })
+                    }
+                        break
+                    case 1: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'follower'
+                        })
+                    }
+                        break
+                    case 2: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'following'
+                        })
+                    }
+                        break
+                }
             },
             onClick2(index) {
                 if (index === 1) {

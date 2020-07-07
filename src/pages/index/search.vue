@@ -15,6 +15,7 @@
                 </tab-view>
                 <div class="right-item">
                     <image style="width: 50px;height: 50px;"
+                           @click="onShowLangList"
                            v-if="searchMode==='repos'"
                            :src="require('@/res/options.png').default">
                     </image>
@@ -29,6 +30,13 @@
                      :mode="searchMode"
                      :searchText="summitText">
         </search-list>
+        <wxc-popup
+                pos="right"
+                :width="600"
+                @wxcPopupOverlayClicked="popupOverlayBottomClick"
+                popup-color="whitesmoke"
+                :show="isShowLangList">
+        </wxc-popup>
     </div>
 </template>
 
@@ -76,6 +84,7 @@
     import searchList from "@/pages/index/searchList";
     import searchBar from "@/pages/index/searchBar";
     import utils from "@/libs/utils";
+    import {WxcPopup} from 'weex-ui'
 
     async function saveText(newText) {
         if (newText.length === 0 || newText.trim().length === 0) {
@@ -109,6 +118,7 @@
             tabView,
             searchHistory,
             searchList,
+            WxcPopup
         },
         name: "search",
         methods: {
@@ -136,13 +146,21 @@
                 this.summitText = e.value;
                 this.showListMode = 'history'
             },
+            onShowLangList() {
+                this.isShowLangList = true
+            },
+            popupOverlayBottomClick(){
+                this.isShowLangList = false
+            }
         },
         data() {
             return {
                 summitText: '',
                 showListMode: 'history',
                 searchMode: 'repos',
-                isLoading: false
+                isLoading: false,
+                isShowLangList: false,
+                lang: null
             }
         }
     }

@@ -28,8 +28,8 @@
 <style scoped>
 
     .head-bar {
-        padding-left: 80px;
-        padding-right: 80px;
+        padding-left: 50px;
+        padding-right: 50px;
         background-color: white;
         height: 100px;
         flex-direction: row;
@@ -37,6 +37,7 @@
     }
 
     .head-item {
+        width: 100px;
         flex-direction: column;
         justify-content: center;
         align-items: center;

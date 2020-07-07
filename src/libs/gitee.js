@@ -85,7 +85,7 @@ export default {
     },
     async getUser(username) {
         let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/users/${username}?access_token=${accessToken}`
+        const url = `https://gitee.com/api/v5/users/${encodeURIComponent(username)}?access_token=${accessToken}`
         return await request("GET", url)
     },
     async getUserFollowers(username, page, countAtPage) {

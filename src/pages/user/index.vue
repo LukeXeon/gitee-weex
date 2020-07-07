@@ -30,7 +30,8 @@
                          :bio="bio"
                          :joinTime="joinTime">
             </user-header>
-            <tabs :items="items">
+            <tabs :items="items"
+                  @tabClick="onClick">
             </tabs>
             <contribution-view
                     style="margin-top: 30px;margin-bottom: 30px"
@@ -88,8 +89,33 @@
             WxcLoading
         },
         methods: {
-            onClick(index) {
-
+            onClick(e) {
+                let index = e.index
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
+                switch (index) {
+                    case 0: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'repos'
+                        })
+                    }
+                        break
+                    case 1: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'follower'
+                        })
+                    }
+                        break
+                    case 2: {
+                        utils.jumpTo('lists', {
+                            path: user,
+                            page: 'following'
+                        })
+                    }
+                        break
+                }
             },
             back() {
                 const navigator = weex.requireModule('navigator')

@@ -24,9 +24,9 @@
             model: {
                 type: Function
             },
-            useEmptyView:{
-                type:Boolean,
-                default:true
+            useEmptyView: {
+                type: Boolean,
+                default: true
             },
         },
         components: {

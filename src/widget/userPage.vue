@@ -1,28 +1,33 @@
 <template>
-    <div>
-        <list alwaysScrollableVertical="true"
-              @loadmore="onLoadMore">
-            <refresh class="refresh"
-                     :display="refreshing ? 'show' : 'hide'"
-                     @refresh="onRefresh"
-                     slot="header">
-                <text class="indicator-text">刷新</text>
-                <loading-indicator class="indicator">
-                </loading-indicator>
-            </refresh>
-            <cell v-for="(item,index) in items"
-                  class="cell"
-                  @click="onClick(item)"
-                  :key="index">
-                <user-item
-                        :icon="item.icon"
-                        :url="item.url"
-                        :nikeName="item.nikeName"
-                        :username="item.username">
-                </user-item>
-            </cell>
-        </list>
-    </div>
+    <list alwaysScrollableVertical="true"
+          @loadmore="onLoadMore">
+        <refresh class="refresh"
+                 :display="refreshing ? 'show' : 'hide'"
+                 @refresh="onRefresh"
+                 slot="header">
+            <text class="indicator-text">刷新</text>
+            <loading-indicator
+                    class="indicator">
+            </loading-indicator>
+        </refresh>
+        <cell v-for="(item,index) in items"
+              class="cell"
+              @click="onClick(item)"
+              :key="index">
+            <user-item
+                    :icon="item.icon"
+                    :url="item.url"
+                    :nikeName="item.nikeName"
+                    :username="item.username">
+            </user-item>
+        </cell>
+        <cell v-if="isDisplayEmpty"
+              style="flex-direction: column;align-items: center">
+            <text class="text">这里什么也没有，下拉刷新试试</text>
+            <image class="image" :src="require('@/res/empty.png').default">
+            </image>
+        </cell>
+    </list>
 </template>
 
 <style scoped>
@@ -53,6 +58,18 @@
         color: #238FFF;
         margin-bottom: 30px;
     }
+
+    .image {
+        width: 200px;
+        height: 200px
+    }
+
+    .text {
+        font-size: 30px;
+        margin-top: 30px;
+        text-align: center
+    }
+
 </style>
 
 <script>
@@ -64,10 +81,19 @@
         components: {
             UserItem
         },
+        computed:{
+            isDisplayEmpty() {
+                return this.useEmptyView && (!this.items || this.items.length === 0)
+            }
+        },
         props: {
             model: {
                 type: Function
-            }
+            },
+            useEmptyView: {
+                type: Boolean,
+                default: true
+            },
         },
         methods: {
             async onRefresh() {

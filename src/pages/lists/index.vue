@@ -12,46 +12,54 @@
                 </image>
             </div>
         </wxc-minibar>
-        <scroller ref="scrollerHead"
-                  class="tab-cell"
-                  scroll-direction="horizontal">
-            <div class="head-tabs">
-                <div class="tab"
-                     v-for="(item, index) in tabs"
-                     :key="index"
-                     :ref="'item' + index">
-                    <text class="tab-title">{{item}}</text>
-                </div>
-                <div class="divider-select"
-                     :style="dividerStyle">
-                    <div class="select-line"></div>
-                </div>
-            </div>
-        </scroller>
-        <slider auto-play="false"
+<!--        <scroller ref="scrollerHead"-->
+<!--                  class="tab-cell"-->
+<!--                  scroll-direction="horizontal">-->
+<!--            <div class="head-tabs">-->
+<!--                <div class="tab"-->
+<!--                     v-for="(item, index) in tabs"-->
+<!--                     :key="index"-->
+<!--                     :ref="'item' + index">-->
+<!--                    <text class="tab-title">{{item}}</text>-->
+<!--                </div>-->
+<!--                <div class="divider-select"-->
+<!--                     :style="dividerStyle">-->
+<!--                    <div class="select-line"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </scroller>-->
+        <slider infinite="false"
+                style="flex: 1;width: 750px;"
+                :index="index"
                 @scroll="onSliderScroll"
                 @change="onSliderChange"
                 offsetXAccuracy="0.001">
-            <repos-page class="frame"
-                        :model="reposLoader">
-            </repos-page>
-            <user-page class="frame"
-                       :model="followerLoader">
-            </user-page>
-            <user-page class="frame"
-                       :model="followingLoader">
-            </user-page>
-            <repos-page class="frame"
-                        :model="starLoader">
-            </repos-page>
-            <repos-page class="frame"
-                        :model="watchLoader">
-            </repos-page>
+            <div class="frame">
+                <repos-page :model="reposLoader">
+                </repos-page>
+            </div>
+            <div class="frame">
+                <user-page :model="followerLoader">
+                </user-page>
+            </div>
+            <div class="frame">
+                <user-page :model="followingLoader">
+                </user-page>
+            </div>
+            <div class="frame">
+                <repos-page :model="starLoader">
+                </repos-page>
+            </div>
+            <div class="frame">
+                <repos-page :model="watchLoader">
+                </repos-page>
+            </div>
         </slider>
     </div>
 </template>
 
 <style scoped>
+
     .frame {
         width: 750px;
     }
@@ -60,7 +68,7 @@
         width: 60px;
         height: 60px;
         justify-content: center;
-        align-items: center
+        align-items: center;
     }
 
     .top-bar {
@@ -99,6 +107,7 @@
         height: 8px;
         background-color: yellow;
     }
+
 </style>
 
 <script>
@@ -110,6 +119,11 @@
     import format from "@/libs/date.format";
 
     const emptyLoader = () => ([])
+    const indexMap = {
+        repos: 0,
+        follower: 1,
+        following: 2,
+    }
 
     export default {
         name: "index",
@@ -130,9 +144,11 @@
 
             },
         },
-        async beforeCreate() {
+        created() {
             let url = weex.config.bundleUrl
             let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
+            let page = decodeURIComponent(utils.getQueryVariable(url, 'page'))
+            this.index = indexMap[page]
             this.title = user
 
             this.reposLoader = async (page) => {
@@ -144,7 +160,7 @@
                     let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
                     let type = gitee.getReposType(item)
                     list.push({
-                        icon: item['namespace']['avatar_url'],
+                        icon: item['owner']['avatar_url'],
                         username: item['namespace']['path'],
                         repos: item['path'],
                         displayReposName: item['name'],
@@ -165,7 +181,8 @@
 
             this.followingLoader = async (page) => {
                 let list = []
-                let data = await gitee.getUserFollowing(user, page, 20)
+                let data = await gitee.getUserFollowers(user, page, 20)
+
                 for (let i = 0; i < data.length; i++) {
                     let item = data[i]
                     list.push({
@@ -180,7 +197,7 @@
 
             this.followerLoader = async (page) => {
                 let list = []
-                let data = await gitee.getUserFollowers(user, page, 20)
+                let data = await gitee.getUserFollowing(user, page, 20)
                 for (let i = 0; i < data.length; i++) {
                     let item = data[i]
                     list.push({
@@ -253,9 +270,10 @@
             return {
                 title: '',
                 dividerStyle: {
-                    transform: "",
+                    transform: '',
                 },
                 tabs: ['仓库', '关注中', '关注者', 'Star的仓库', 'Watch的仓库'],
+                index: 0,
                 reposLoader: emptyLoader,
                 followingLoader: emptyLoader,
                 followerLoader: emptyLoader,

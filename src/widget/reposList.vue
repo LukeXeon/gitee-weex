@@ -8,10 +8,10 @@
                         @onItemClick="onItemClick">
             </repos-item>
         </cell>
-        <cell v-if="useEmptyView&&!(items!==undefined&&items!=null&&typeof items==='object'&&items.length!==0)"
+        <cell v-if="isDisplayEmpty"
               style="flex-direction: column;align-items: center">
             <text class="text">这里什么也没有，下拉刷新试试</text>
-            <image class="image" :src="empty">
+            <image class="image" :src="require('@/res/empty.png').default">
             </image>
         </cell>
     </list>
@@ -22,14 +22,15 @@
     import reposItem from "@/widget/reposItem";
     import {Utils} from 'weex-ui'
 
-    const empty = require('@/res/empty.png').default
-
     export default {
         components: {
             reposItem
         },
         computed: {
-            top: () => Utils.env.getPageHeight() * 0.2
+            top: () => Utils.env.getPageHeight() * 0.2,
+            isDisplayEmpty() {
+                return this.useEmptyView && (!this.items || this.items.length === 0)
+            }
         },
         methods: {
             onItemClick(e) {

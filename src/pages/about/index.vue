@@ -28,7 +28,7 @@
                     <image style="width: 180px;height: 180px;margin-top: 20px"
                            :src="require('@/res/weex-ui.png').default">
                     </image>
-                    <text style="font-size: 30px;margin-top: 20px">由Weex Ui提供富交互组件</text>
+                    <text style="font-size: 30px;margin-top: 20px">由Weex UI提供富交互组件</text>
                     <image style="width: 180px;height: 180px;margin-top: 20px;border-radius: 20px"
                            :src="require('@/res/gcta.png').default">
                     </image>
