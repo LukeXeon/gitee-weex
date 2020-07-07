@@ -60,7 +60,7 @@ export default {
                         'json'
                     )
                     let accessToken = data["access_token"]
-                    if (accessToken === null || accessToken === undefined || accessToken === "") {
+                    if (accessToken || accessToken === "") {
                         return false
                     }
                     await utils.setValue('access_token', accessToken)

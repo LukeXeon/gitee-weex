@@ -136,56 +136,29 @@
             this.title = user
 
             this.reposLoader = async (page) => {
-                let myInfo = await gitee.loadMyInfo()
                 let list = []
-                if (myInfo['login'] === user) {
-                    let data = await gitee.getMyRepos(page, 20)
-                    for (let i = 0; i < data.length; i++) {
-                        let item = data[i]
-                        let color = gitee.getLanguageColor(item['language'])
-                        let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
-                        let type = gitee.getReposType(item)
-                        list.push({
-                            icon: item['namespace']['avatar_url'],
-                            username: item['namespace']['path'],
-                            repos: item['path'],
-                            displayReposName: item['name'],
-                            displayUsername: item['namespace']['name'],
-                            updatedAt: updatedAt,
-                            languageColor: color,
-                            language: item['language'] || "其他",
-                            description: item['description'],
-                            starCount: item['stargazers_count'],
-                            forkCount: item['forks_count'],
-                            watchCount: item['watchers_count'],
-                            branch: item['default_branch'],
-                            type: type
-                        })
-                    }
-                } else {
-                    let data = await gitee.getOtherRepos(user, page, 20)
-                    for (let i = 0; i < data.length; i++) {
-                        let item = data[i]
-                        let color = gitee.getLanguageColor(item['language'])
-                        let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
-                        let type = gitee.getReposType(item)
-                        list.push({
-                            icon: item['namespace']['avatar_url'],
-                            username: item['namespace']['path'],
-                            repos: item['path'],
-                            displayReposName: item['name'],
-                            displayUsername: item['namespace']['name'],
-                            updatedAt: updatedAt,
-                            languageColor: color,
-                            language: item['language'] || "其他",
-                            description: item['description'],
-                            starCount: item['stargazers_count'],
-                            forkCount: item['forks_count'],
-                            watchCount: item['watchers_count'],
-                            branch: item['default_branch'],
-                            type: type
-                        })
-                    }
+                let data = await gitee.getOtherRepos(user, page, 20)
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i]
+                    let color = gitee.getLanguageColor(item['language'])
+                    let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
+                    let type = gitee.getReposType(item)
+                    list.push({
+                        icon: item['namespace']['avatar_url'],
+                        username: item['namespace']['path'],
+                        repos: item['path'],
+                        displayReposName: item['name'],
+                        displayUsername: item['namespace']['name'],
+                        updatedAt: updatedAt,
+                        languageColor: color,
+                        language: item['language'] || "其他",
+                        description: item['description'],
+                        starCount: item['stargazers_count'],
+                        forkCount: item['forks_count'],
+                        watchCount: item['watchers_count'],
+                        branch: item['default_branch'],
+                        type: type
+                    })
                 }
                 return list
             }
