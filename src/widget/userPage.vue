@@ -60,7 +60,7 @@
     import utils from "@/libs/utils";
 
     export default {
-        name: "userList",
+        name: "userPage",
         components: {
             UserItem
         },

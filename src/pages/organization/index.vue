@@ -81,7 +81,6 @@
                 this.username = data['login']
                 this.bio = data['description']
                 this.avatarIcon = data['avatar_url']
-
             }
         },
         async created() {

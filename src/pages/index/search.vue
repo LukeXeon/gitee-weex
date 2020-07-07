@@ -77,6 +77,32 @@
     import searchBar from "@/pages/index/searchBar";
     import utils from "@/libs/utils";
 
+    async function saveText(newText) {
+        if (newText.length === 0 || newText.trim().length === 0) {
+            return
+        }
+        let text = await utils.getValue('search_history')
+        let list
+        try {
+            list = JSON.parse(text)
+        } catch (e) {
+        }
+        if (!Array.isArray(list)) {
+            list = []
+        }
+        if (list.length > 10) {
+            list.pop()
+        }
+        if (list.length > 0) {
+            let index = list.indexOf(newText)
+            if (index !== -1) {
+                list.splice(index, 1)
+            }
+        }
+        list.unshift(newText)
+        await utils.setValue('search_history', JSON.stringify(list))
+    }
+
     export default {
         components: {
             searchBar,
@@ -92,31 +118,6 @@
                 this.$refs.searchBar.setValue(e.text)
                 await this.saveText(this.tempText)
             },
-            async saveText(newText) {
-                if (newText.length === 0 || newText.trim().length === 0) {
-                    return
-                }
-                let text = await utils.getValue('search_history')
-                let list
-                try {
-                    list = JSON.parse(text)
-                } catch (e) {
-                }
-                if (!Array.isArray(list)) {
-                    list = []
-                }
-                if (list.length > 10) {
-                    list.pop()
-                }
-                if (list.length > 0) {
-                    let index = list.indexOf(newText)
-                    if (index !== -1) {
-                        list.splice(index, 1)
-                    }
-                }
-                list.unshift(newText)
-                await utils.setValue('search_history', JSON.stringify(list))
-            },
             onSelect(e) {
                 if (e.index === 0) {
                     this.searchMode = 'repos'
@@ -126,21 +127,19 @@
             },
             async onReturn() {
                 this.showListMode = 'search'
-                this.summitText = this.tempText
-                await this.saveText(this.tempText)
+                await saveText(this.summitText)
             },
             async onClose() {
                 this.showListMode = 'history'
             },
             onInput(e) {
-                this.tempText = e.value;
+                this.summitText = e.value;
                 this.showListMode = 'history'
             },
         },
         data() {
             return {
                 summitText: '',
-                tempText:'',
                 showListMode: 'history',
                 searchMode: 'repos',
                 isLoading: false
