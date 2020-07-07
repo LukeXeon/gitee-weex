@@ -1,21 +1,24 @@
 <template>
-    <div class="bar">
-        <div v-for="(text,index) in tabs" style="flex: 1">
-            <div class="select-item"
-                 v-if="index===activeTab"
-                 key="tab">
-                <text class="item">{{text}}</text>
+    <div class="bar-wrapper">
+        <div class="select-tab-wrapper">
+            <div class="select-tab"
+                 ref="selectTab">
             </div>
-            <div v-else
-                 class="unselect-item"
-                 @click="onSelect(index)">
-                <text class="item">{{text}}</text>
+        </div>
+        <div class="bar">
+            <div v-for="(text,index) in tabs"
+                 @click="onSelect(index)"
+                 class="tab">
+                <text class="text">{{text}}</text>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
+    import utils from "@/libs/utils";
+
     export default {
         props: {
             tabs: {
@@ -26,50 +29,60 @@
         name: "tabView",
         methods: {
             onSelect(index) {
-                this.activeTab = index;
+                let tab = this.$refs.selectTab
+                utils.animate(tab,{
+                    styles: {
+                        transform: `translateX(${index*190})`,
+                        transformOrigin: 'center center'
+                    },
+                    duration: 200, //ms
+                    timingFunction: 'ease',
+                    delay: 0 //ms
+                })
                 this.$emit('select', {
                     index: index
                 })
             }
         },
-        data() {
-            return {
-                activeTab: 0
-            }
-        }
     }
 </script>
 
 <style scoped>
-    .bar {
-        flex-direction: row;
+    .bar-wrapper{
         background-color: #eaeaea;
         border-radius: 20px;
+        flex-direction: column
     }
 
-    .select-item {
+    .bar {
+        flex-direction: row;
+    }
+
+    .tab{
+        margin: 5px;
+        width: 180px;
+        height: 50px;
         justify-content: center;
         align-items: center;
-        flex: 1;
-        border-width: 0.5px;
-        border-color: #dddddd;
+    }
+
+    .text{
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .select-tab-wrapper{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        padding: 5px;
+    }
+
+    .select-tab {
+        transition-property: transform;
+        width: 180px;
+        height: 50px;
         border-radius: 15px;
         background-color: white;
-        margin: 5px;
-    }
-
-    .unselect-item {
-        justify-content: center;
-        align-items: center;
-        flex: 1;
-        margin: 5px;
-    }
-
-    .item {
-        text-align: center;
-        font-size: 32px;
-        flex: 1;
-        justify-content: center;
-        align-items: center;
     }
 </style>

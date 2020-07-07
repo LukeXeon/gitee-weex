@@ -9,8 +9,7 @@
             </search-bar>
             <div class="select-bar">
                 <div style="flex: 1"></div>
-                <tab-view style="height: 60px;width: 500px"
-                          @select="onSelect"
+                <tab-view @select="onSelect"
                           :tabs="['仓库','用户']">
                 </tab-view>
                 <div class="right-item">

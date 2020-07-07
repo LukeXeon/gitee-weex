@@ -124,8 +124,19 @@
                 }
             },
             onClick2(index) {
-                if (index === 1) {
-                    utils.jumpTo('about')
+                switch (index) {
+                    case 0: {
+                        utils.jumpTo('settings')
+                    }
+                        break
+                    case 1: {
+                        utils.jumpTo('about')
+                    }
+                        break
+                    case 2: {
+                        utils.jumpTo('report')
+                    }
+                        break
                 }
             },
             async doRefresh() {
@@ -148,6 +159,7 @@
                 ]
                 htmlUtils.getContributions(info['login']).then(res => {
                     this.contributions = res
+
                 })
             },
         },

@@ -1,5 +1,5 @@
 <template>
-    <div style="background-color: whitesmoke">
+    <div class="wrapper">
         <wxc-minibar :title="title"
                      text-color="black"
                      class="top-bar"
@@ -12,25 +12,29 @@
                 </image>
             </div>
         </wxc-minibar>
-<!--        <scroller ref="scrollerHead"-->
-<!--                  class="tab-cell"-->
-<!--                  scroll-direction="horizontal">-->
-<!--            <div class="head-tabs">-->
-<!--                <div class="tab"-->
-<!--                     v-for="(item, index) in tabs"-->
-<!--                     :key="index"-->
-<!--                     :ref="'item' + index">-->
-<!--                    <text class="tab-title">{{item}}</text>-->
-<!--                </div>-->
-<!--                <div class="divider-select"-->
-<!--                     :style="dividerStyle">-->
-<!--                    <div class="select-line"></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </scroller>-->
+        <div class="header-wrapper">
+            <scroller ref="scrollerHead"
+                      class="tab-header"
+                      show-scrollbar="false"
+                      scroll-direction="horizontal">
+                <div class="head-tabs">
+                    <div class="tab"
+                         v-for="(item, index) in tabs"
+                         :key="index"
+                         @click="onTabClick(index)"
+                         :ref="'item' + index">
+                        <text class="tab-title">{{item}}</text>
+                    </div>
+                    <div class="divider-select"
+                         :style="dividerStyle">
+                        <div class="select-line"></div>
+                    </div>
+                </div>
+            </scroller>
+        </div>
         <slider infinite="false"
                 style="flex: 1;width: 750px;"
-                :index="index"
+                :index="initIndex"
                 @scroll="onSliderScroll"
                 @change="onSliderChange"
                 offsetXAccuracy="0.001">
@@ -60,6 +64,19 @@
 
 <style scoped>
 
+    .wrapper{
+        background-color: whitesmoke;
+        flex-direction: column;
+    }
+
+    .header-wrapper {
+        height: 70px;
+        width: 750px;
+        background-color: #FBFBFB;
+        border-bottom-color: #dddddd;
+        border-bottom-width: 0.5px;
+    }
+
     .frame {
         width: 750px;
     }
@@ -71,17 +88,17 @@
         align-items: center;
     }
 
-    .top-bar {
-        border-bottom-color: #888888;
-        border-bottom-width: 0.5px;
+    .tab {
+        width: 180px;
+        height: 70px;
+        justify-content: center;
+        align-items: center;
     }
 
-    .tab-cell {
+    .tab-header {
         flex-direction: row;
         justify-content: stretch;
-        background-color: #f51438;
-        height: 120px;
-        max-height: 120px;
+        height: 80px;
     }
 
     .head-tabs {
@@ -90,22 +107,26 @@
     }
 
     .tab-title {
+        lines: 1;
+        font-weight: bold;
         font-size: 28px;
-        color: #FFF;
-        margin-top: 10px;
     }
 
     .divider-select {
-        width: 150px;
+        width: 180px;
         position: absolute;
         left: 0;
         bottom: 0;
         transition-property: transform;
+        justify-content: center;
+        align-items: center;
     }
 
     .select-line {
+        width: 80px;
         height: 8px;
-        background-color: yellow;
+        border-radius: 10px;
+        background-color: #238FFF;
     }
 
 </style>
@@ -118,12 +139,15 @@
     import gitee from "@/libs/gitee";
     import format from "@/libs/date.format";
 
+    const dom = weex.requireModule('dom')
     const emptyLoader = () => ([])
     const indexMap = {
         repos: 0,
         follower: 1,
         following: 2,
     }
+
+    let tempIndex = 0
 
     export default {
         name: "index",
@@ -137,19 +161,31 @@
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
             },
-            onSliderScroll() {
-
+            onTabClick(index) {
+                this.initIndex = index
+                tempIndex = index
             },
-            onSliderChange() {
-
+            onSliderScroll(event) {
+                let tempOffset = event.offsetXRatio;
+                let translateX = 180 * tempIndex - tempOffset * 180;
+                this.dividerStyle.transform = `translateX(${translateX}px)`;
+            },
+            onSliderChange(event) {
+                tempIndex = event.index;
+                let el = this.$refs['item' + tempIndex][0];
+                dom.scrollToElement(el, {});
             },
         },
         created() {
             let url = weex.config.bundleUrl
             let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
             let page = decodeURIComponent(utils.getQueryVariable(url, 'page'))
+            this.initIndex = indexMap[page]
+            tempIndex = this.initIndex
             this.index = indexMap[page]
             this.title = user
+            let translateX = tempIndex * 180
+            this.dividerStyle.transform = `translateX(${translateX}px)`
 
             this.reposLoader = async (page) => {
                 let list = []
@@ -265,6 +301,7 @@
                 }
                 return list
             }
+
         },
         data() {
             return {
@@ -272,8 +309,8 @@
                 dividerStyle: {
                     transform: '',
                 },
-                tabs: ['仓库', '关注中', '关注者', 'Star的仓库', 'Watch的仓库'],
-                index: 0,
+                tabs: ['Repository', 'Following', 'Follower', 'Stargazer', 'Watch'],
+                initIndex: 0,
                 reposLoader: emptyLoader,
                 followingLoader: emptyLoader,
                 followerLoader: emptyLoader,

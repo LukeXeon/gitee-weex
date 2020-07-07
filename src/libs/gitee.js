@@ -273,5 +273,17 @@ export default {
         } catch (e) {
             return false
         }
+    },
+    async saveIssues(user, repos, title, body, type) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/issues`
+        let text = JSON.stringify({
+            access_token: accessToken,
+            repo: repos,
+            title: title,
+            body: body,
+            issue_type: type,
+        })
+        return await request('POST', url, text)
     }
 }
