@@ -103,8 +103,16 @@ export default {
         const url = `https://gitee.com/api/v5/user/starred/${owner}/${repo}?access_token=${accessToken}`
         return await request("PUT", url)
     },
-    async getStars(userId, page) {
+    async getStars(user, page) {
+        let u = await this.getUser(user)
+        let userId = u['id'];
         const url = `https://gitee.com/api/v3/user/${userId}/stared_projects?page=${page}`
+        return await request("GET", url)
+    },
+    async getWatches(user, page) {
+        let u = await this.getUser(user)
+        let userId = u['id'];
+        const url = `https://gitee.com/api/v3/user/${userId}/watched_projects?page=${page}`
         return await request("GET", url)
     },
     async cancelStar(owner, repo) {

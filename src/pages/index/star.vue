@@ -20,7 +20,7 @@
 
     async function loader(page) {
         let user = await gitee.loadMyInfo()
-        let data = await gitee.getStars(user['id'], Math.max(1, page))
+        let data = await gitee.getStars(user['name'], Math.max(1, page))
         let list = []
         for (let i = 0; i < data.length; i++) {
             let item = data[i]

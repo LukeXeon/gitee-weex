@@ -17,10 +17,10 @@
                   scroll-direction="horizontal">
             <div class="head-tabs">
                 <div class="tab"
-                     v-for="(tab, t) in tabs"
-                     :key="t"
-                     :ref="'item' + t">
-                    <text class="tab-title">{{tab.title}}</text>
+                     v-for="(item, index) in tabs"
+                     :key="index"
+                     :ref="'item' + index">
+                    <text class="tab-title">{{item}}</text>
                 </div>
                 <div class="divider-select"
                      :style="dividerStyle">
@@ -106,6 +106,8 @@
     import ReposPage from "@/widget/reposPage";
     import UserPage from "@/widget/userPage";
     import utils from "@/libs/utils";
+    import gitee from "@/libs/gitee";
+    import format from "@/libs/date.format";
 
     const emptyLoader = () => ([])
 
@@ -127,30 +129,151 @@
             onSliderChange() {
 
             },
-
         },
-        async created() {
+        async beforeCreate() {
             let url = weex.config.bundleUrl
-            this.title = decodeURIComponent(utils.getQueryVariable(url, 'path'))
+            let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
+            this.title = user
 
-            this.reposLoader = async () => {
-
+            this.reposLoader = async (page) => {
+                let myInfo = await gitee.loadMyInfo()
+                let list = []
+                if (myInfo['login'] === user) {
+                    let data = await gitee.getMyRepos(page, 20)
+                    for (let i = 0; i < data.length; i++) {
+                        let item = data[i]
+                        let color = gitee.getLanguageColor(item['language'])
+                        let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
+                        let type = gitee.getReposType(item)
+                        list.push({
+                            icon: item['namespace']['avatar_url'],
+                            username: item['namespace']['path'],
+                            repos: item['path'],
+                            displayReposName: item['name'],
+                            displayUsername: item['namespace']['name'],
+                            updatedAt: updatedAt,
+                            languageColor: color,
+                            language: item['language'] || "其他",
+                            description: item['description'],
+                            starCount: item['stargazers_count'],
+                            forkCount: item['forks_count'],
+                            watchCount: item['watchers_count'],
+                            branch: item['default_branch'],
+                            type: type
+                        })
+                    }
+                } else {
+                    let data = await gitee.getOtherRepos(user, page, 20)
+                    for (let i = 0; i < data.length; i++) {
+                        let item = data[i]
+                        let color = gitee.getLanguageColor(item['language'])
+                        let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日')
+                        let type = gitee.getReposType(item)
+                        list.push({
+                            icon: item['namespace']['avatar_url'],
+                            username: item['namespace']['path'],
+                            repos: item['path'],
+                            displayReposName: item['name'],
+                            displayUsername: item['namespace']['name'],
+                            updatedAt: updatedAt,
+                            languageColor: color,
+                            language: item['language'] || "其他",
+                            description: item['description'],
+                            starCount: item['stargazers_count'],
+                            forkCount: item['forks_count'],
+                            watchCount: item['watchers_count'],
+                            branch: item['default_branch'],
+                            type: type
+                        })
+                    }
+                }
+                return list
             }
 
-            this.followingLoader = async () => {
-
+            this.followingLoader = async (page) => {
+                let list = []
+                let data = await gitee.getUserFollowing(user, page, 20)
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i]
+                    list.push({
+                        nikeName: item['name'],
+                        username: item['login'],
+                        icon: item['avatar_url'],
+                        url: item['html_url']
+                    })
+                }
+                return list
             }
 
-            this.followerLoader = async () => {
-
+            this.followerLoader = async (page) => {
+                let list = []
+                let data = await gitee.getUserFollowers(user, page, 20)
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i]
+                    list.push({
+                        nikeName: item['name'],
+                        username: item['login'],
+                        icon: item['avatar_url'],
+                        url: item['html_url']
+                    })
+                }
+                return list
             }
 
-            this.starLoader = async () => {
-
+            this.starLoader = async (page) => {
+                let data = await gitee.getStars(user, Math.max(1, page))
+                let list = []
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i]
+                    let color = gitee.getLanguageColor(item['language'])
+                    let updatedAt = format.format(new Date(item['last_push_at']), 'Y年m月d日')
+                    let type = gitee.getReposType(item)
+                    list.push({
+                        icon: item['namespace']['avatar'] || item['owner']['new_portrait'],
+                        username: item['namespace']['path'],
+                        repos: item['path'],
+                        displayReposName: item['name'],
+                        displayUsername: item['namespace']['name'],
+                        updatedAt: updatedAt,
+                        languageColor: color,
+                        language: item['language'] || "其他",
+                        description: item['description'],
+                        starCount: item['stars_count'],
+                        forkCount: item['forks_count'],
+                        watchCount: item['watches_count'],
+                        branch: item['default_branch'],
+                        type: type
+                    })
+                }
+                return list
             }
 
-            this.watchLoader = async () => {
-
+            this.watchLoader = async (page) => {
+                let data = await gitee.getWatches(user, Math.max(1, page))
+                let list = []
+                for (let i = 0; i < data.length; i++) {
+                    let item = data[i]
+                    let color = gitee.getLanguageColor(item['language'])
+                    let updatedAt = format.format(new Date(item['last_push_at']), 'Y年m月d日')
+                    let type = gitee.getReposType(item)
+                    list.push({
+                        icon: item['namespace']['avatar'] || item['owner']['new_portrait'],
+                        username: item['namespace']['path'],
+                        repos: item['path'],
+                        displayReposName: item['name'],
+                        displayUsername: item['namespace']['name'],
+                        updatedAt: updatedAt,
+                        languageColor: color,
+                        language: item['language'] || "其他",
+                        description: item['description'],
+                        starCount: item['stars_count'],
+                        forkCount: item['forks_count'],
+                        watchCount: item['watches_count'],
+                        branch: item['default_branch'],
+                        type: type
+                    })
+                }
+                return list
             }
         },
         data() {
@@ -164,7 +287,7 @@
                 followingLoader: emptyLoader,
                 followerLoader: emptyLoader,
                 starLoader: emptyLoader,
-                watchLoader: emptyLoader
+                watchLoader: emptyLoader,
             }
         }
     }
