@@ -30,6 +30,15 @@
     import {Element} from 'domino-core/src/impl'
     import domino from 'domino-core'
 
+    function getLength(i) {
+        let l = 0;
+        while (i >= 1) {
+            i = i / 10;
+            l++;
+        }
+        return l
+    }
+
     export default {
         name: "codeView",
         props: {
@@ -40,18 +49,7 @@
         },
         methods: {
             getLineText(current) {
-                let max = this.allLines.lines.length;
-
-                function getLength(i) {
-                    let l = 0;
-                    while (i >= 1) {
-                        i = i / 10;
-                        l++;
-                    }
-                    return l
-                }
-
-                let space = getLength(max) - getLength(current);
+                let space = this.allLineWidth - getLength(current);
                 let s = [];
                 for (let i = 0; i < space; i++) {
                     s.push(null)
@@ -67,6 +65,9 @@
             }
         },
         computed: {
+            allLineWidth() {
+                return getLength(this.allLines.lines.length)
+            },
             pageWidth() {
                 return Math.max(750, this.allLines.maxWidth * 30)
             },
@@ -173,7 +174,7 @@
 </style>
 
 <style scoped>
-    .line{
+    .line {
         height: 0.5px;
         background-color: #888888;
     }
