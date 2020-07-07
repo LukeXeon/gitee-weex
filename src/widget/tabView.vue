@@ -29,10 +29,15 @@
         name: "tabView",
         methods: {
             onSelect(index) {
+                this.index = index
+            }
+        },
+        watch:{
+            index(value){
                 let tab = this.$refs.selectTab
-                utils.animate(tab,{
+                utils.animate(tab, {
                     styles: {
-                        transform: `translateX(${index*190})`,
+                        transform: `translateX(${value * 190})`,
                         transformOrigin: 'center center'
                     },
                     duration: 200, //ms
@@ -40,10 +45,15 @@
                     delay: 0 //ms
                 })
                 this.$emit('select', {
-                    index: index
+                    index: value
                 })
             }
         },
+        data() {
+            return {
+                index: 0
+            }
+        }
     }
 </script>
 
