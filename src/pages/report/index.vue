@@ -47,6 +47,7 @@
     import {WxcMinibar,WxcLoading} from 'weex-ui'
     import gitee from "@/libs/gitee";
     import UUID from 'uuidjs';
+    import utils from "@/libs/utils";
 
     export default {
         components: {
@@ -60,7 +61,10 @@
                 navigator.pop()
             },
             openIssues() {
-
+                utils.jumpTo('issues', {
+                    path: 'micro-world',
+                    repos: 'gitee-weex',
+                })
             },
             onInput(e) {
                 this.value = e.value

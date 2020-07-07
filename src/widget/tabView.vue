@@ -79,6 +79,8 @@
     }
 
     .select-tab {
+        border-color: #dddddd;
+        border-width: 0.5px;
         transition-property: transform;
         width: 180px;
         height: 50px;
