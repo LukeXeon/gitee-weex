@@ -17,6 +17,7 @@
             <div class="group1">
                 <div class="input">
                     <textarea class="input"
+                              ref="input"
                               @input="onInput"
                               placeholder="反馈内容"
                               rows="10"/>
@@ -35,17 +36,22 @@
                 </div>
             </div>
         </scroller>
+        <wxc-loading :show="isLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="true">
+        </wxc-loading>
     </div>
 </template>
 
 <script>
-    import {WxcMinibar} from 'weex-ui'
+    import {WxcMinibar,WxcLoading} from 'weex-ui'
     import gitee from "@/libs/gitee";
     import UUID from 'uuidjs';
 
     export default {
         components: {
-            WxcMinibar
+            WxcMinibar,
+            WxcLoading
         },
         name: "index",
         methods: {
@@ -61,6 +67,8 @@
             },
             async onSubmit() {
                 let modal = weex.requireModule('modal')
+                this.isLoading = true
+                this.$refs.input.blur()
                 try {
                     if (this.value || this.value.length === 0) {
                         await gitee.saveIssues(
@@ -78,10 +86,12 @@
                         message: '提交失败，原因为：' + e
                     })
                     return
+                } finally {
+                    this.isLoading = false
                 }
                 modal.alert({
                     message: '提交成功'
-                })
+                }, this.back)
             }
         },
         created() {
@@ -94,7 +104,8 @@
                 platform: '',
                 osVersion: '',
                 deviceModel: '',
-                value: ''
+                value: '',
+                isLoading: false,
             }
         }
     }
