@@ -7,7 +7,7 @@
         </div>
         <div class="bar">
             <div v-for="(text,index) in tabs"
-                 @click="onSelect(index)"
+                 @click="setIndex(index)"
                  class="tab">
                 <text class="text">{{text}}</text>
             </div>
@@ -28,25 +28,27 @@
         },
         name: "tabView",
         methods: {
-            onSelect(index) {
+            setIndex(index) {
                 this.index = index
-            }
+            },
         },
-        watch:{
-            index(value){
-                let tab = this.$refs.selectTab
-                utils.animate(tab, {
-                    styles: {
-                        transform: `translateX(${value * 190})`,
-                        transformOrigin: 'center center'
-                    },
-                    duration: 200, //ms
-                    timingFunction: 'ease',
-                    delay: 0 //ms
-                })
-                this.$emit('select', {
-                    index: value
-                })
+        watch: {
+            index(newValue, oldValue) {
+                if (oldValue !== newValue) {
+                    let tab = this.$refs.selectTab
+                    utils.animate(tab, {
+                        styles: {
+                            transform: `translateX(${newValue * 190})`,
+                            transformOrigin: 'center center'
+                        },
+                        duration: 200, //ms
+                        timingFunction: 'ease',
+                        delay: 0 //ms
+                    })
+                    this.$emit('select', {
+                        index: value
+                    })
+                }
             }
         },
         data() {
@@ -58,7 +60,7 @@
 </script>
 
 <style scoped>
-    .bar-wrapper{
+    .bar-wrapper {
         background-color: #eaeaea;
         border-radius: 20px;
         flex-direction: column
@@ -68,7 +70,7 @@
         flex-direction: row;
     }
 
-    .tab{
+    .tab {
         margin: 5px;
         width: 180px;
         height: 50px;
@@ -76,12 +78,12 @@
         align-items: center;
     }
 
-    .text{
+    .text {
         text-align: center;
         font-size: 30px;
     }
 
-    .select-tab-wrapper{
+    .select-tab-wrapper {
         position: absolute;
         left: 0;
         bottom: 0;

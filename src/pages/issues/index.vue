@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <wxc-minibar title="反馈"
+        <wxc-minibar title="Issues"
                      text-color="black"
                      background-color="#FBFBFB">
             <div slot="left"
@@ -19,10 +19,13 @@
         </wxc-minibar>
         <div class="bar2">
             <tab-view @select="onSelect"
+                      ref="tabView"
                       :tabs="['Open','Closed']">
             </tab-view>
         </div>
-        <slider>
+        <slider style="flex: 1"
+                @change="onScrollChanged"
+                :index="index">
         </slider>
         <wxc-popup popup-color="transparent"
                    :show="isBottomShow"
@@ -53,7 +56,7 @@
         },
         methods: {
             onSelect(index) {
-
+                this.index = index
             },
             back() {
                 const navigator = weex.requireModule('navigator')
@@ -65,10 +68,14 @@
             openInput(){
                 this.isBottomShow = true
             },
+            onScrollChanged(e){
+                this.$refs.tabView.setIndex(e.index)
+            }
         },
         data() {
             return {
-                isBottomShow: false
+                isBottomShow: false,
+                index: 0
             }
         }
     }
