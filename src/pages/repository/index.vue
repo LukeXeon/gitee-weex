@@ -219,11 +219,11 @@
                 }
             },
             onLabelClick(index) {
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
                 switch (index) {
                     case 0: {
-                        let url = weex.config.bundleUrl
-                        let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
-                        let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
                         utils.jumpTo('hierarchy', {
                             user: user,
                             repos: repos,
@@ -233,11 +233,17 @@
                     }
                         break
                     case 1: {
-
+                        utils.jumpTo('issues', {
+                            user: user,
+                            repos: repos,
+                        })
                     }
                         break
                     case 2: {
-
+                        utils.jumpTo('pr', {
+                            user: user,
+                            repos: repos,
+                        })
                     }
                         break
                 }
@@ -268,8 +274,8 @@
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
                 let branch = decodeURIComponent(utils.getQueryVariable(url, 'branch'))
                 let icon = decodeURIComponent(utils.getQueryVariable(url, 'icon'))
-                gitee.getPulls(user, repos).then(res => {
-                    this.pulls = res.length
+                gitee.getPullRequests(user, repos).then(res => {
+                    this.pulls = res.length >= 99 ? '99+' : res.length
                 })
                 gitee.getBranches(user, repos).then(res => {
                     this.branchCount = res.length

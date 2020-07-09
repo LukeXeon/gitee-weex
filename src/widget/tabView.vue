@@ -46,7 +46,7 @@
                         delay: 0 //ms
                     })
                     this.$emit('select', {
-                        index: value
+                        index: newValue
                     })
                 }
             }

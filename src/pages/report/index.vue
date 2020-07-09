@@ -46,7 +46,6 @@
 <script>
     import {WxcMinibar,WxcLoading} from 'weex-ui'
     import gitee from "@/libs/gitee";
-    import UUID from 'uuidjs';
     import utils from "@/libs/utils";
 
     export default {
@@ -62,7 +61,7 @@
             },
             openIssues() {
                 utils.jumpTo('issues', {
-                    path: 'micro-world',
+                    user: 'micro-world',
                     repos: 'gitee-weex',
                 })
             },
@@ -78,7 +77,7 @@
                         await gitee.saveIssues(
                             'micro-world',
                             'gitee-weex',
-                            `Report[${UUID.generate()}]`,
+                            'Report',
                             this.value,
                             'Report'
                         )
@@ -176,7 +175,7 @@
         border-radius: 15px;
         justify-content: center;
         align-items: center;
-        background-color: #00B4FF;
+        background-color: #0088fb;
     }
 
     .button-text{

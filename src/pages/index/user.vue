@@ -159,7 +159,6 @@
                 ]
                 htmlUtils.getContributions(info['login']).then(res => {
                     this.contributions = res
-
                 })
             },
         },

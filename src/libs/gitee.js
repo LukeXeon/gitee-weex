@@ -284,6 +284,26 @@ export default {
             body: body,
             issue_type: type,
         })
-        return await request('POST', url, text)
+        return await request('POST', url)
+    },
+    async getIssues(user, repos, page, countAtPage, state = 'open') {
+        let accessToken = await utils.getValue('access_token')
+        try {
+            const url = `https://gitee.com/api/v5/repos/${user}/${repos}/issues?access_token=${accessToken}&state=${state}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
+            return await request('GET', url)
+        } catch (e) {
+            const url = `https://gitee.com/api/v5/repos/${user}/${repos}/issues?state=${state}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
+            return await request('GET', url)
+        }
+    },
+    async getPullRequests(user, repos, page = 1, countAtPage = 100, state = 'open') {
+        let accessToken = await utils.getValue('access_token')
+        try {
+            const url = `https://gitee.com/api/v5/repos/${user}/${repos}/pulls?access_token=${accessToken}&state=${state}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
+            return await request('GET', url)
+        } catch (e) {
+            const url = `https://gitee.com/api/v5/repos/${user}/${repos}/pulls?state=${state}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
+            return await request('GET', url)
+        }
     }
 }
