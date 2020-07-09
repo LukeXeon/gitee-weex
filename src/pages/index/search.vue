@@ -31,10 +31,13 @@
         </search-list>
         <wxc-popup
                 pos="right"
-                :width="600"
+                :width="500"
                 @wxcPopupOverlayClicked="popupOverlayBottomClick"
                 popup-color="whitesmoke"
                 :show="isShowLangList">
+            <div style="flex-direction: column">
+
+            </div>
         </wxc-popup>
     </div>
 </template>
@@ -146,6 +149,7 @@
                 this.showListMode = 'history'
             },
             onShowLangList() {
+                this.$refs.searchBar.blur()
                 this.isShowLangList = true
             },
             popupOverlayBottomClick(){

@@ -118,6 +118,9 @@
                     self.$emit('onBlur', { value: self.value });
                 }, 10);
             },
+            blur(){
+                this.$refs['search-input'].blur()
+            },
             detectShowClose() {
                 this.showClose = (this.value.length > 0);
             },

@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    import Enumerable from 'linq'
     import {Utils, WxcIndexlist, WxcResult, WxcSearchbar} from 'weex-ui'
 
     export default {
