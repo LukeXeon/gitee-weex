@@ -124,15 +124,20 @@
                     branch: this.branch,
                     icon: this.icon
                 })
-            }
-        },
-        created() {
-            let globalEvent = weex.requireModule('globalEvent');
-            globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent', async (e) => {
+            },
+            async checkClipboard() {
                 let text = await utils.getClipboard()
+                if (this.url === text) {
+                    return
+                }
                 if (text && text.startsWith('https://gitee.com/') && text.length > 'https://gitee.com/'.length) {
-                    let user = ''
-                    let repos = ''
+                    let subText = text.substring('https://gitee.com/'.length)
+                    const parts = subText.split('/')
+                    if (parts.length < 2) {
+                        return
+                    }
+                    let user = parts[0]
+                    let repos = parts[1]
                     let data = await gitee.getRepos(user, repos)
                     this.icon = data['owner']['avatar_url']
                     this.user = user
@@ -141,7 +146,12 @@
                     this.branch = data['default_branch']
                     this.isBottomShow = true
                 }
-            });
+            }
+        },
+        created() {
+            let globalEvent = weex.requireModule('globalEvent');
+            globalEvent.addEventListener('WXApplicationDidBecomeActiveEvent',this.checkClipboard);
+            this.checkClipboard();
             const tabPageHeight = Utils.env.getPageHeight();
             // 如果页面没有导航栏，可以用下面这个计算高度的方法
             // const tabPageHeight = env.deviceHeight / env.deviceWidth * 750;
@@ -154,11 +164,11 @@
             return {
                 tabStyles: styles,
                 titles: titles,
-                isBottomShow: true,
+                isBottomShow: false,
                 icon: '',
-                user: 'user',
-                repos: 'repos',
-                url: 'url',
+                user: '',
+                repos: '',
+                url: '',
                 branch: ''
             }
         }
@@ -207,6 +217,7 @@
     }
 
     .repos {
+        color: #0088fb;
         lines: 1;
         max-width: 500px;
         text-overflow: ellipsis;

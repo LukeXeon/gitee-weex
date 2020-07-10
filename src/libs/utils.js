@@ -144,8 +144,8 @@ export default {
     },
     getClipboard() {
         return new Promise(function (resolve) {
-            clipboard.getString(function () {
-                resolve()
+            clipboard.getString(function (e) {
+                resolve(e.data || null)
             })
         })
     },
