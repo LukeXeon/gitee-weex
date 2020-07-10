@@ -44,7 +44,7 @@
 </template>
 
 <script>
-    import {WxcMinibar,WxcLoading} from 'weex-ui'
+    import {WxcMinibar, WxcLoading} from 'weex-ui'
     import gitee from "@/libs/gitee";
     import utils from "@/libs/utils";
 
@@ -77,8 +77,8 @@
                         await gitee.saveIssues(
                             'micro-world',
                             'gitee-weex',
-                            'Report',
                             this.value,
+                            `运行环境：${this.deviceModel}-${this.platform}-${this.osVersion}`,
                             'Report'
                         )
                     } else {
@@ -132,7 +132,7 @@
         justify-content: flex-start;
     }
 
-    .env-text{
+    .env-text {
         font-weight: bold;
         font-size: 28px;
     }
@@ -149,7 +149,7 @@
         align-items: center;
     }
 
-    .wrapper{
+    .wrapper {
         background-color: whitesmoke;
         flex-direction: column;
     }
@@ -167,7 +167,7 @@
         padding: 10px 5px;
     }
 
-    .button{
+    .button {
         height: 80px;
         margin-top: 40px;
         margin-left: 20px;
@@ -178,7 +178,7 @@
         background-color: #0088fb;
     }
 
-    .button-text{
+    .button-text {
         color: white;
         font-weight: bold;
         font-size: 35px;
