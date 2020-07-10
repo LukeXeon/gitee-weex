@@ -15,23 +15,28 @@
         <scroller alwaysScrollableVertical="true">
             <div class="group">
                 <label2 title="昵称"
+                        @onCellClick="onCellClick({field:'name',content:name || '',title:'昵称'})"
                         :content="name">
                 </label2>
                 <label2 title="简介"
-                        :content="description">
+                        @onCellClick="onCellClick({field:'bio',content:bio || '',title:'简介'})"
+                        :content="bio">
                 </label2>
             </div>
-            <div class="group">
-                <label2 title="QQ"
-                        :content="qq">
-                </label2>
-                <label2 title="微信"
-                        :content="wechat">
-                </label2>
-                <label2 title="邮箱"
-                        :content="email">
-                </label2>
-            </div>
+            <!--            <div class="group">-->
+            <!--                <label2 title="QQ"-->
+            <!--                        @onCellClick="onCellClick({field:'qq',content:qq || '',title:'QQ'})"-->
+            <!--                        :content="qq">-->
+            <!--                </label2>-->
+            <!--                <label2 title="微信"-->
+            <!--                        @onCellClick="onCellClick({field:'wechat',content:wechat || '',title:'微信'})"-->
+            <!--                        :content="wechat">-->
+            <!--                </label2>-->
+            <!--                <label2 title="邮箱"-->
+            <!--                        @onCellClick="onCellClick({field:'email',content:email || '',title:'邮箱'})"-->
+            <!--                        :content="email">-->
+            <!--                </label2>-->
+            <!--            </div>-->
             <div class="button">
                 <text class="button-text">退出</text>
             </div>
@@ -44,9 +49,10 @@
 </template>
 
 <script>
-    import {WxcMinibar,WxcLoading} from 'weex-ui';
+    import {WxcMinibar, WxcLoading} from 'weex-ui';
     import gitee from "@/libs/gitee";
     import label2 from "@/widget/label2";
+    import utils from "@/libs/utils";
 
     export default {
         components: {
@@ -60,22 +66,30 @@
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
             },
+            onCellClick(item) {
+                utils.jumpTo('updateUser', item)
+            }
         },
         async created() {
-            let data = await gitee.loadMyInfo()
-            this.title = data['login']
-            this.name = data['name']
-            this.description = data['bio']
-            this.qq = data['qq']
-            this.wechat = data['wechat']
-            this.email = data['email']
-            this.isLoading = false
+            const bc = new BroadcastChannel('user-update')
+            let reload = async () => {
+                let data = await gitee.loadMyInfo()
+                this.title = data['login']
+                this.name = data['name']
+                this.bio = data['bio']
+                this.qq = data['qq']
+                this.wechat = data['wechat']
+                this.email = data['email']
+                this.isLoading = false
+            }
+            bc.onmessage = reload
+            await reload()
         },
         data() {
             return {
                 title: '',
                 name: '',
-                description: '',
+                bio: '',
                 qq: '',
                 wechat: '',
                 email: '',

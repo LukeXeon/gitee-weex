@@ -305,5 +305,11 @@ export default {
             const url = `https://gitee.com/api/v5/repos/${user}/${repos}/pulls?state=${state}&sort=created&direction=desc&page=${page}&per_page=${countAtPage}`
             return await request('GET', url)
         }
+    },
+    async updateUser(body) {
+        let accessToken = await utils.getValue('access_token')
+        let b = JSON.stringify({...body, ...{'access_token': accessToken}})
+        const url = 'https://gitee.com/api/v5/user'
+        return await request('PATCH', url, b)
     }
 }

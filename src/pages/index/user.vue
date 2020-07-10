@@ -167,6 +167,8 @@
             },
         },
         async created() {
+            const bc = new BroadcastChannel('user-update')
+            bc.onmessage = this.doRefresh
             await this.doRefresh()
         },
         data() {
