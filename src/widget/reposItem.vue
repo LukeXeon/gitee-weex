@@ -99,7 +99,7 @@
     }
 
     .tags-line {
-        margin: 10px 60px 10px 100px;
+        margin: 10px 60px 20px 100px;
         flex-direction: row;
         align-items: center;
     }

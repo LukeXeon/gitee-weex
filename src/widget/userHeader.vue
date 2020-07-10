@@ -1,5 +1,5 @@
 <template>
-    <div class="head-bar">
+    <div class="head-bar" @click="onClick">
         <image class="head-icon" :src="avatarIcon">
         </image>
         <div class="text-group">
@@ -25,6 +25,11 @@
             nikeName: String,
             bio: String,
             joinTime: String
+        },
+        methods: {
+            onClick() {
+                this.$emit('onHeaderClick')
+            }
         }
     }
 </script>

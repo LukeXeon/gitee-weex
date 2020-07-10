@@ -29,6 +29,7 @@
     import {Utils} from 'weex-ui'
     import {Element} from 'domino-core/src/impl'
     import domino from 'domino-core'
+    import htmlUtils from "@/libs/htmlUtils";
 
     function getLength(i) {
         let l = 0;
@@ -143,9 +144,8 @@
                     } else {
                         highlight = hljs.highlightAuto(source).value
                     }
-                    let html = "<html><head><title></title></head><body>" + highlight + "<br></body></html>";
 
-                    let root = domino.createDocument(html).body;
+                    let root = htmlUtils.createDocument(highlight).body;
 
                     build2(env, root);
 

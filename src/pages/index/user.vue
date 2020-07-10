@@ -21,6 +21,7 @@
                          :username="username"
                          :nikeName="nikeName"
                          :bio="bio"
+                         @onHeaderClick="onUserHeaderClick"
                          :joinTime="joinTime">
             </user-header>
             <tabs :items="items"
@@ -88,6 +89,9 @@
             userHeader
         },
         methods: {
+            onUserHeaderClick() {
+                utils.jumpTo('modify')
+            },
             async onRefresh() {
                 this.refreshing = true
                 try {
