@@ -1,12 +1,12 @@
 <template>
     <scroller scroll-direction="horizontal"
               show-scrollbar="false">
-        <list scrollable="true"
+        <scroller scrollable="true"
               @loadmore="onLoadMore"
               class="list"
               :style="{width:pageWidth+'px'}"
               show-scrollbar="false">
-            <cell style="flex-direction: row"
+            <div style="flex-direction: row"
                   :key="index"
                   v-for="(line,index) in displayLines">
                 <div class="line-marker">
@@ -15,11 +15,11 @@
                 </div>
                 <text :class="text.class"
                       v-for="(text) in line">{{text.text||' '}}</text>
-            </cell>
-            <cell v-if="displayLines.length>0"
+            </div>
+            <div v-if="displayLines.length>0"
                   class="line">
-            </cell>
-        </list>
+            </div>
+        </scroller>
     </scroller>
 </template>
 

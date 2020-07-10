@@ -6,6 +6,7 @@ const navigator = weex.requireModule('navigator')
 const dom = weex.requireModule('dom')
 const clipboard = weex.requireModule('clipboard')
 
+
 export default {
     request(method, url, type, body, headers) {
         return new Promise(function (resolve, reject) {
@@ -160,5 +161,5 @@ export default {
                 resolve()
             }, time)
         })
-    }
+    },
 }
