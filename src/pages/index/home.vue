@@ -118,6 +118,7 @@
                 this.isBottomShow = false
             },
             onClickToRepos() {
+                this.isBottomShow = false
                 utils.jumpTo('repository', {
                     user: this.user,
                     repos: this.repos,

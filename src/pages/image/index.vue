@@ -1,6 +1,7 @@
 <template>
     <div style="flex-direction: column">
         <wxc-minibar :title="title"
+                     class="top-bar"
                      :text-color="isBlackMode?'#FFFFFF':'#000000'"
                      :background-color="isBlackMode?'#3f3f3f':'#f6f6f6'">
             <div slot="left"
@@ -73,6 +74,11 @@
 </script>
 
 <style scoped>
+    .top-bar {
+        border-bottom-color: #888888;
+        border-bottom-width: 0.5px;
+    }
+
     .left {
         width: 60px;
         height: 60px;
