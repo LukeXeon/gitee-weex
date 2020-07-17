@@ -58,7 +58,8 @@
                 <tab3 :items="tabs">
                 </tab3>
                 <div class="bar">
-                    <div class="lang-line-wrapper">
+                    <div ref="langLine"
+                         class="lang-line-wrapper">
                         <div v-if="languagesSummary.length!==0"
                              @click="onLangLineClick"
                              style="flex: 1;justify-content: flex-end;align-items: center;">
@@ -70,7 +71,8 @@
                         </div>
                         <div v-else
                              class="lang-line"
-                             style="background-color: darkgray;"></div>
+                             style="background-color: darkgray;">
+                        </div>
                     </div>
                     <label-line v-for="(item,index) in labels"
                                 @onLabelClick="onLabelClick(index)"

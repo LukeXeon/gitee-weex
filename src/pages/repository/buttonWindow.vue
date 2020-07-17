@@ -1,6 +1,8 @@
 <template>
     <div class="bottom-window">
-        <div class="item" v-for="(item,index) in buttons">
+        <div class="item"
+             @click="onClick(index)"
+             v-for="(item,index) in buttons">
             <image class="item-icon"
                    :src="item.icon">
             </image>
@@ -10,31 +12,70 @@
 </template>
 
 <script>
+    import commits from '@/res/commits.png'
+    import watch1 from '@/res/watch(1).png'
+    import watch2 from '@/res/watch(2).png'
+    import fork from '@/res/fork.png'
+    import wiki from '@/res/wiki.png'
+    import release from '@/res/release.png'
+
     export default {
         name: "buttonWindow",
         props: {
             user: String,
-            repos: String
+            repos: String,
+            isWatch: Boolean,
         },
-        data() {
-            return {
-                buttons: [
+        computed: {
+            buttons() {
+                return [
                     {
+                        icon: !this.isWatch ? watch1 : watch2,
                         text: 'Watch'
                     },
                     {
+                        icon: fork,
                         text: 'Fork'
                     },
                     {
+                        icon: wiki,
                         text: 'Wiki'
                     },
                     {
+                        icon: commits,
                         text: 'Commits'
                     },
                     {
+                        icon: release,
                         text: 'Releases'
                     }
                 ]
+            }
+        },
+        methods: {
+            onClick(index) {
+                switch (index) {
+                    case 0: {
+
+                    }
+                        break
+                    case 1: {
+
+                    }
+                        break
+                    case 2: {
+
+                    }
+                        break
+                    case 3: {
+
+                    }
+                        break
+                    case 4: {
+
+                    }
+                        break
+                }
             }
         }
     }
@@ -60,14 +101,13 @@
     }
 
     .item-icon{
-        width: 80px;
-        height: 80px;
-        background-color: #0088fb;
+        width: 70px;
+        height: 70px;
     }
 
     .item-text{
         margin-top: 5px;
-        font-size: 28px;
+        font-size: 22px;
         text-align: center;
     }
 </style>
