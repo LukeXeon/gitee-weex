@@ -2,12 +2,13 @@
     <div class="wrapper">
         <scroller scroll-direction="horizontal"
                   scrollable="true"
+                  ref="scroller"
                   alwaysScrollableHorizontal="true"
                   show-scrollbar="false"
                   scrollToBegin="true"
                   class="scroller">
             <div class="box-group"
-                 :ref="'key'+index"
+                 :ref="'group'+index"
                  v-for="(itemGroup,index) in renderItems">
                 <div class="box"
                      v-for="(box,index2) in itemGroup"
@@ -53,9 +54,28 @@
             }
         },
         computed: {
-            renderItems: function () {
+            renderItems() {
                 return buildItems(this.items)
             },
+        },
+        watch:{
+            renderItems(value) {
+                if (value && value.length > 0) {
+                    setTimeout(() => {
+                        try {
+                            let vnode = this.$refs['group' + (value.length - 1)][0]
+                            if (vnode) {
+                                let dom = weex.requireModule('dom')
+                                dom.scrollToElement(vnode, {
+                                    offset: 0,
+                                    animated: true
+                                })
+                            }
+                        } catch (e) {
+                        }
+                    }, 500)
+                }
+            }
         },
         data() {
             return {

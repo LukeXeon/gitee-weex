@@ -26,17 +26,20 @@
         </search-history>
         <search-list v-if="showListMode==='search'"
                      style="flex: 1"
+                     :language="languageName"
                      :mode="searchMode"
                      :searchText="summitText">
         </search-list>
         <wxc-popup
                 pos="right"
-                :width="500"
+                :width="600"
                 @wxcPopupOverlayClicked="popupOverlayBottomClick"
                 popup-color="whitesmoke"
                 :show="isShowLangList">
-            <div style="flex-direction: column">
-
+            <div style="flex-direction: column;width: 600px">
+                <index-list :list="languageList"
+                            @itemSelected="onLangSelected">
+                </index-list>
             </div>
         </wxc-popup>
     </div>
@@ -87,6 +90,9 @@
     import searchBar from "@/pages/index/searchBar";
     import utils from "@/libs/utils";
     import {WxcPopup} from 'weex-ui'
+    import IndexList from "@/widget/indexList";
+    import languages from '@/res/languages.json'
+    import gitee from "@/libs/gitee";
 
     async function saveText(newText) {
         if (newText.length === 0 || newText.trim().length === 0) {
@@ -114,8 +120,20 @@
         await utils.setValue('search_history', JSON.stringify(list))
     }
 
+    const languageList = []
+
+    for (let i = 0; i < languages['length']; i++) {
+        let item = languages[i]
+        let name = item['name']
+        languageList.push({
+            name: name,
+            color: gitee.getLanguageColor(name),
+        })
+    }
+
     export default {
         components: {
+            IndexList,
             searchBar,
             tabView,
             searchHistory,
@@ -151,9 +169,13 @@
             onShowLangList() {
                 this.$refs.searchBar.blur()
                 this.isShowLangList = true
+                this.showListMode = 'history'
             },
-            popupOverlayBottomClick(){
+            popupOverlayBottomClick() {
                 this.isShowLangList = false
+            },
+            onLangSelected(e) {
+                this.languageName = e.value.name === '所有语言' ? '' : e.value.name
             }
         },
         data() {
@@ -163,7 +185,8 @@
                 searchMode: 'repos',
                 isLoading: false,
                 isShowLangList: false,
-                lang: null
+                languageName: '',
+                languageList: languageList
             }
         }
     }

@@ -33,7 +33,8 @@
             mode: {
                 type: String,
                 default: 'repos'
-            }
+            },
+            language:String
         },
         components: {
             reposPage,
@@ -45,37 +46,42 @@
                 let text = this.searchText
                 if (text) {
                     return async (page) => {
-                        let data = await gitee.searchRepos(this.searchText, null, page, 20);
+
                         let list = [];
-                        for (let i = 0; i < data.length; i++) {
-                            let item = data[i];
-                            let color = gitee.getLanguageColor(item['language']);
-                            let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日');
-                            let type = gitee.getReposType(item);
-                            list.push({
-                                icon: item['owner']['avatar_url'],
-                                username: item['namespace']['path'],
-                                repos: item['path'],
-                                displayReposName: item['name'],
-                                displayUsername: item['namespace']['name'],
-                                updatedAt: updatedAt,
-                                languageColor: color,
-                                language: item['language'] || "其他",
-                                description: item['description'],
-                                starCount: item['stargazers_count'],
-                                forkCount: item['forks_count'],
-                                watchCount: item['watchers_count'],
-                                branch: item['default_branch'],
-                                type: type
-                            })
+                        try {
+                            let data = await gitee.searchRepos(this.searchText, this.language, page, 20);
+                            for (let i = 0; i < data.length; i++) {
+                                let item = data[i];
+                                let color = gitee.getLanguageColor(item['language']);
+                                let updatedAt = format.format(new Date(item['updated_at']), 'Y年m月d日');
+                                let type = gitee.getReposType(item);
+                                list.push({
+                                    icon: item['owner']['avatar_url'],
+                                    username: item['namespace']['path'],
+                                    repos: item['path'],
+                                    displayReposName: item['name'],
+                                    displayUsername: item['namespace']['name'],
+                                    updatedAt: updatedAt,
+                                    languageColor: color,
+                                    language: item['language'] || "其他",
+                                    description: item['description'],
+                                    starCount: item['stargazers_count'],
+                                    forkCount: item['forks_count'],
+                                    watchCount: item['watchers_count'],
+                                    branch: item['default_branch'],
+                                    type: type
+                                })
+                            }
+                            if (page === 1 && list.length === 0) {
+                                let modal = weex.requireModule('modal')
+                                modal.alert({
+                                    message: "没有找到数据"
+                                })
+                            }
                         }
-                        if (page === 1 && list.length === 0) {
-                            let modal = weex.requireModule('modal')
-                            modal.alert({
-                                message: "没有找到数据"
-                            })
+                        finally {
+                            this.isLoading = false
                         }
-                        this.isLoading = false
                         return list
                     }
                 } else {
@@ -87,18 +93,21 @@
                 let text = this.searchText
                 if (text) {
                     return async (page) => {
-                        let data = await gitee.searchUser(this.searchText, page, 20)
                         let list = []
-                        for (let i = 0; i < data.length; i++) {
-                            let item = data[i];
-                            list.push({
-                                nikeName: item['name'],
-                                username: item['login'],
-                                icon: item['avatar_url'],
-                                url: item['html_url']
-                            })
+                        try {
+                            let data = await gitee.searchUser(this.searchText, page, 20)
+                            for (let i = 0; i < data.length; i++) {
+                                let item = data[i];
+                                list.push({
+                                    nikeName: item['name'],
+                                    username: item['login'],
+                                    icon: item['avatar_url'],
+                                    url: item['html_url']
+                                })
+                            }
+                        } finally {
+                            this.isLoading = false
                         }
-                        this.isLoading = false
                         return list
                     }
                 } else {

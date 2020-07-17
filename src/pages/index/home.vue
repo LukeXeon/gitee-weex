@@ -11,10 +11,10 @@
             </div>
 
             <!-- 第二个页面内容-->
-            <div class="item-container" :style="this['contentStyle']">
-                <events style="flex: 1">
-                </events>
-            </div>
+<!--            <div class="item-container" :style="this['contentStyle']">-->
+<!--                <events style="flex: 1">-->
+<!--                </events>-->
+<!--            </div>-->
 
             <!-- 第三个页面内容-->
             <div class="item-container" :style="this['contentStyle']">
@@ -66,11 +66,11 @@
             icon: require('../../res/hot(1).png').default,
             activeIcon: require('../../res/hot.png').default
         },
-        {
-            title: '事件',
-            icon: require('../../res/event(1).png').default,
-            activeIcon: require('../../res/event.png').default
-        },
+        // {
+        //     title: '事件',
+        //     icon: require('../../res/event(1).png').default,
+        //     activeIcon: require('../../res/event.png').default
+        // },
         {
             title: '我的star',
             icon: require('../../res/starBig(1).png').default,
