@@ -110,7 +110,10 @@
                    @wxcPopupOverlayClicked="popupOverlayBottomClick"
                    pos="bottom"
                    height="200">
-            <button-window>
+            <button-window
+                    :user="path"
+                    :repos="repository"
+                    :isWatched="isWatched">
             </button-window>
         </wxc-popup>
         <wxc-popup popup-color="transparent"
@@ -123,7 +126,8 @@
                      class="lang-list-wrapper">
                     <div v-for="(item,index) in langTexts"
                          class="lang-cell">
-                        <div class="circular-box" :style="{'background-color':item.color}"/>
+                        <div class="circular-box"
+                             :style="{'background-color':item.color}"/>
                         <text style="flex:1;font-size: 35px;margin-left: 20px">{{item.lang}}</text>
                         <text style="font-size: 35px;justify-self: flex-end">{{item.value}}</text>
                     </div>
@@ -188,6 +192,7 @@
             pageHeight() {
                 return Utils.env.getPageHeight()
             },
+
         },
         methods: {
             onActionClick(e) {
@@ -298,6 +303,7 @@
                 this.website = data['homepage']
                 this.updateAt = format.format(new Date(data['updated_at']), "Y年m月d日")
                 this.isStared = data['stared']
+                this.isWatched = data['watched']
                 this.language = data['language'] || "其他"
                 this.stars = data['stargazers_count']
                 this.watchs = data['watchers_count']
@@ -408,6 +414,7 @@
                 pulls: '...',
                 updateAt: '',
                 isStared: false,
+                isWatched: false,
                 language: null,
                 watchs: 0,
                 stars: 0,
@@ -421,6 +428,7 @@
                 timer: null,
                 isShowFloat: true,
                 isLoading: true,
+                isLoading2: false,
                 char: ' / ',
                 refreshing: false,
                 reposType: '',

@@ -18,19 +18,21 @@
     import fork from '@/res/fork.png'
     import wiki from '@/res/wiki.png'
     import release from '@/res/release.png'
+    import gitee from "@/libs/gitee";
+    import utils from "@/libs/utils";
 
     export default {
         name: "buttonWindow",
         props: {
             user: String,
             repos: String,
-            isWatch: Boolean,
+            isWatched: Boolean,
         },
         computed: {
             buttons() {
                 return [
                     {
-                        icon: !this.isWatch ? watch1 : watch2,
+                        icon: !this.isWatched ? watch1 : watch2,
                         text: 'Watch'
                     },
                     {
@@ -53,26 +55,39 @@
             }
         },
         methods: {
-            onClick(index) {
+            async onClick(index) {
                 switch (index) {
                     case 0: {
-
+                        if (this.isWatched) {
+                            await gitee.cancelWatch(this.user, this.repos)
+                        } else {
+                            await gitee.watch(this.user, this.repos)
+                        }
                     }
                         break
                     case 1: {
-
+                        await gitee.fork(this.user, this.repos)
                     }
                         break
                     case 2: {
-
+                        let url = `https://gitee.com/${this.user}/${this.repos}/wikis`
+                        utils.jumpTo('webview', {
+                            url: url
+                        })
                     }
                         break
                     case 3: {
-
+                        utils.jumpTo('commits', {
+                            user: this.user,
+                            repos: this.repos
+                        })
                     }
                         break
                     case 4: {
-
+                        let url = `https://gitee.com/${this.user}/${this.repos}/releases`
+                        utils.jumpTo('webview', {
+                            url: url
+                        })
                     }
                         break
                 }

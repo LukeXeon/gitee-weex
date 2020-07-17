@@ -26,6 +26,7 @@ const weexEntry = {
   'modify': helper.root('pages/modify/index.js'),
   'orgLists': helper.root('pages/orgLists/index.js'),
   'updateUser': helper.root('pages/updateUser/index.js'),
+  'commits': helper.root('pages/commits/index.js'),
 }
 
 const getEntryFileContent = (source, routerpath) => {

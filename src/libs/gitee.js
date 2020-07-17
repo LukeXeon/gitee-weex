@@ -311,5 +311,12 @@ export default {
         let b = JSON.stringify({...body, ...{'access_token': accessToken}})
         const url = 'https://gitee.com/api/v5/user'
         return await request('PATCH', url, b)
+    },
+    async fork(user, repos) {
+        let accessToken = await utils.getValue('access_token')
+        let url = `https://gitee.com/api/v5/repos/${user}/${repos}/forks`
+        return await request("POST", url, {
+            'access_token': accessToken
+        })
     }
 }

@@ -36,7 +36,10 @@
                 @wxcPopupOverlayClicked="popupOverlayBottomClick"
                 popup-color="whitesmoke"
                 :show="isShowLangList">
-            <div style="flex-direction: column;width: 600px">
+            <div class="right">
+                <div class="right-header">
+                    <text class="right-header-text">选择语言</text>
+                </div>
                 <index-list :list="languageList"
                             @itemSelected="onLangSelected">
                 </index-list>
@@ -79,6 +82,26 @@
         height: 60px;
         align-items: center;
         padding-right: 20px
+    }
+
+    .right{
+        flex-direction: column;
+        width: 600px;
+        border-left-color: #dddddd;
+        border-left-width: 0.5px;
+    }
+
+    .right-header{
+        height: 80px;
+        background-color: white;
+        justify-content: center;
+        align-items: center;
+        border-bottom-width: 0.5px;
+        border-bottom-color: #dddddd;
+    }
+
+    .right-header-text{
+        font-size: 30px;
     }
 
 </style>
