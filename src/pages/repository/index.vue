@@ -107,10 +107,9 @@
                    :show="isBottomShow"
                    @wxcPopupOverlayClicked="popupOverlayBottomClick"
                    pos="bottom"
-                   height="400">
-            <div class="bottom-bar">
-
-            </div>
+                   height="200">
+            <button-window>
+            </button-window>
         </wxc-popup>
         <wxc-popup popup-color="transparent"
                    :show="isBottomShow2"
@@ -141,6 +140,7 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from 'domino-core'
+    import ButtonWindow from "@/pages/repository/buttonWindow";
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -150,6 +150,7 @@
     export default {
         name: "index",
         components: {
+            ButtonWindow,
             LabelLine,
             WxcMinibar,
             ReposItem,
