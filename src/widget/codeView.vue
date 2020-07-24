@@ -2,13 +2,13 @@
     <scroller scroll-direction="horizontal"
               show-scrollbar="false">
         <scroller scrollable="true"
-              @loadmore="onLoadMore"
-              class="list"
-              :style="{width:pageWidth+'px'}"
-              show-scrollbar="false">
+                  @loadmore="onLoadMore"
+                  class="list"
+                  :style="{width:pageWidth+'px'}"
+                  show-scrollbar="false">
             <div style="flex-direction: row"
-                  :key="index"
-                  v-for="(line,index) in displayLines">
+                 :key="index"
+                 v-for="(line,index) in displayLines">
                 <div class="line-marker">
                     <text class="text-span2"
                           v-for="(item) in getLineText(index+1)">{{item}}</text>
@@ -17,7 +17,7 @@
                       v-for="(text) in line">{{text.text||' '}}</text>
             </div>
             <div v-if="displayLines.length>0"
-                  class="line">
+                 class="line">
             </div>
         </scroller>
     </scroller>
@@ -143,6 +143,10 @@
                         highlight = hljs.highlight(language, source).value
                     } else {
                         highlight = hljs.highlightAuto(source).value
+                    }
+
+                    if (!highlight.endsWith('<br>')) {
+                        highlight = highlight + '<br>'
                     }
 
                     let root = htmlUtils.createDocument(highlight).body;

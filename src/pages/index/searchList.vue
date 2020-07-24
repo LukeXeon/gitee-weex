@@ -23,6 +23,7 @@
     import format from "@/libs/date.format";
     import userPage from "@/widget/userPage";
     import {WxcLoading} from 'weex-ui'
+    import utils from "@/libs/utils";
 
     const emptyLoader = ()=> ([])
 

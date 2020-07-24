@@ -150,7 +150,7 @@ export default {
     async searchRepos(text, lang, page, countAtPage) {
         let accessToken = await utils.getValue('access_token')
         let url = `https://gitee.com/api/v5/search/repositories?access_token=${accessToken}&q=${encodeURIComponent(text)}&page=${page}&per_page=${countAtPage}&order=desc`
-        if (lang != null) {
+        if (lang != null && lang.length > 0) {
             url += `&language=${encodeURIComponent(lang)}`
         }
         return await request("GET", url)
