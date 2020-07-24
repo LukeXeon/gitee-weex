@@ -5,7 +5,7 @@
                      text-color="while"
                      background-color="#238FFF">
             <div slot="left"
-                 v-on:click="back"
+                 @click="back"
                  style="width: 60px;height: 60px;justify-content: center;align-items: center">
                 <image :src="require('@/res/back(1).png').default"
                        style="width: 40px;height: 40px">
@@ -41,7 +41,7 @@
         },
         methods: {
             back() {
-                this.$router.pop()
+                this.$router.replace('/boot')
             },
             test(text) {
 

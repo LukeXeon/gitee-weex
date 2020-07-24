@@ -32,10 +32,13 @@
                     })
                 }
             })
+            let channel = new BroadcastChannel('sign-out')
+            channel.onmessage = async () => {
+                await utils.removeKey('refresh_token')
+                await utils.removeKey('access_token')
+                await this.$router.replace('/boot')
+            }
         },
-        data() {
-            return {}
-        }
     }
 </script>
 

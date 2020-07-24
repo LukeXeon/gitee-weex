@@ -30,9 +30,7 @@
         async created() {
             if (await gitee.testLogin()) {
 //                utils.jumpTo('index')
-                await this.$router.push({
-                    path: '/home'
-                })
+                await this.$router.replace('/home')
             } else {
                 this.buttonEnable = true
             }
@@ -47,15 +45,11 @@
                     }, async function (value) {
                         await utils.setValue('first-boot', true)
 //                        utils.jumpTo('login')
-                        await this.$router.push({
-                            path: '/login'
-                        })
+                        await this.$router.replace('/login')
                     })
                 } else {
 //                    utils.jumpTo('login')
-                    await this.$router.push({
-                        path: '/login'
-                    })
+                    await this.$router.replace('/login')
                 }
             }
         },

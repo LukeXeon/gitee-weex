@@ -15,11 +15,17 @@
         <scroller alwaysScrollableVertical="true"
                   style="width: 750px;flex: 1">
             <div class="group1">
-                <div class="item" @click="onClear">
+                <div class="item"
+                     @click="onClear">
                     <text class="header">清除历史搜索记录</text>
                     <image class="image"
                            :src="require('@/res/right.png').default">
                     </image>
+                </div>
+            </div>
+            <div class="group1">
+                <div class="item" @click="onSignOut">
+                    <text class="sign-out">登出</text>
                 </div>
             </div>
         </scroller>
@@ -56,11 +62,14 @@
                 const navigator = weex.requireModule('navigator')
                 navigator.pop()
             },
+            onSignOut() {
+                let channel = new BroadcastChannel('sign-out')
+                channel.postMessage({})
+                this.back()
+            }
         },
         data() {
-            return {
-
-            }
+            return {}
         }
     }
 </script>
@@ -88,7 +97,7 @@
         height: 80px;
         flex-direction: row;
         align-items: center;
-        border-bottom-color:  #dddddd;
+        border-bottom-color: #dddddd;
         border-bottom-width: 0.5px;
     }
 
@@ -109,5 +118,12 @@
         height: 60px;
         justify-content: center;
         align-items: center;
+    }
+
+    .sign-out {
+        font-size: 30px;
+        text-align: center;
+        color: red;
+        flex: 1;
     }
 </style>

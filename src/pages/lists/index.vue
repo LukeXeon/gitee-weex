@@ -34,7 +34,7 @@
         </div>
         <slider infinite="false"
                 style="flex: 1;width: 750px;"
-                :index="initIndex"
+                :index="index"
                 @scroll="onSliderScroll"
                 @change="onSliderChange"
                 offsetXAccuracy="0.001">
@@ -162,7 +162,7 @@
                 navigator.pop()
             },
             onTabClick(index) {
-                this.initIndex = index
+                this.index = index
                 tempIndex = index
             },
             onSliderScroll(event) {
@@ -180,8 +180,8 @@
             let url = weex.config.bundleUrl
             let user = decodeURIComponent(utils.getQueryVariable(url, 'path'))
             let page = decodeURIComponent(utils.getQueryVariable(url, 'page'))
-            this.initIndex = indexMap[page]
-            tempIndex = this.initIndex
+            this.index = indexMap[page]
+            tempIndex = this.index
             this.index = indexMap[page]
             this.title = user
             let translateX = tempIndex * 180
@@ -310,7 +310,7 @@
                     transform: '',
                 },
                 tabs: ['Repository', 'Following', 'Follower', 'Stargazer', 'Watch'],
-                initIndex: 0,
+                index: 0,
                 reposLoader: emptyLoader,
                 followingLoader: emptyLoader,
                 followerLoader: emptyLoader,
