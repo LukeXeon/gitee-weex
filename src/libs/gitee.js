@@ -124,7 +124,8 @@ export default {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/user/subscriptions/${owner}/${repo}`
         return await request("PUT", url, {
-            "access_token": accessToken
+            "access_token": accessToken,
+            'watch_type': 'watching'
         })
     },
     async cancelWatch(owner, repo) {

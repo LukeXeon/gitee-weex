@@ -7,14 +7,14 @@
                 text-color="black"
                 background-color="#FBFBFB">
             <div slot="left"
-                 v-on:click="back"
+                 @click="back"
                  style="width: 60px;height: 60px;justify-content: center;align-items: center">
                 <image :src="require('@/res/back.png').default"
                        style="width: 40px;height: 40px">
                 </image>
             </div>
             <div slot="right"
-                 v-if="!isLoading"
+                 v-if="!isFirstLoading"
                  v-on:click="starThis"
                  class="star-button"
                  :style="{'background-color':!isStared?'white':'#238FFF','border-color':isStared?'#0062ff':'#dddddd'}">
@@ -23,7 +23,7 @@
             </div>
         </wxc-minibar>
         <div style="flex: 1">
-            <scroller v-if="!isLoading"
+            <scroller v-if="!isFirstLoading"
                       style="flex: 1;width: 750px"
                       ref="main"
                       scrollable="true"
@@ -84,6 +84,7 @@
                     </label-line>
                 </div>
                 <label-line style="margin-top: 20px"
+                            @onLabelClick="onBranchClick"
                             :icon="require('@/res/branch(1).png').default"
                             title="Branch"
                             :rightText="branchText">
@@ -96,25 +97,26 @@
             <image class="float-button"
                    ref="floatButton"
                    @click="onFloatClick"
-                   v-if="!isLoading&&!isBottomShow"
+                   v-if="!isFirstLoading&&!isBottomShow"
                    :style="{'top':`${pageHeight-320}px`}"
                    :src="require('@/res/point.png').default">
             </image>
         </div>
-        <wxc-loading :show="isLoading"
-                     :loadingPic="require('@/res/loading.gif').default"
-                     :need-mask="true">
-        </wxc-loading>
         <wxc-popup popup-color="transparent"
                    :show="isBottomShow"
                    @wxcPopupOverlayClicked="popupOverlayBottomClick"
                    pos="bottom"
                    height="200">
-            <button-window
-                    :user="path"
-                    :repos="repository"
-                    :isWatched="isWatched">
-            </button-window>
+            <div class="bottom-window">
+                <div class="bottom-window-item"
+                     @click="onButtonClick(index)"
+                     v-for="(item,index) in buttons">
+                    <image class="bottom-window-item-icon"
+                           :src="item.icon">
+                    </image>
+                    <text class="bottom-window-item-text">{{item.text}}</text>
+                </div>
+            </div>
         </wxc-popup>
         <wxc-popup popup-color="transparent"
                    :show="isBottomShow2"
@@ -134,6 +136,36 @@
                 </div>
             </div>
         </wxc-popup>
+        <wxc-popup popup-color="transparent"
+                   :height="450"
+                   :show="isBottomShow3"
+                   @wxcPopupOverlayClicked="popupOverlayBottomClick3"
+                   pos="bottom">
+            <div class="bottom-bar"
+                 style="flex-direction: column">
+                <text class="branch-title">分支</text>
+                <list class="branch-list">
+                    <cell class="branch-item"
+                          @click="onBranchItemClick(item)"
+                          v-for="(item,index) in branches">
+                        <image class="branch-image"
+                               :src="require('@/res/branch.png').default">
+                        </image>
+                        <text class="branch-text">{{item}}</text>
+                        <image class="branch-correct"
+                               v-if="item===branch"
+                               :src="require('@/res/correct.png').default">
+                        </image>
+                        <div style="width: 30px"></div>
+                    </cell>
+                </list>
+                <text class="branch-tips">Tips：点击可切换分支</text>
+            </div>
+        </wxc-popup>
+        <wxc-loading :show="isLoading||isFirstLoading"
+                     :loadingPic="require('@/res/loading.gif').default"
+                     :need-mask="true">
+        </wxc-loading>
     </div>
 </template>
 
@@ -146,7 +178,12 @@
     import gitee from "@/libs/gitee";
     import format from '@/libs/date.format'
     import domino from 'domino-core'
-    import ButtonWindow from "@/pages/repository/buttonWindow";
+    import commits from '@/res/commits.png'
+    import watch1 from '@/res/watch(1).png'
+    import watch2 from '@/res/watch(2).png'
+    import fork from '@/res/fork.png'
+    import wiki from '@/res/wiki.png'
+    import release from '@/res/release.png'
 
     const code = require('@/res/code.png').default
     const branch = require('@/res/branch(1).png').default
@@ -156,7 +193,6 @@
     export default {
         name: "index",
         components: {
-            ButtonWindow,
             LabelLine,
             WxcMinibar,
             ReposItem,
@@ -192,7 +228,30 @@
             pageHeight() {
                 return Utils.env.getPageHeight()
             },
-
+            buttons() {
+                return [
+                    {
+                        icon: !this.isWatched ? watch1 : watch2,
+                        text: this.isWatched ? 'Unwatch' : 'Watch'
+                    },
+                    {
+                        icon: fork,
+                        text: 'Fork'
+                    },
+                    {
+                        icon: wiki,
+                        text: 'Wiki'
+                    },
+                    {
+                        icon: commits,
+                        text: 'Commits'
+                    },
+                    {
+                        icon: release,
+                        text: 'Releases'
+                    }
+                ]
+            }
         },
         methods: {
             onActionClick(e) {
@@ -202,6 +261,66 @@
             },
             onImageClick(e) {
 
+            },
+            async onButtonClick(index) {
+                let url = weex.config.bundleUrl
+                let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
+                let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
+                switch (index) {
+                    case 0: {
+                        try {
+                            this.isLoading = true
+                            if (this.isWatched) {
+                                await gitee.cancelWatch(user, repos)
+                            } else {
+                                await gitee.watch(user, repos)
+                            }
+                            this.isWatched = !this.isWatched
+                        } finally {
+                            this.isLoading = false
+                        }
+                    }
+                        break
+                    case 1: {
+                        let modal = weex.requireModule('modal')
+                        modal.confirm({
+                            message: '注意：fork会产生一个新的仓库。',
+                            okTitle: '确认',
+                            cancelTitle: '取消'
+                        }, async (value) => {
+                            if (value === '确认') {
+                                try {
+                                    this.isLoading = true
+                                    await gitee.fork(user, repos)
+                                } finally {
+                                    this.isLoading = false
+                                }
+                            }
+                        })
+                    }
+                        break
+                    case 2: {
+                        let url = `https://gitee.com/${user}/${repos}/wikis`
+                        utils.jumpTo('webview', {
+                            url: url
+                        })
+                    }
+                        break
+                    case 3: {
+                        utils.jumpTo('commits', {
+                            user: user,
+                            repos: repos
+                        })
+                    }
+                        break
+                    case 4: {
+                        let url = `https://gitee.com/${user}/${repos}/releases`
+                        utils.jumpTo('webview', {
+                            url: url
+                        })
+                    }
+                        break
+                }
             },
             onNameClick() {
                 switch (this.reposType) {
@@ -259,6 +378,9 @@
             popupOverlayBottomClick2() {
                 this.isBottomShow2 = false
             },
+            popupOverlayBottomClick3() {
+                this.isBottomShow3 = false
+            },
             async onLangLineClick() {
                 this.isBottomShow2 = true
             },
@@ -280,15 +402,17 @@
                 let url = weex.config.bundleUrl
                 let user = decodeURIComponent(utils.getQueryVariable(url, 'user'))
                 let repos = decodeURIComponent(utils.getQueryVariable(url, 'repos'))
-                let branch = decodeURIComponent(utils.getQueryVariable(url, 'branch'))
                 let icon = decodeURIComponent(utils.getQueryVariable(url, 'icon'))
                 gitee.getPullRequests(user, repos).then(res => {
                     this.pulls = res.length >= 99 ? '99+' : res.length
                 })
                 gitee.getBranches(user, repos).then(res => {
-                    this.branchCount = res.length
+                    this.branchCount = res.length >= 99 ? '99+' : res.length
+                    this.branches = res.map((item) => {
+                        return item.name
+                    })
                 })
-                this.loadExtraInfo(user, repos, branch).then(res => {
+                this.loadExtraInfo(user, repos, this.branch).then(res => {
                     if (res) {
                         this.languagesSummary = res.colorLines
                         this.langTexts = res.texts
@@ -310,7 +434,6 @@
                 this.forks = data['forks_count']
                 this.issues = data['open_issues_count']
                 this.license = data['license']
-                this.branch = data['default_branch']
                 this.reposType = data['namespace']['type']
                 this.path = data['namespace']['path']
             },
@@ -394,11 +517,27 @@
             },
             onFloatClick() {
                 this.isBottomShow = true
+            },
+            onBranchClick() {
+                this.isBottomShow3 = true
+            },
+            async onBranchItemClick(item) {
+                if (item !== this.branch) {
+                    try {
+                        this.isLoading = true
+                        this.branch = item
+                        await this.doRefresh()
+                    } finally {
+                        this.isLoading = false
+                    }
+                }
             }
         },
         async created() {
+            let url = weex.config.bundleUrl
+            this.branch = decodeURIComponent(utils.getQueryVariable(url, 'branch'))
             await this.doRefresh()
-            this.isLoading = false
+            this.isFirstLoading = false
         },
         data() {
             return {
@@ -423,12 +562,14 @@
                 //UI
                 langTexts: [],
                 languagesSummary: [],
+                branches: [],
                 isBottomShow: false,
                 isBottomShow2: false,
+                isBottomShow3: false,
                 timer: null,
                 isShowFloat: true,
-                isLoading: true,
-                isLoading2: false,
+                isLoading: false,
+                isFirstLoading: true,
                 char: ' / ',
                 refreshing: false,
                 reposType: '',
@@ -617,4 +758,86 @@
         border-radius: 5px
     }
 
+    .bottom-window {
+        flex: 1;
+        background-color: white;
+        border-radius: 30px;
+        margin: 20px;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .bottom-window-item {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+
+    .bottom-window-item-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .bottom-window-item-text {
+        margin-top: 5px;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .branch-image {
+        margin-left: 20px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .branch-item {
+        background-color: white;
+        border-bottom-width: 0.5px;
+        border-bottom-color: #dddddd;
+        padding-top: 12.5px;
+        padding-bottom: 12.5px;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .branch-correct {
+        width: 40px;
+        height: 40px;
+    }
+
+    .branch-text {
+        margin-left: 5px;
+        flex: 1;
+        lines: 1;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    .branch-title {
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        padding-top: 15px;
+        padding-bottom: 10px;
+        border-bottom-width: 0.5px;
+        border-bottom-color: #dddddd;
+    }
+
+    .branch-list {
+        flex: 1;
+        background-color: whitesmoke;
+    }
+
+    .branch-tips {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-top-color: #dddddd;
+        border-top-width: 0.5px;
+        text-align: center;
+        font-size: 25px;
+    }
 </style>
