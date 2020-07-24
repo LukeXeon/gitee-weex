@@ -93,7 +93,7 @@
 
     .right-header{
         height: 80px;
-        background-color: white;
+        background-color: #FBFBFB;
         justify-content: center;
         align-items: center;
         border-bottom-width: 0.5px;
