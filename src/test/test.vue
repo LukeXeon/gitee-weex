@@ -1,17 +1,16 @@
 <template>
-    <div style="">
-
+    <div style="flex: 1;background-color: #00B4FF;width: 750px">
+        <commits style="flex: 1">
+        </commits>
     </div>
 </template>
 <script>
-    import SimpleMarkdown from 'simple-markdown'
-
-    const markdownText = `
-    adsadasdasdasd
-
-    `
+    import commits from '@/pages/commits/index.vue'
 
     export default {
+        components: {
+            commits
+        },
         name: "test",
         data() {
             let list = []

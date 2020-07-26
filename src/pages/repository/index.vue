@@ -309,7 +309,8 @@
                     case 3: {
                         utils.jumpTo('commits', {
                             user: user,
-                            repos: repos
+                            repos: repos,
+                            branch: this.branch
                         })
                     }
                         break

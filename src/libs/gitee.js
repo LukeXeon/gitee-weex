@@ -319,5 +319,10 @@ export default {
         return await request("POST", url, {
             'access_token': accessToken
         })
+    },
+    async getCommits(user, repos, branch, page, countAtPage) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/repos/${user}/${repos}/commits?access_token=${accessToken}&sha=${branch}&page=${page}&per_page=${countAtPage}`
+        return await request('GET', url)
     }
 }
