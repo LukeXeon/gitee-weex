@@ -24,7 +24,6 @@ const weexEntry = {
   'issues': helper.root('pages/issues/index.js'),
   'pr': helper.root('pages/pr/index.js'),
   'modify': helper.root('pages/modify/index.js'),
-  'orgLists': helper.root('pages/orgLists/index.js'),
   'updateUser': helper.root('pages/updateUser/index.js'),
   'commits': helper.root('pages/commits/index.js'),
 }

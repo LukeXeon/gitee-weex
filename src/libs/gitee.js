@@ -246,23 +246,17 @@ export default {
         const url = `https://gitee.com/api/v5/orgs/${org}?access_token=${accessToken}`
         return await request("GET", url)
     },
-    async getOrgRepos(org) {
-        let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/orgs/${org}/repos?access_token=${accessToken}`
-        return await request("GET", url)
-    },
-    async getOrgMembers(org) {
-        let accessToken = await utils.getValue('access_token')
-        const url = `https://gitee.com/api/v5/orgs/${org}/members?access_token=${accessToken}`
-        return await request("GET", url)
-    },
     getReposType(item) {
-        if ((item['namespace']['enterprise_id'] && item['namespace']['enterprise_id'] !== 0) || item['namespace']['type'] === 'enterprise') {
-            return 'enterprise'
-        } else if ((item['namespace']['path'] === item['owner']['username']) || item['namespace']['type'] === 'personal') {
-            return 'personal'
-        } else {
-            return 'group'
+        try {
+            if ((item['namespace']['enterprise_id'] && item['namespace']['enterprise_id'] !== 0) || item['namespace']['type'] === 'enterprise') {
+                return 'enterprise'
+            } else if ((item['namespace']['path'] === item['owner']['username']) || item['namespace']['type'] === 'personal') {
+                return 'personal'
+            } else {
+                return 'group'
+            }
+        }catch (e) {
+            utils.debug(JSON.stringify(item))
         }
     },
     async checkFollow(user) {
@@ -324,5 +318,15 @@ export default {
         let accessToken = await utils.getValue('access_token')
         const url = `https://gitee.com/api/v5/repos/${user}/${repos}/commits?access_token=${accessToken}&sha=${branch}&page=${page}&per_page=${countAtPage}`
         return await request('GET', url)
-    }
+    },
+    async getOrgUsers(org, page, countAtPage) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/orgs/${org}/members?access_token=${accessToken}&page=${page}&per_page=${countAtPage}&role=all`
+        return await request('GET', url)
+    },
+    async getOrgRepos(org, page, countAtPage) {
+        let accessToken = await utils.getValue('access_token')
+        const url = `https://gitee.com/api/v5/orgs/${org}/repos?access_token=${accessToken}&type=all&page=${page}&per_page=${countAtPage}`
+        return await request("GET", url)
+    },
 }
