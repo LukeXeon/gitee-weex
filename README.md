@@ -4,7 +4,37 @@
 
 这是一个由**纯Weex和js**开发的**Gitee**客户端，灵感来自于**PPHub**。
 
-## 在线预览【仅支持iOS】
+## 有啥功能？
+目前已经实现的功能有：
+* 代码高亮
+* 剪贴板链接检测提示跳转
+* 用户与仓库搜索
+* contribute view
+* fork、star、watch、follow等功能
+* 分支切换
+* 查看pr，issues
+* 还有一些杂七杂八的界面和组件......
+
+未实现或者不太可能实现的功能：
+
+* 在weex中渲染markdown
+* 分享
+
+## 如何开发？
+
+### Step 1 将仓库使用git克隆到本地
+```shell
+git clone git@gitee.com:micro-world/gitee-weex.git
+```
+### Step 2 安装依赖
+```shell
+npm install
+```
+### Step 3 开始调试
+```
+npm start
+```
+## 立即体验【仅支持iOS】
 
 **注：由于Weex操蛋的双端一致性，以及Android Weex Playground弱鸡的能力，所以目前只支持iOS，后续有机会再单独发布Android Apk。**
 
