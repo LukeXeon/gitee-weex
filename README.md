@@ -1,14 +1,17 @@
 # Gitee-Weex
-这是一个由纯Weex开发的Gitee客户端。
+
+## 這是啥？
+
+这是一个由**纯Weex和js**开发的**Gitee**客户端，灵感来自于**PPHub**。
 
 ## 在线预览【仅支持iOS】
 
-由于Weex操蛋的双端一致性，目前只支持iOS。
+**注：由于Weex操蛋的双端一致性，以及Android Weex Playground弱鸡的能力，所以目前只支持iOS，后续有机会再单独发布Android Apk。**
 
-### 在App Store 上下载 Weex Playground
-<img src="https://gitee-weex.oss-cn-hongkong.aliyuncs.com/image/IMG_1857%2820200808-160207%29.PNG" style="zoom:50%" />
-### 打开Weex Playground扫描下面的二维码
-<img src="https://gitee-weex.oss-cn-hongkong.aliyuncs.com/image/qrcode.png" style="zoom:50%" />
+|**Step 1 在App Store 上下载 Weex Playground**|**Step 2 打开Weex Playground扫描下面的二维码**|
+|----|----|
+|![](https://gitee-weex.oss-cn-hongkong.aliyuncs.com/image/IMG_1857%2820200808-160207%29.PNG)|![](https://gitee-weex.oss-cn-hongkong.aliyuncs.com/image/qrcode.png)|
+
 ## 运行截图
 
 ||||
